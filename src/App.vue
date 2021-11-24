@@ -26,6 +26,7 @@ import 'terminal.css';
         </div>
     </div>
     <div class="container">
+      <hr>
         <router-view></router-view>
         <hr>
         <footer>
