@@ -1,15 +1,16 @@
 <script>
 import Grab from "../scripts/grab.js";
+import Pagination from "../components/Pagination.vue";
 var instance = new Grab(`tencent`);
 
 function spliceDict(dict, minKey, maxKey) {
-  var newDict = {};
-  for(var i in dict) {
-    if(i >= minKey && i <= maxKey) {
-      newDict[i] = dict[i];
+    var newDict = {};
+    for (var i in dict) {
+        if (i >= minKey && i <= maxKey) {
+            newDict[i] = dict[i];
+        }
     }
-  }
-  return newDict;
+    return newDict;
 }
 
 export default {
@@ -17,23 +18,36 @@ export default {
     data() {
         return {
             info: {},
+            iconIndex: [],
+            pageSize: 42,
+            pageCurr: 1,
         };
     },
     async mounted() {
         await instance.init();
         let response = await instance.getSummonerIcons();
-        console.log(response);
-        this.info = response.data.data;
+        var info = response.data.data;
+
+        for (var key in info) {
+            this.iconIndex.push(info[key]);
+        }
+
+        this.iconIndex.sort(function (a, b) {
+            return parseInt(a.id) - parseInt(b.id);
+        });
     },
     methods: {
         getSummonerIcon(id) {
             return instance.getSummonerIcon(id);
         },
-        getInfoSlice(length) {
-            console.log(this.info.length);
-            return spliceDict(this.info,0,length)
+        getInfoSlice() {
+            return spliceDict(this.info, 0, this.pageSize);
+        },
+        getPageTotal() {
+            return Math.ceil(this.iconIndex.length / this.pageSize);
         }
     },
+    components: { Pagination }
 };
 </script>
 
@@ -118,15 +132,16 @@ export default {
             <section>
                 <header></header>
                 <div class="image-grid">
-                    <a href="#" style="border: none;" v-for="(item) in getInfoSlice(40)">
-                        <img
-                            :src="getSummonerIcon(item.id)"
-                            :width="item.image.w"
-                            :height="item.image.w"
-                            alt="random image"
-                        />
+                    <a href="#" style="border: none;" v-for="(item) in iconIndex.slice(0, pageSize)">
+                        <img :src="getSummonerIcon(item.id)" :alt="item.id" />
                     </a>
                 </div>
+                <Pagination
+                    :current="pageCurr"
+                    :total="getPageTotal()"
+                    :per-page="2"
+                    @page-changed="current = $event"
+                />
             </section>
         </main>
     </div>
@@ -142,7 +157,7 @@ export default {
     grid-template-columns: repeat(
         auto-fit,
         minmax(calc(var(--page-width) / 12), 1fr)
-      );
+    );
 }
 
 .components-grid {
@@ -153,10 +168,10 @@ export default {
 }
 
 @media only screen and (min-width: 70em) {
-      .components-grid {
+    .components-grid {
         grid-template-columns: 3fr 9fr;
-      }
     }
+}
 
 img {
     width: 100%;
