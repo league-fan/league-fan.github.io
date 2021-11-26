@@ -3,12 +3,16 @@ on: [push]
 jobs:
   build_vue:
     runs-on: ubuntu-latest
-    name: Build Vue
     steps:
     - uses: actions/checkout@v2
-    - id: Build-Vue
-      uses: xRealNeon/VuePagesAction@1.0.1
-      with:
-        username: 'magicwenli'
-        reponame: 'league-fan'
-        token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
+    - name: Build-Vue
+      run: |
+        yarn install --frozen-lockfile
+        yarn build
+        cd dist
+        git config --global user.email "CI@github.com"
+        git config --global user.name "CI"
+        git init
+        git add -A
+        git commit -m 'auto commit ${{ github.sha }}'
+        git push -f master:gh-pages
