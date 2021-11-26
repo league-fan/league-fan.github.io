@@ -70,4 +70,10 @@ export default {
     background-color: aliceblue;
     color: black;
 }
+
+@media screen and (max-width: 768px) {
+    .card {
+        display: none;
+    }
+}
 </style>

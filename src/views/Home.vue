@@ -1,29 +1,27 @@
 <script>
 import Grab from "../scripts/grab.js";
 import Pagination from "../components/Pagination.vue";
-import * as JsSearch from 'js-search';
 import Tooltip from "../components/ImageTooltip.vue";
 import ImageTooltip from "../components/ImageTooltip.vue";
 
 var instance = new Grab(`tencent`);
-var search = new JsSearch.Search('summonericon');
 
 
 export default {
     name: "Home",
     data() {
         return {
-            info: {},
             iconIndex: [],
             output: [],
             pageSize: 42,
-            pageCurr: 10,
+            pageCurr: 1,
             search: {
                 keyword: "",
-                type: "",
-                page: 1
             },
-
+            preview: {
+                id: "",
+                description: "",
+            }
         };
     },
     async mounted() {
@@ -31,15 +29,26 @@ export default {
 
         var respSI = await instance.getSummonerIcons();
         var infoSI = respSI.data.data;
-        var respSID = await instance.getSummonerIconDescriptions();
-        var infoSID = respSID.data;
+        var respSID = await instance.getSummonerIconDescriptionsTencent();
+        var infoSID = respSID.data.cuportrait;
+
         for (var key in infoSI) {
-            var thekey = "summoner_icon_name_" + key
             var newkey = infoSI[key];
-            if (infoSID.hasOwnProperty(thekey)) {
-                newkey.description = infoSID[thekey];
-            } else {
+            if (parseInt(key) <= 28) {
                 newkey.description = "Not Found";
+            } else {
+
+                if (parseInt(key) < 79 && parseInt(key) > 49) {
+                    key = key - 50;
+                }
+                if (infoSID.hasOwnProperty(key)) {
+                    if (infoSID[key].name === " ")
+                        newkey.description = "Not Found";
+                    else
+                        newkey.description = infoSID[key].name;
+                } else {
+                    newkey.description = "Not Found";
+                }
             }
             this.iconIndex.push(newkey);
         }
@@ -47,10 +56,8 @@ export default {
             return parseInt(a.id) - parseInt(b.id);
         });
 
-        search.addIndex('id');
-        search.addIndex(['description']);
-        console.log(this.iconIndex);
-        search.addDocuments(this.iconIndex);
+        this.output = this.iconIndex;
+        this.preview = this.iconIndex[0];
 
         respSI = null;
         infoSI = null;
@@ -64,10 +71,18 @@ export default {
         pageChange(page) {
             this.pageCurr = page;
         },
-        searchKeyword() {
-            console.log(search.search(this.search.keyword));
-        },
-
+        filteredInfo() {
+            this.pageCurr = 1;
+            console.log("Search: ", this.search.keyword);
+            if (this.search.keyword === "" || this.search.keyword === "Search") {
+                this.output = this.iconIndex;
+            } else {
+                this.output = this.iconIndex.filter(item => {
+                    return item.description.toLowerCase().includes(this.search.keyword.toLowerCase()) ||
+                        String(item.id).includes(this.search.keyword.toLowerCase());
+                })
+            }
+        }
     },
     components: { Pagination, Tooltip, ImageTooltip }
 };
@@ -82,21 +97,18 @@ export default {
                     type="text"
                     placeholder="Search"
                     v-model="search.keyword"
-                    @keyup.enter="searchKeyword"
+                    @keyup.enter="filteredInfo"
                 />
+                <span>Press Enter to search</span>
             </div>
 
-            <h2>Documentation</h2>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="#DocVariables">Variables</a>
-                    </li>
-                    <li>
-                        <a href="#DocTypography">Typography</a>
-                    </li>
-                </ul>
-            </nav>
+                <div class="description">
+                    ID:&nbsp; {{ preview.id }}
+                    <br />Description:
+                    <br />{{ preview.description }}
+                    <br />
+                    <a class="newtab" :href="getSummonerIcon(preview.id)" target="_blank">Open in new tab</a>
+                </div>
         </aside>
         <main>
             <section>
@@ -105,16 +117,18 @@ export default {
                     <a
                         href="#"
                         style="border: none;"
-                        v-for="(item) in iconIndex.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)"
+                        v-for="(item) in output.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)"
                     >
                         <ImageTooltip
                             :img-src="getSummonerIcon(item.id)"
-                            :item="item" />
+                            :item="item"
+                            @click="preview = item"
+                        />
                     </a>
                 </div>
                 <Pagination
                     :current="pageCurr"
-                    :total="iconIndex.length"
+                    :total="output.length"
                     :per-page="pageSize"
                     @page-changed="pageChange"
                     text-before-input
@@ -133,7 +147,7 @@ export default {
     grid-template-rows: auto;
     grid-template-columns: repeat(
         auto-fit,
-        minmax(calc(var(--page-width) / 10), 1fr)
+        minmax(calc(var(--page-width) / 12), 1fr)
     );
 }
 
@@ -144,14 +158,27 @@ export default {
     grid-template-rows: auto;
 }
 
+img {
+    width: 100%;
+    height: auto;
+}
+
+.search {
+    margin-bottom: var(--global-line-height);
+}
+
+.search > span {
+    font-size: calc(var(--global-font-size) * 0.75);
+}
+
 @media only screen and (min-width: 70em) {
     .components-grid {
         grid-template-columns: 3fr 9fr;
     }
 }
-
-img {
-    width: 100%;
-    height: auto;
+.newtab {
+    display: inline-block;
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
 </style>
