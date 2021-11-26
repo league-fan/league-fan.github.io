@@ -71,9 +71,14 @@ export default {
     color: black;
 }
 
+.img-tooltip > img {
+    max-width: 100%;
+}
+
 @media screen and (max-width: 768px) {
     .card {
         display: none;
     }
 }
+
 </style>

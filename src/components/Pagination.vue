@@ -2,9 +2,9 @@
 
 <template>
     <div class="min-w-max">
-        <section class="flex justify-between">
+        <section class="block justify-between">
             <ul class="flex items-center">
-                <li class="pr-6" v-if="hasPrev()">
+                <li class="left-arrow pr-6" v-if="hasPrev()">
                     <a href="#" @click.prevent="changePage(prevPage)">
                         <div class="flex items-center justify-center h-6 w-6">
                             <div class="svg-center">
@@ -52,7 +52,7 @@
                         </div>
                     </a>
                 </li>
-                <li class="pr-6" v-if="hasNext()">
+                <li class="right-arrow pr-6" v-if="hasNext()">
                     <a href="#" @click.prevent="changePage(nextPage)">
                         <div class="flex items-center justify-center h-6 w-6 p-2">
                             <div class="svg-center">
@@ -127,7 +127,7 @@ export default defineComponent({
         },
         pageRange: {
             type: Number,
-            default: 2
+            default: 1
         },
         textBeforeInput: {
             type: String,
@@ -198,6 +198,32 @@ input {
     }
 }
 
+.block {
+    display: block;
+}
+
+.left-arrow {
+    display: none;
+}
+
+.right-arrow {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+    .left-arrow {
+        display: block;
+    }
+
+    .right-arrow {
+        display: block;
+    }
+
+    .block {
+        display: flex;
+    }
+}
+
 .min-w-max {
     min-width: max-content;
 }
@@ -239,19 +265,19 @@ input {
 }
 
 .pr-6 {
-    padding-right: .5rem;
+    padding-right: 0.5rem;
 }
 .pr-2 {
     padding-right: 0.25rem;
 }
 
 .pl-4 {
-    padding-left: .5rem;
+    padding-left: 0.5rem;
 }
 
 .px-1 {
-    padding-left: .25rem;
-    padding-right: .25rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
 }
 
 .px-2 {
@@ -260,8 +286,8 @@ input {
 }
 
 .py-1 {
-    padding-top: .25rem;
-    padding-bottom: .25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
 }
 
 .p-2 {
@@ -303,7 +329,7 @@ ul > li::after {
 }
 
 li {
-    padding-left: .5rem;
+    padding-left: 0.5rem;
 }
 
 li::after {

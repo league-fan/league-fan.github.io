@@ -63,13 +63,14 @@ export default {
         infoSI = null;
         respSID = null;
         infoSID = null;
+
+        if (window.innerWidth < 768) {
+            this.pageSize = 24;
+        }
     },
     methods: {
         getSummonerIcon(id) {
             return instance.getSummonerIcon(id);
-        },
-        pageChange(page) {
-            this.pageCurr = page;
         },
         filteredInfo() {
             this.pageCurr = 1;
@@ -91,7 +92,7 @@ export default {
 <template>
     <div class="components components-grid">
         <aside id="menu">
-            <h2>Search</h2>
+            <h3>Search</h3>
             <div class="search">
                 <input
                     type="text"
@@ -102,21 +103,26 @@ export default {
                 <span>Press Enter to search</span>
             </div>
 
-                <div class="description">
-                    ID:&nbsp; {{ preview.id }}
-                    <br />Description:
-                    <br />{{ preview.description }}
+            <div class="terminal-card card">
+                <header>ID: {{ preview.id }}</header>
+                <div>
+                    {{ preview.description }}
                     <br />
-                    <a class="newtab" :href="getSummonerIcon(preview.id)" target="_blank">Open in new tab</a>
+                    <a
+                        class="newtab"
+                        :href="getSummonerIcon(preview.id)"
+                        target="_blank"
+                    >Open in new tab</a>
                 </div>
+            </div>
         </aside>
-        <main>
+        <div>
             <section>
                 <header></header>
                 <div class="image-grid">
                     <a
                         href="#"
-                        style="border: none;"
+                        @click.prevent
                         v-for="(item) in output.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)"
                     >
                         <ImageTooltip
@@ -130,18 +136,16 @@ export default {
                     :current="pageCurr"
                     :total="output.length"
                     :per-page="pageSize"
-                    @page-changed="pageChange"
+                    @page-changed="pageCurr = $event"
                     text-before-input
                 />
             </section>
-        </main>
+        </div>
     </div>
 </template>
 
 <style scoped>
 .image-grid {
-    display: grid;
-    grid-template-rows: auto;
     display: grid;
     grid-gap: 1em;
     grid-template-rows: auto;
@@ -151,16 +155,15 @@ export default {
     );
 }
 
+.image-grid > a {
+    border: none;
+}
+
 .components-grid {
     display: grid;
     grid-column-gap: 1.4em;
     grid-template-columns: auto;
     grid-template-rows: auto;
-}
-
-img {
-    width: 100%;
-    height: auto;
 }
 
 .search {
@@ -178,7 +181,11 @@ img {
 }
 .newtab {
     display: inline-block;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.card {
+    margin-bottom: 2em;
 }
 </style>

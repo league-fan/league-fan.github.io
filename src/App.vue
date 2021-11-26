@@ -7,7 +7,7 @@ import 'terminal.css';
     <div class="terminal-nav">
       <div class="terminal-logo">
         <div class="logo terminal-prompt">
-          <a href="#" class="no-style">League Fan</a>
+          <a href="/league-fan/" class="no-style">League Fan</a>
         </div>
       </div>
       <nav class="terminal-menu">
@@ -27,7 +27,6 @@ import 'terminal.css';
   </div>
   <div class="container">
     <div class="main">
-      <hr />
       <router-view></router-view>
     </div>
     <div class="footer">
@@ -35,7 +34,7 @@ import 'terminal.css';
       <footer>
         <header></header>
         Css theme by <a href="https://terminalcss.xyz/" target="_blank">Terminal CSS</a>
-        <br/><a href="/license">License</a>
+        <br/><a href="/league-fan/license">License</a>
       </footer>
     </div>
   </div>
