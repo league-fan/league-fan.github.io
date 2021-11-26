@@ -1,6 +1,6 @@
 {
-  "name": "lol-show",
-  "version": "0.0.0",
+  "name": "league-fan",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
