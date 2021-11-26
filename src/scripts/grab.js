@@ -35,12 +35,12 @@ export class Grab {
 
   getSummonerIcons() {
     return instance.get(
-      `http://ddragon.leagueoflegends.com/cdn/${this.version}/data/${this.lang}/profileicon.json`
+      `https://ddragon.leagueoflegends.com/cdn/${this.version}/data/${this.lang}/profileicon.json`
     );
   }
 
   getSummonerIcon(id) {
-    return `http://ddragon.leagueoflegends.com/cdn/${this.version}/img/profileicon/${id}.png`;
+    return `https://ddragon.leagueoflegends.com/cdn/${this.version}/img/profileicon/${id}.png`;
   }
 
   getSummonerIconDescriptions() {
