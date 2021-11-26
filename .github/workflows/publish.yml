@@ -1,18 +1,31 @@
 name: Build Vue
-on: [push]
+
+on: 
+  push:
+    branches:
+    - master
+
 jobs:
   build_vue:
     runs-on: ubuntu-latest
+    env:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      github_path: magicwenli/league-fan
     steps:
     - uses: actions/checkout@v2
-    - name: Build-Vue
-      run: |
-        yarn install --frozen-lockfile
-        yarn build
-        cd dist
-        git config --global user.email "CI@github.com"
-        git config --global user.name "CI"
-        git init
-        git add -A
-        git commit -m 'auto commit ${{ github.sha }}'
-        git push -f master:gh-pages
+    - uses: xRealNeon/VuePagesAction@1.0.1
+      with:
+        # Your username
+        username: magicwenli
+        # Your reponame
+        reponame: league-fan
+        # Your Github token
+        token: ${{ secrets.GITHUB_TOKEN }}
+        # Your git commit email
+        gitemail: CI@example.com
+        # Your git commit name
+        gitname: CI
+        # Your git commit message
+        gitmsg: deploy
+        # Use yarn to build
+        useyarn: true
