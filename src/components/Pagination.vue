@@ -1,3 +1,5 @@
+<!-- Modified from https://github.com/OCRVblockchain/vue-tailwind-pagination -->
+
 <template>
     <div class="min-w-max">
         <section class="flex justify-between">
@@ -5,7 +7,7 @@
                 <li class="pr-6" v-if="hasPrev()">
                     <a href="#" @click.prevent="changePage(prevPage)">
                         <div class="flex items-center justify-center h-6 w-6">
-                            <div class>
+                            <div class="svg-center">
                                 <svg
                                     class="h-4 w-4"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -237,19 +239,19 @@ input {
 }
 
 .pr-6 {
-    padding-right: 1rem;
+    padding-right: .5rem;
 }
 .pr-2 {
-    padding-right: 0.5rem;
+    padding-right: 0.25rem;
 }
 
 .pl-4 {
-    padding-left: 1rem;
+    padding-left: .5rem;
 }
 
 .px-1 {
-    padding-left: 1px;
-    padding-right: 1px;
+    padding-left: .25rem;
+    padding-right: .25rem;
 }
 
 .px-2 {
@@ -258,8 +260,8 @@ input {
 }
 
 .py-1 {
-    padding-top: 1px;
-    padding-bottom: 1px;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
 }
 
 .p-2 {
@@ -298,6 +300,10 @@ a {
 
 ul > li::after {
     content: "";
+}
+
+li {
+    padding-left: .5rem;
 }
 
 li::after {

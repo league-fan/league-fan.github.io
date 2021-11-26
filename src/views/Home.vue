@@ -1,17 +1,13 @@
 <script>
 import Grab from "../scripts/grab.js";
 import Pagination from "../components/Pagination.vue";
-var instance = new Grab(`tencent`);
+import * as JsSearch from 'js-search';
+import Tooltip from "../components/ImageTooltip.vue";
+import ImageTooltip from "../components/ImageTooltip.vue";
 
-function spliceDict(dict, minKey, maxKey) {
-    var newDict = {};
-    for (var i in dict) {
-        if (i >= minKey && i <= maxKey) {
-            newDict[i] = dict[i];
-        }
-    }
-    return newDict;
-}
+var instance = new Grab(`tencent`);
+var search = new JsSearch.Search('summonericon');
+
 
 export default {
     name: "Home",
@@ -19,102 +15,76 @@ export default {
         return {
             info: {},
             iconIndex: [],
+            output: [],
             pageSize: 42,
-            pageCurr: 1,
+            pageCurr: 10,
+            search: {
+                keyword: "",
+                type: "",
+                page: 1
+            },
+
         };
     },
     async mounted() {
-        await instance.init();
-        let response = await instance.getSummonerIcons();
-        var info = response.data.data;
+        await instance.init(); // 初始化，获取版本和语言信息
 
-        for (var key in info) {
-            this.iconIndex.push(info[key]);
+        var respSI = await instance.getSummonerIcons();
+        var infoSI = respSI.data.data;
+        var respSID = await instance.getSummonerIconDescriptions();
+        var infoSID = respSID.data;
+        for (var key in infoSI) {
+            var thekey = "summoner_icon_name_" + key
+            var newkey = infoSI[key];
+            if (infoSID.hasOwnProperty(thekey)) {
+                newkey.description = infoSID[thekey];
+            } else {
+                newkey.description = "Not Found";
+            }
+            this.iconIndex.push(newkey);
         }
-
         this.iconIndex.sort(function (a, b) {
             return parseInt(a.id) - parseInt(b.id);
         });
+
+        search.addIndex('id');
+        search.addIndex(['description']);
+        console.log(this.iconIndex);
+        search.addDocuments(this.iconIndex);
+
+        respSI = null;
+        infoSI = null;
+        respSID = null;
+        infoSID = null;
     },
     methods: {
         getSummonerIcon(id) {
             return instance.getSummonerIcon(id);
         },
-        getInfoSlice() {
-            return spliceDict(this.info, 0, this.pageSize);
+        pageChange(page) {
+            this.pageCurr = page;
         },
-        getPageTotal() {
-            return Math.ceil(this.iconIndex.length / this.pageSize);
-        }
+        searchKeyword() {
+            console.log(search.search(this.search.keyword));
+        },
+
     },
-    components: { Pagination }
+    components: { Pagination, Tooltip, ImageTooltip }
 };
 </script>
 
 <template>
     <div class="components components-grid">
         <aside id="menu">
-            <h2>Components</h2>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="#GridSystem">Grid System</a>
-                    </li>
-                    <li>
-                        <a href="#Navigation">Navigation</a>
-                    </li>
-                    <li>
-                        <a href="#NavigationList">Navigation List</a>
-                    </li>
-                    <li>
-                        <a href="#Lists">Lists</a>
-                    </li>
-                    <li>
-                        <a href="#Typography">Typography</a>
-                    </li>
-                    <li>
-                        <a href="#Tables">Tables</a>
-                    </li>
-                    <li>
-                        <a href="#SpecialElements">Special Elements</a>
-                        <ul>
-                            <li>
-                                <a href="#Blockquote">Blockquote</a>
-                            </li>
-                            <li>
-                                <a href="#Misc">Misc</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#Forms">Forms</a>
-                    </li>
-                    <li>
-                        <a href="#Progress">Progress Bar</a>
-                    </li>
-                    <li>
-                        <a href="#Buttons">Buttons</a>
-                    </li>
-                    <li>
-                        <a href="#Cards">Cards</a>
-                    </li>
-                    <li>
-                        <a href="#Timeline">Timeline</a>
-                    </li>
-                    <li>
-                        <a href="#Alerts">Alerts</a>
-                    </li>
-                    <li>
-                        <a href="#Media">Media</a>
-                    </li>
-                    <li>
-                        <a href="#Figure">Image with caption</a>
-                    </li>
-                    <li>
-                        <a href="#highlightjs">Supports Highlight.js</a>
-                    </li>
-                </ul>
-            </nav>
+            <h2>Search</h2>
+            <div class="search">
+                <input
+                    type="text"
+                    placeholder="Search"
+                    v-model="search.keyword"
+                    @keyup.enter="searchKeyword"
+                />
+            </div>
 
             <h2>Documentation</h2>
             <nav>
@@ -132,15 +102,22 @@ export default {
             <section>
                 <header></header>
                 <div class="image-grid">
-                    <a href="#" style="border: none;" v-for="(item) in iconIndex.slice(0, pageSize)">
-                        <img :src="getSummonerIcon(item.id)" :alt="item.id" />
+                    <a
+                        href="#"
+                        style="border: none;"
+                        v-for="(item) in iconIndex.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)"
+                    >
+                        <ImageTooltip
+                            :img-src="getSummonerIcon(item.id)"
+                            :item="item" />
                     </a>
                 </div>
                 <Pagination
                     :current="pageCurr"
-                    :total="getPageTotal()"
-                    :per-page="2"
-                    @page-changed="current = $event"
+                    :total="iconIndex.length"
+                    :per-page="pageSize"
+                    @page-changed="pageChange"
+                    text-before-input
                 />
             </section>
         </main>
@@ -156,7 +133,7 @@ export default {
     grid-template-rows: auto;
     grid-template-columns: repeat(
         auto-fit,
-        minmax(calc(var(--page-width) / 12), 1fr)
+        minmax(calc(var(--page-width) / 10), 1fr)
     );
 }
 

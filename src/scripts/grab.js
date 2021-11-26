@@ -42,6 +42,16 @@ export class Grab {
   getSummonerIcon(id) {
     return `http://ddragon.leagueoflegends.com/cdn/${this.version}/img/profileicon/${id}.png`;
   }
+
+  getSummonerIconDescriptions() {
+      let lang = this.lang.toLowerCase();
+    //   return instance.get(`https://raw.communitydragon.org/${this.version}/plugins/rcp-fe-lol-loot/global/${lang}/summonericon.json`);
+    return instance.get(`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-loot/global/${lang}/summonericon.json`);
+  }
+  
+  getSummonerIconDescriptionsTencent(){
+    return instance.get(`https://game.gtimg.cn/images/lol/act/img/js/cuPortraitList/cuportrait_list.js`);
+  }
 }
 
 export default Grab;

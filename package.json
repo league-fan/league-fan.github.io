@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "js-search": "^2.0.0",
     "sass": "^1.43.5",
     "terminal.css": "^0.7.2",
     "vue": "^3.2.16",
