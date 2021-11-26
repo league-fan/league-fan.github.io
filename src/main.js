@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
     history: createWebHistory(),
+    base: "/league-fan/",
     routes,
     linkActiveClass: "active",
   })

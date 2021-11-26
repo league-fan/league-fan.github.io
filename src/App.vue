@@ -13,13 +13,13 @@ import 'terminal.css';
       <nav class="terminal-menu">
         <ul>
           <li>
-            <router-link to="/" class="menu-item" href="#">Summoner Icon</router-link>
+            <router-link to="/league-fan/" class="menu-item" href="#">Summoner Icon</router-link>
           </li>
           <li>
-            <router-link to="/traits" class="menu-item" href="#">Traits</router-link>
+            <router-link to="/league-fan/traits" class="menu-item" href="#">Traits</router-link>
           </li>
           <li>
-            <router-link to="/skins" class="menu-item" href="#">Skins</router-link>
+            <router-link to="/league-fan/skins" class="menu-item" href="#">Skins</router-link>
           </li>
         </ul>
       </nav>

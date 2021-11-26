@@ -4,9 +4,9 @@ import NotFound from './views/NotFound.vue'
 
 /** @type {import('vue-router').RouterOptions['routes']} */
 export const routes = [
-  { path: '/', component: Home, meta: { title: 'Home' } },
+  { path: '/league-fan/', component: Home, meta: { title: 'Home' } },
   {
-    path: '/license',
+    path: '/league-fan/license',
     meta: { title: 'License' },
     component: License,
     // example of route level code-splitting
@@ -14,5 +14,5 @@ export const routes = [
     // which is lazy-loaded when the route is visited.
     // component: () => import('./views/About.vue')
   },
-  { path: '/:path(.*)', component: NotFound },
+  { path: '/league-fan/:path(.*)', component: NotFound },
 ]
