@@ -70,7 +70,7 @@ export default {
     },
     methods: {
         getSummonerIcon(id) {
-            return instance.getSummonerIcon(id);
+            return instance.getSummonerIconHttp(id);
         },
         filteredInfo() {
             this.pageCurr = 1;

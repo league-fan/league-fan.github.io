@@ -43,6 +43,11 @@ export class Grab {
     return `https://ddragon.leagueoflegends.com/cdn/${this.version}/img/profileicon/${id}.png`;
   }
 
+  getSummonerIconHttp(id) {
+    return `http://ddragon.leagueoflegends.com/cdn/${this.version}/img/profileicon/${id}.png`;
+  }
+  
+
   getSummonerIconDescriptions() {
       let lang = this.lang.toLowerCase();
     //   return instance.get(`https://raw.communitydragon.org/${this.version}/plugins/rcp-fe-lol-loot/global/${lang}/summonericon.json`);
