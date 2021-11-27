@@ -8,7 +8,7 @@ var instance = new Grab(`tencent`);
 
 
 export default {
-    name: "Home",
+    name: "SummonerIcons",
     data() {
         return {
             iconIndex: [],

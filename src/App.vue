@@ -7,19 +7,19 @@ import 'terminal.css';
     <div class="terminal-nav">
       <div class="terminal-logo">
         <div class="logo terminal-prompt">
-          <a href="/league-fan/" class="no-style">League Fan</a>
+          <a href="./" class="no-style">League Fan</a>
         </div>
       </div>
       <nav class="terminal-menu">
         <ul>
           <li>
-            <router-link to="/league-fan/" class="menu-item" href="#">Summoner Icon</router-link>
+            <router-link to="./" class="menu-item">Icons</router-link>
           </li>
           <li>
-            <router-link to="/league-fan/traits" class="menu-item" href="#">Traits</router-link>
+            <router-link to="./summoner-emotes" class="menu-item">Emotes</router-link>
           </li>
           <li>
-            <router-link to="/league-fan/skins" class="menu-item" href="#">Skins</router-link>
+            <router-link to="./summoner-emotes" class="menu-item">Skins</router-link>
           </li>
         </ul>
       </nav>
@@ -34,7 +34,7 @@ import 'terminal.css';
       <footer>
         <header></header>
         Css theme by <a href="https://terminalcss.xyz/" target="_blank">Terminal CSS</a>
-        <br/><a href="/league-fan/license">License</a>
+        <br/><router-link to="./license">License</router-link>
       </footer>
     </div>
   </div>
