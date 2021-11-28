@@ -23,5 +23,11 @@ export const routes = [
     component: () => import('./views/SummonerEmotes.vue'),
     meta: { title: 'Summoner Emotes' }
   },
+  {
+    path: baseUrl+'/summoner-skins',
+    name: 'skins',
+    component: NotFound,
+    meta: { title: 'Summoner Skins' }
+  },
   { path: '/:path(.*)', component: NotFound },
 ]
