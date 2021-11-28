@@ -140,8 +140,8 @@ export default {
             <div class="terminal-card card">
                 <header>ID: {{ preview.id }}</header>
                 <div>
-                    {{ preview.description }}
-                    <br />
+                    {{ preview.name }}{{ (preview.description && preview.name) ? '\n' : '' }}{{ preview.description }}
+                    <br v-if="(preview.name || preview.description)" >
                     <a
                         class="newtab"
                         :href="getSummonerIcon(preview.id)"
@@ -161,7 +161,9 @@ export default {
                     >
                         <ImageTooltip
                             :img-src="getSummonerIcon(item.id)"
-                            :item="item"
+                            :id="item.id"
+                            :description="item.description"
+                            :scale="1.5"
                             @click="preview = item"
                         />
                     </a>

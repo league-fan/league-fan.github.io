@@ -57,6 +57,10 @@ export class Grab {
   getSummonerIconDescriptionsTencent(){
     return instance.get(`https://game.gtimg.cn/images/lol/act/img/js/cuPortraitList/cuportrait_list.js`);
   }
+
+  getSummonerEmotes() {
+    return instance.get('https://cdn.jsdelivr.net/npm/@magicwenli/league-fan-assets/summoner-emotes.json');
+  }
 }
 
 export default Grab;

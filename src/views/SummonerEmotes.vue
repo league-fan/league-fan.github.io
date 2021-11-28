@@ -3,12 +3,16 @@ import Grab from "../scripts/grab.js";
 import Pagination from "../components/Pagination.vue";
 import Tooltip from "../components/ImageTooltip.vue";
 import ImageTooltip from "../components/ImageTooltip.vue";
-
+import VueSlider from 'vue-slider-component'
+import '../styles/slider.scss'
 var instance = new Grab(`tencent`);
 
+function isContains(str, substr) {
+    return new RegExp(substr).test(str);
+}
 
 export default {
-    name: "SummonerIcons",
+    name: "SummonerEmotes",
     data() {
         return {
             iconIndex: [],
@@ -21,37 +25,41 @@ export default {
             preview: {
                 id: "",
                 description: "",
-            }
+            },
+            slider: {
+                val: 1,
+                data: [
+                    { id: 2, name: "2" },
+                    { id: 3, name: "3" },
+                    { id: 4, name: "4" },
+                    { id: 5, name: "5" },
+                    { id: 6, name: "6" },
+                    { id: 1, name: "Auto" }
+                ],
+                mod: "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.5fr))",
+            },
         };
     },
     async mounted() {
         await instance.init(); // 初始化，获取版本和语言信息
 
-        var respSI = await instance.getSummonerIcons();
-        var infoSI = respSI.data.data;
-        var respSID = await instance.getSummonerIconDescriptionsTencent();
-        var infoSID = respSID.data.cuportrait;
+        var respSI = await instance.getSummonerEmotes();
+        var infoSI = respSI.data;
+        infoSI.splice(0, 1)
+        console.log(infoSI);
 
-        for (var key in infoSI) {
-            var newkey = infoSI[key];
-            if (parseInt(key) <= 28) {
-                newkey.description = "Not Found";
-            } else {
-
-                if (parseInt(key) < 79 && parseInt(key) > 49) {
-                    key = key - 50;
-                }
-                if (infoSID.hasOwnProperty(key)) {
-                    if (infoSID[key].name === " ")
-                        newkey.description = "Not Found";
-                    else
-                        newkey.description = infoSID[key].name;
-                } else {
-                    newkey.description = "Not Found";
-                }
+        for (var i in infoSI) {
+            var a = infoSI[i];
+            if (!isContains(a.inventoryIcon, `/lol-game-data/`)) {
+                var newkey = {};
+                newkey.name = a.name;
+                newkey.description = a.description;
+                newkey.id = a.id;
+                newkey.src = a.inventoryIcon;
+                this.iconIndex.push(newkey);
             }
-            this.iconIndex.push(newkey);
         }
+
         this.iconIndex.sort(function (a, b) {
             return parseInt(a.id) - parseInt(b.id);
         });
@@ -61,8 +69,6 @@ export default {
 
         respSI = null;
         infoSI = null;
-        respSID = null;
-        infoSID = null;
 
         if (window.innerWidth < 768) {
             this.pageSize = 24;
@@ -83,16 +89,27 @@ export default {
                         String(item.id).includes(this.search.keyword.toLowerCase());
                 })
             }
+        },
+        onSliderChange(value, index) {
+            console.log(value, index);
+            switch (value) {
+                case 1:
+                    this.slider.mod = "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.5fr))";
+                    break;
+
+                default:
+                    this.slider.mod = "repeat(" + value + ", 0.5fr)";
+                    break;
+            }
         }
     },
-    components: { Pagination, Tooltip, ImageTooltip }
+    components: { Pagination, Tooltip, ImageTooltip, VueSlider }
 };
 </script>
 
 <template>
     <div class="components components-grid">
         <aside id="menu">
-            <h3>Search</h3>
             <div class="search">
                 <input
                     type="text"
@@ -102,15 +119,25 @@ export default {
                 />
                 <span>Press Enter to search</span>
             </div>
+            <div class="slider">
+                <vue-slider
+                    v-model="slider.val"
+                    :vData="slider.data"
+                    :data-value="'id'"
+                    :data-label="'name'"
+                    :tooltip="'none'"
+                    @change="onSliderChange"
+                ></vue-slider>
+            </div>
 
             <div class="terminal-card card">
                 <header>ID: {{ preview.id }}</header>
-                <div>
-                    {{ preview.description }}
-                    <br />
+                <div class="break-word">
+                    {{ preview.name }}{{ (preview.description && preview.name) ? '\n' : '' }}{{ preview.description }}
+                    <br v-if="(preview.name || preview.description)" >
                     <a
                         class="newtab"
-                        :href="getSummonerIcon(preview.id)"
+                        :href="preview.src"
                         target="_blank"
                     >Open in new tab</a>
                 </div>
@@ -119,18 +146,21 @@ export default {
         <div>
             <section>
                 <header></header>
-                <div class="image-grid">
-                    <a
-                        href="#"
+                <div class="image-grid" :style="{ 'grid-template-columns': slider.mod }">
+                    <div
                         @click.prevent
                         v-for="(item) in output.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)"
                     >
                         <ImageTooltip
-                            :img-src="getSummonerIcon(item.id)"
-                            :item="item"
+                            :img-src="item.src"
+                            :id="item.id"
+                            :description="item.description"
+                            :name="item.name"
+                            :scale="2.5"
+                            :popup="false"
                             @click="preview = item"
                         />
-                    </a>
+                    </div>
                 </div>
                 <Pagination
                     :current="pageCurr"
@@ -151,7 +181,7 @@ export default {
     grid-template-rows: auto;
     grid-template-columns: repeat(
         auto-fit,
-        minmax(calc(var(--page-width) / 12), 1fr)
+        minmax(calc(var(--page-width) / 12), 0.5fr)
     );
 }
 
@@ -174,6 +204,17 @@ export default {
     font-size: calc(var(--global-font-size) * 0.75);
 }
 
+.break-word {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+}
+
 @media only screen and (min-width: 70em) {
     .components-grid {
         grid-template-columns: 3fr 9fr;
@@ -187,5 +228,11 @@ export default {
 
 .card {
     margin-bottom: 2em;
+}
+
+.slider {
+    margin: auto;
+    display: block;
+    padding: 0px 15px 10px 10px;
 }
 </style>

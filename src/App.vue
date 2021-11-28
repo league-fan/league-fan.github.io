@@ -19,7 +19,7 @@ import 'terminal.css';
             <router-link to="./summoner-emotes" class="menu-item">Emotes</router-link>
           </li>
           <li>
-            <router-link to="./summoner-emotes" class="menu-item">Skins</router-link>
+            <router-link to="./summoner-skins" class="menu-item">Skins</router-link>
           </li>
         </ul>
       </nav>
