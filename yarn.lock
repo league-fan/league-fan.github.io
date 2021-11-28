@@ -149,6 +149,11 @@ braces@~3.0.2:
   optionalDependencies:
     fsevents "~2.3.2"
 
+core-js@^3.6.5:
+  version "3.19.1"
+  resolved "https://registry.npmmirror.com/core-js/download/core-js-3.19.1.tgz#f6f173cae23e73a7d88fa23b6e9da329276c6641"
+  integrity sha1-9vFzyuI+c6fYj6I7bp2jKSdsZkE=
+
 cp-file@^7.0.0:
   version "7.0.0"
   resolved "https://registry.nlark.com/cp-file/download/cp-file-7.0.0.tgz#b9454cfd07fe3b974ab9ea0e5f29655791a9b8cd"
@@ -501,12 +506,25 @@ vite@^2.6.4:
   optionalDependencies:
     fsevents "~2.3.2"
 
+vue-property-decorator@^9.0.2:
+  version "9.1.2"
+  resolved "https://registry.nlark.com/vue-property-decorator/download/vue-property-decorator-9.1.2.tgz#266a2eac61ba6527e2e68a6933cfb98fddab5457"
+  integrity sha1-JmourGG6ZSfi5oppM8+5j92rVFc=
+
 vue-router@4:
   version "4.0.12"
   resolved "https://registry.npmmirror.com/vue-router/download/vue-router-4.0.12.tgz#8dc792cddf5bb1abcc3908f9064136de7e13c460"
   integrity sha1-jceSzd9bsavMOQj5BkE23n4TxGA=
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.18"
+
+vue-slider-component@^4.0.0-beta.4:
+  version "4.0.0-beta.4"
+  resolved "https://registry.npmmirror.com/vue-slider-component/download/vue-slider-component-4.0.0-beta.4.tgz#b72d7964f3c1e6368c3f1eece726a73066e0f567"
+  integrity sha1-ty15ZPPB5jaMPx7s5yanMGbg9Wc=
+  dependencies:
+    core-js "^3.6.5"
+    vue-property-decorator "^9.0.2"
 
 vue@^3.2.16:
   version "3.2.22"

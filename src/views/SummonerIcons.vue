@@ -3,7 +3,8 @@ import Grab from "../scripts/grab.js";
 import Pagination from "../components/Pagination.vue";
 import Tooltip from "../components/ImageTooltip.vue";
 import ImageTooltip from "../components/ImageTooltip.vue";
-
+import VueSlider from 'vue-slider-component'
+import '../styles/slider.scss'
 var instance = new Grab(`tencent`);
 
 
@@ -21,7 +22,19 @@ export default {
             preview: {
                 id: "",
                 description: "",
-            }
+            },
+            slider: {
+                val: 1,
+                data: [
+                { id: 2, name: "2" }, 
+                { id: 3, name: "3" }, 
+                { id: 4, name: "4" }, 
+                { id: 5, name: "5" }, 
+                { id: 6, name: "6" },
+                { id: 1, name: "Auto" }
+                ],
+                mod: "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.5fr))",
+            },
         };
     },
     async mounted() {
@@ -83,16 +96,27 @@ export default {
                         String(item.id).includes(this.search.keyword.toLowerCase());
                 })
             }
+        },
+        onSliderChange(value, index) {
+            console.log(value, index);
+            switch (value) {
+                case 1:
+                    this.slider.mod = "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.5fr))";
+                    break;
+
+                default:
+                    this.slider.mod = "repeat(" + value + ", 0.5fr)";
+                    break;
+            }
         }
     },
-    components: { Pagination, Tooltip, ImageTooltip }
+    components: { Pagination, Tooltip, ImageTooltip, VueSlider }
 };
 </script>
 
 <template>
     <div class="components components-grid">
         <aside id="menu">
-            <h3>Search</h3>
             <div class="search">
                 <input
                     type="text"
@@ -101,6 +125,16 @@ export default {
                     @keyup.enter="filteredInfo"
                 />
                 <span>Press Enter to search</span>
+            </div>
+            <div class="slider">
+                <vue-slider
+                    v-model="slider.val"
+                    :vData="slider.data"
+                    :data-value="'id'"
+                    :data-label="'name'"
+                    :tooltip="'none'"
+                    @change="onSliderChange"
+                ></vue-slider>
             </div>
 
             <div class="terminal-card card">
@@ -119,7 +153,7 @@ export default {
         <div>
             <section>
                 <header></header>
-                <div class="image-grid">
+                <div class="image-grid" :style="{ 'grid-template-columns': slider.mod }">
                     <a
                         href="#"
                         @click.prevent
@@ -151,7 +185,7 @@ export default {
     grid-template-rows: auto;
     grid-template-columns: repeat(
         auto-fit,
-        minmax(calc(var(--page-width) / 12), 1fr)
+        minmax(calc(var(--page-width) / 12), 0.5fr)
     );
 }
 
@@ -187,5 +221,11 @@ export default {
 
 .card {
     margin-bottom: 2em;
+}
+
+.slider {
+    margin: auto;
+    display: block;
+    padding: 0px 15px 10px 10px;
 }
 </style>
