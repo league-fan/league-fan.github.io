@@ -28,6 +28,7 @@ import 'terminal.css';
   <div class="container">
     <div class="main">
       <router-view></router-view>
+      <vue-progress-bar></vue-progress-bar>
     </div>
     <div class="footer">
       <hr />
