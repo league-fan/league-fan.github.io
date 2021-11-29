@@ -4,6 +4,7 @@
             :src="imgSrc"
             :alt="id"
             :style="scaleObject"
+            @load="$emit('handleImgLoad',1)"
             @mouseover="onHover"
             @mouseout="show = false"
             @mousemove="onMouseMove"
@@ -23,6 +24,7 @@
 <script>
 export default {
     name: "Image Tooltip",
+    emits:['handleImgLoad'],
     props: {
         imgSrc: {
             type: String,
@@ -96,7 +98,6 @@ export default {
                 }
             }
         },
-
     },
     computed: {
         scaleObject: function () {

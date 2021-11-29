@@ -5,6 +5,7 @@ import Tooltip from "../components/ImageTooltip.vue";
 import ImageTooltip from "../components/ImageTooltip.vue";
 import VueSlider from 'vue-slider-component'
 import '../styles/slider.scss'
+import axios from "axios";
 var instance = new Grab(`tencent`);
 
 
@@ -15,6 +16,8 @@ export default {
             iconIndex: [],
             output: [],
             pageSize: 42,
+            pageLoaded: 0,
+            pageItemNum: 0,
             pageCurr: 1,
             search: {
                 keyword: "",
@@ -26,12 +29,12 @@ export default {
             slider: {
                 val: 1,
                 data: [
-                { id: 2, name: "2" }, 
-                { id: 3, name: "3" }, 
-                { id: 4, name: "4" }, 
-                { id: 5, name: "5" }, 
-                { id: 6, name: "6" },
-                { id: 1, name: "Auto" }
+                    { id: 2, name: "2" },
+                    { id: 3, name: "3" },
+                    { id: 4, name: "4" },
+                    { id: 5, name: "5" },
+                    { id: 6, name: "6" },
+                    { id: 1, name: "Auto" }
                 ],
                 mod: "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.5fr))",
             },
@@ -108,7 +111,20 @@ export default {
                     this.slider.mod = "repeat(" + value + ", 0.5fr)";
                     break;
             }
-        }
+        },
+        onPageChange(val) {
+            this.$Progress.set(0);
+            this.pageItemNum = this.output.slice((this.pageCurr - 1) * this.pageSize, this.pageCurr * this.pageSize).length;
+            this.pageLoaded = 0;
+            this.pageCurr = val;
+        },
+        handleImgLoad(load) {
+            this.pageLoaded++;
+            this.$Progress.increase((1 / this.pageItemNum) * 101);
+            if (this.pageLoaded === this.pageItemNum) {
+                this.$Progress.finish();
+            }
+        },
     },
     components: { Pagination, Tooltip, ImageTooltip, VueSlider }
 };
@@ -141,7 +157,7 @@ export default {
                 <header>ID: {{ preview.id }}</header>
                 <div>
                     {{ preview.name }}{{ (preview.description && preview.name) ? '\n' : '' }}{{ preview.description }}
-                    <br v-if="(preview.name || preview.description)" >
+                    <br v-if="(preview.name || preview.description)" />
                     <a
                         class="newtab"
                         :href="getSummonerIcon(preview.id)"
@@ -161,9 +177,10 @@ export default {
                     >
                         <ImageTooltip
                             :img-src="getSummonerIcon(item.id)"
-                            :id="item.id"
+                            :id="parseInt(item.id)"
                             :description="item.description"
                             :scale="1.5"
+                            @handle-img-load="handleImgLoad"
                             @click="preview = item"
                         />
                     </a>
@@ -172,7 +189,7 @@ export default {
                     :current="pageCurr"
                     :total="output.length"
                     :per-page="pageSize"
-                    @page-changed="pageCurr = $event"
+                    @page-changed="onPageChange"
                     text-before-input
                 />
             </section>
