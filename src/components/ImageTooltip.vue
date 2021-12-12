@@ -3,6 +3,7 @@
         <img
             :src="imgSrc"
             :alt="id"
+            :title="id"
             :style="scaleObject"
             @mouseover="onHover"
             @mouseout="show = false"

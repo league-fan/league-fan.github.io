@@ -26,6 +26,9 @@ export default {
                 id: "",
                 description: "",
             },
+            setting: {
+                display: "none",
+            },
             slider: {
                 val: 1,
                 data: [
@@ -73,6 +76,8 @@ export default {
         if (window.innerWidth < 768) {
             this.pageSize = 24;
         }
+
+        this.onSliderChange(this.$store.state.slider.val, 0)
     },
     methods: {
         getSummonerIcon(id) {
@@ -119,27 +124,37 @@ export default {
                 />
                 <span>Press Enter to search</span>
             </div>
-            <div class="slider">
-                <vue-slider
-                    v-model="slider.val"
-                    :vData="slider.data"
-                    :data-value="'id'"
-                    :data-label="'name'"
-                    :tooltip="'none'"
-                    @change="onSliderChange"
-                ></vue-slider>
+            <button
+                class="collapsible btn btn-default btn-ghost"
+                @click='setting.display === "none" ? setting.display="block" : setting.display="none"'
+            >Settings</button>
+            <div class="settings" :style="{ 'display': setting.display }">
+                <div class="language">
+                    <label for="select">Language:</label>
+                    <select v-model="this.$store.state.settings.language">
+                        <option :value="'chinese'">Chinese</option>
+                        <option :value="'english'">English</option>
+                    </select>
+                </div>
+                <label>Col Items:</label>
+                <div class="slider">
+                    <vue-slider
+                        v-model="this.$store.state.settings.sliderVal"
+                        :vData="slider.data"
+                        :data-value="'id'"
+                        :data-label="'name'"
+                        :tooltip="'none'"
+                        @change="onSliderChange"
+                    ></vue-slider>
+                </div>
             </div>
 
             <div class="terminal-card card">
                 <header>ID: {{ preview.id }}</header>
                 <div class="break-word">
                     {{ preview.name }}{{ (preview.description && preview.name) ? '\n' : '' }}{{ preview.description }}
-                    <br v-if="(preview.name || preview.description)" >
-                    <a
-                        class="newtab"
-                        :href="preview.src"
-                        target="_blank"
-                    >Open in new tab</a>
+                    <br v-if="(preview.name || preview.description)" />
+                    <a class="newtab" :href="preview.src" target="_blank">Open in new tab</a>
                 </div>
             </div>
         </aside>
@@ -228,11 +243,27 @@ export default {
 
 .card {
     margin-bottom: 2em;
+    margin-top: 1em;
 }
 
 .slider {
-    margin: auto;
+    margin-top: 20px;
     display: block;
     padding: 0px 15px 10px 10px;
+}
+
+.collapsible {
+    width: 100%;
+}
+
+.settings {
+    border-color: var(--font-color);
+    border-style: solid;
+    border-width: 1px;
+    border-top-width: 0px;
+    padding: 8px;
+}
+.language{
+    margin-bottom: 8px;
 }
 </style>
