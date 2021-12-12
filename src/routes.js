@@ -1,5 +1,6 @@
 import License from './views/Licence.vue'
 import NotFound from './views/NotFound.vue'
+import Test from './views/Test2.vue'
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -16,6 +17,12 @@ export const routes = [
     name: 'license',
     meta: { title: 'License' },
     component: License,
+  },
+  {
+    path: baseUrl+'/test',
+    name: 'test',
+    meta: { title: 'Test' },
+    component: Test,
   },
   {
     path: baseUrl+'/summoner-emotes',
