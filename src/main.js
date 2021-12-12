@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { routes } from './routes.js'
+import {store} from './vuex.js'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -19,4 +20,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(store).mount('#app')
