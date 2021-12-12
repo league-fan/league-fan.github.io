@@ -18,6 +18,8 @@ export default {
             output: [],
             pageSize: 42,
             pageCurr: 1,
+            pageLoaded: 0,
+            pageItemNum: 0,
             search: {
                 keyword: "",
             },
@@ -81,7 +83,20 @@ export default {
         updatePreview(item,index){
             this.$store.state.preview.index = index;
             this.preview = this.output[index];
-        }
+        },
+        onPageChange(val) {
+            this.$Progress.set(0);
+            this.pageItemNum = this.output.slice((this.pageCurr - 1) * this.pageSize, this.pageCurr * this.pageSize).length;
+            this.pageLoaded = 0;
+            this.pageCurr = val;
+        },
+        handleImgLoad(load) {
+            this.pageLoaded++;
+            this.$Progress.increase((1 / this.pageItemNum) * 101);
+            if (this.pageLoaded === this.pageItemNum) {
+                this.$Progress.finish();
+            }
+        },
     },
     components: { Pagination, Tooltip, ImageTooltip, VueSlider }
 };
@@ -148,6 +163,7 @@ export default {
                             :name="item.name"
                             :scale="2.5"
                             :popup="false"
+                            @handle-img-load="handleImgLoad"
                             @click="updatePreview(item,index)"
                         />
                     </div>
@@ -156,7 +172,7 @@ export default {
                     :current="pageCurr"
                     :total="output.length"
                     :per-page="pageSize"
-                    @page-changed="pageCurr = $event"
+                    @page-changed="onPageChange"
                     text-before-input
                 />
             </section>
