@@ -8,8 +8,12 @@ export const store = createStore({
       },
       settings: {
         sliderVal: 1,
+        display: "none",
         language: "chinese",
       },
+      preview: {
+        index:0
+      }
     };
   },
   mutations: {
@@ -18,5 +22,8 @@ export const store = createStore({
         state.slider.val = val;
       }
     },
+    toggleSettings(state) {
+      state.settings.display = state.settings.display === "none" ? "block" : "none";
+    }
   },
 });
