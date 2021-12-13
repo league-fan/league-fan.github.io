@@ -26,6 +26,7 @@ export default {
             if (this.$store.state[this.name].caches.hasOwnProperty(this.$store.state.settings.language)) {
                 this.emotes = this.$store.state[this.name].caches[this.$store.state.settings.language];
             } else {
+                this.$Progress.start();
                 grab.get('summoner-icons', this.$store.state.settings.language).then(res => {
                     this.emotes = res.data;
                     let newlist = []
@@ -43,6 +44,12 @@ export default {
                         return item[this.assetsProps.src] !== undefined;
                     })
                     this.$store.state[this.name].caches[this.$store.state.settings.language] = this.emotes;
+                    this.$Progress.finish();
+                    return;
+                }, err => {
+                    this.$Progress.fail();
+                    console.log(err);
+                    return;
                 });
             }
         },
