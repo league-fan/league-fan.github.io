@@ -14,10 +14,12 @@ export const store = createStore({
       icons:{
         previewIndex:0,
         page:1,
+        caches:{}
       },
       emotes:{
         previewIndex:0,
         page:1,
+        caches:{}
       }
     };
   },

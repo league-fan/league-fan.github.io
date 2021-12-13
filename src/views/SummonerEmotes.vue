@@ -18,20 +18,25 @@ export default {
                 src: 'inventoryIcon',
                 description: 'description',
                 title: 'name',
-            }
+            },
         }
     },
     methods: {
         getEmotes() {
-            grab.get('summoner-emotes', this.$store.state.settings.language).then(res => {
-                this.emotes = res.data;
-                this.emotes.sort((a, b) => { return a.id - b.id });
-                this.emotes = this.emotes.filter(item => {
-                    return !item.inventoryIcon.includes("/lol-game-data/");
-                })
-                // console.log(this.$store.state.settings.language);
-                this.keyval += 1;
-            });
+            if (this.$store.state[this.name].caches.hasOwnProperty(this.$store.state.settings.language)) {
+                this.emotes = this.$store.state[this.name].caches[this.$store.state.settings.language];
+                return;
+            } else {
+                grab.get('summoner-emotes', this.$store.state.settings.language).then(res => {
+                    this.emotes = res.data;
+                    this.emotes.sort((a, b) => { return a.id - b.id });
+                    this.emotes = this.emotes.filter(item => {
+                        return !item.inventoryIcon.includes("/lol-game-data/");
+                    })
+                    this.$store.state[this.name].caches[this.$store.state.settings.language] = this.emotes;
+                    return;
+                });
+            }
         },
     },
     mounted() {
