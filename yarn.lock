@@ -624,9 +624,6 @@ vue-slider-component@^4.0.0-beta.4:
     core-js "^3.6.5"
     vue-property-decorator "^9.0.2"
 
-<<<<<<< HEAD
-vue@^3.0.0, vue@^3.2.16:
-=======
 vue@^3.0.0:
   version "3.2.26"
   resolved "https://registry.npmmirror.com/vue/download/vue-3.2.26.tgz#5db575583ecae495c7caa5c12fd590dffcbb763e"
@@ -639,7 +636,6 @@ vue@^3.0.0:
     "@vue/shared" "3.2.26"
 
 vue@^3.2.16:
->>>>>>> dev
   version "3.2.22"
   resolved "https://registry.npmmirror.com/vue/download/vue-3.2.22.tgz?cache=0&sync_timestamp=1636948095873&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fvue%2Fdownload%2Fvue-3.2.22.tgz"
   integrity sha512-KD5nZpXVZquOC6926Xnp3zOvswrUyO9Rya7ZUoxWFQEjFDW4iACtwzubRB4Um2Om9kj6CaJOqAVRDSFlqLpdgw==
