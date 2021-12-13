@@ -7,7 +7,7 @@
     <br />
     <br />Riot Games' profits are not limited in any way whatsoever.
     <br />The asset is merely being used for product promotion purposes.
-    <br />Disclaimer: Fandom's League of Legends Wiki is not endorsed by Riot Games and nor does it reflect their views, opinions, or those of anyone officially involved in League of Legends' production and/or management.
+    <br />Disclaimer: League Fan is not endorsed by Riot Games and nor does it reflect their views, opinions, or those of anyone officially involved in League of Legends' production and/or management.
     <br />
     <br />© Riot Games, Inc. All rights reserved. 'Riot Games', 'League of Legends', and 'PvP.net' are trademarks, services marks, or registered trademarks of Riot Games, Inc.
   </p>

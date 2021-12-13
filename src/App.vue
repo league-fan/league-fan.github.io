@@ -34,8 +34,14 @@ import 'terminal.css';
       <hr />
       <footer>
         <header></header>
-        Css theme by <a href="https://terminalcss.xyz/" target="_blank">Terminal CSS</a>
-        <br/><router-link to="./license">License</router-link>
+        <p>
+          Css theme by
+          <a href="https://terminalcss.xyz/" target="_blank">Terminal CSS</a>
+          <span style="float:right;">
+            Project by magicwenli/<a href="https://github.com/league-fan/league-fan.github.io/" target="_blank">league-fan</a>
+          </span>
+        </p>
+        <router-link to="./license">License</router-link>
       </footer>
     </div>
   </div>
@@ -43,6 +49,6 @@ import 'terminal.css';
 
 <style>
 .container {
-    grid-template-rows: 1fr 1fr 1fr; /* or whatever you need */
+  grid-template-rows: 1fr 1fr 1fr; /* or whatever you need */
 }
 </style>
