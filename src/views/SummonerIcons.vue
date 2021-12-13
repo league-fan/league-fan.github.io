@@ -22,29 +22,33 @@ export default {
         }
     },
     methods: {
-        getEmotes() {
-            grab.get('summoner-icons', this.$store.state.settings.language).then(res => {
-                this.emotes = res.data;
-                let newlist = []
-                for (const item of this.emotes) {
-                    if (item.hasOwnProperty('descriptions') && item.description !== undefined && item.description.length > 0) {
-                        item.description = item.description[0].description;
-                    } else {
-                        item.description = "";
+        getIcons() {
+            if (this.$store.state[this.name].caches.hasOwnProperty(this.$store.state.settings.language)) {
+                this.emotes = this.$store.state[this.name].caches[this.$store.state.settings.language];
+            } else {
+                grab.get('summoner-icons', this.$store.state.settings.language).then(res => {
+                    this.emotes = res.data;
+                    let newlist = []
+                    for (const item of this.emotes) {
+                        if (item.hasOwnProperty('descriptions') && item.description !== undefined && item.description.length > 0) {
+                            item.description = item.description[0].description;
+                        } else {
+                            item.description = "";
+                        }
+                        delete item.descriptions;
+                        newlist.push(item);
                     }
-                    delete item.descriptions;
-                    newlist.push(item);
-                }
-                newlist.sort((a, b) => { return a.id - b.id });
-                this.emotes = newlist.filter(item => {
-                    return item[this.assetsProps.src] !== undefined;
-                })
-                this.keyval += 1;
-            });
+                    newlist.sort((a, b) => { return a.id - b.id });
+                    this.emotes = newlist.filter(item => {
+                        return item[this.assetsProps.src] !== undefined;
+                    })
+                    this.$store.state[this.name].caches[this.$store.state.settings.language] = this.emotes;
+                });
+            }
         },
     },
     mounted() {
-        this.getEmotes();
+        this.getIcons();
     },
     components: { ImgFrame }
 }
@@ -56,6 +60,6 @@ export default {
         :name="name"
         :assets-list="emotes"
         :assets-props="assetsProps"
-        @on-lang-change="getEmotes()"
+        @on-lang-change="getIcons()"
     />
 </template>
