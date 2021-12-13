@@ -76,8 +76,8 @@ export default {
             if (this.search.keyword === "" || this.search.keyword === "Search") {
                 this.output = this.assetsList;
             } else {
-                this.output = this.assetsList.filter(item => {
-                    return item.description.toLowerCase().includes(this.search.keyword.toLowerCase()) ||
+                this.output = this.assetsList.filter(item => {                   
+                    return item[this.assetsProps.title].toLowerCase().includes(this.search.keyword.toLowerCase()) ||
                         String(item.id).includes(this.search.keyword.toLowerCase());
                 })
             }
@@ -86,7 +86,7 @@ export default {
             // console.log(value, index);
             switch (value) {
                 case 1:
-                    this.slider.mod = "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.5fr))";
+                    this.slider.mod = "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.3fr))";
                     break;
 
                 default:
