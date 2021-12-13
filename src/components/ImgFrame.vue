@@ -8,9 +8,30 @@ import '../styles/slider.scss'
 export default {
     name: "Img Frame",
     props: {
+        name: {
+            type: String,
+            required: true
+        },
         assetsList: {
             type: Object,
             required: true
+        },
+        assetsProps: {
+            id: String,
+            src: String,
+            description: String,
+            title: String,
+        },
+        scale: {
+            type: Number,
+            default: 1.5
+        },
+    },
+    watch: {
+        assetsList(a, b) {
+            if (a.length > 1) {
+                this.updateOutPut()
+            }
         }
     },
     data() {
@@ -22,12 +43,6 @@ export default {
             pageItemNum: 0,
             search: {
                 keyword: "",
-            },
-            preview: {
-                id: "",
-                description: "",
-                name:"",
-                inventoryIcon:"",
             },
             setting: {
                 display: "none",
@@ -43,17 +58,16 @@ export default {
                 ],
                 mod: "repeat(auto-fit,minmax(calc(var(--page-width) / 12), 0.5fr))",
             },
+            preview: {},
         };
     },
     mounted() {
         this.output = this.assetsList;
-    
+
         if (window.innerWidth < 768) {
             this.pageSize = 24;
         }
-
         this.onSliderChange(this.$store.state.slider.val, 0)
-        this.preview = this.output[this.$store.state.preview.index];
     },
     methods: {
         filteredInfo() {
@@ -80,15 +94,28 @@ export default {
                     break;
             }
         },
-        updatePreview(item,index){
-            this.$store.state.preview.index = index;
-            this.preview = this.output[index];
+        updatePreview(item, index) {
+            this.$store.state[this.name].previewIndex = item.id;
+            this.preview = this.output.filter(item => {
+                return item.id === this.$store.state[this.name].previewIndex;
+            })[0];
+        },
+        updateOutPut() {
+            this.output = this.assetsList;
+            // console.log(this.$store.state[this.name].previewIndex);
+            // console.log(this.output);
+            this.preview = this.output.filter(item => {
+                return item.id === this.$store.state[this.name].previewIndex;
+            })[0];
         },
         onPageChange(val) {
             this.$Progress.set(0);
             this.pageItemNum = this.output.slice((this.pageCurr - 1) * this.pageSize, this.pageCurr * this.pageSize).length;
             this.pageLoaded = 0;
             this.pageCurr = val;
+        },
+        onLangChange(){
+            this.$emit('onLangChange')
         },
         handleImgLoad(load) {
             this.pageLoaded++;
@@ -116,12 +143,15 @@ export default {
             </div>
             <button
                 class="collapsible btn btn-default btn-ghost"
-                @click='this.$store.commit("toggleSettings")'
+                @click="this.$store.commit('toggleSettings')"
             >Settings</button>
             <div class="settings" :style="{ 'display': this.$store.state.settings.display }">
                 <div class="language">
                     <label for="select">Language:</label>
-                    <select v-model="this.$store.state.settings.language" @change="$emit('onLangChange')">
+                    <select
+                        v-model="this.$store.state.settings.language"
+                        @change="onLangChange"
+                    >
                         <option :value="'chinese'">Chinese</option>
                         <option :value="'english'">English</option>
                     </select>
@@ -140,11 +170,15 @@ export default {
             </div>
 
             <div class="terminal-card card">
-                <header>ID: {{ preview.id }}</header>
+                <header>ID: {{ preview[assetsProps.id] }}</header>
                 <div class="break-word">
-                    {{ preview.name }}{{ (preview.description && preview.name) ? '\n' : '' }}{{ preview.description }}
-                    <br v-if="(preview.name || preview.description)" />
-                    <a class="newtab" :href="preview.inventoryIcon" target="_blank">Open in new tab</a>
+                    {{ preview[assetsProps.title] }}{{ (preview[assetsProps.description] && preview[assetsProps.title]) ? '\n' : '' }}{{ preview[assetsProps.description] }}
+                    <br v-if="(preview[assetsProps.title] || preview[assetsProps.description])" />
+                    <a
+                        class="newtab"
+                        :href="preview[assetsProps.src]"
+                        target="_blank"
+                    >Open in new tab</a>
                 </div>
             </div>
         </aside>
@@ -157,14 +191,14 @@ export default {
                         v-for="(item,index) in output.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)"
                     >
                         <ImageTooltip
-                            :img-src="item.inventoryIcon"
-                            :id="item.id"
-                            :description="item.description"
-                            :name="item.name"
-                            :scale="2.5"
+                            :img-src="item[assetsProps.src]"
+                            :id="item[assetsProps.id]"
+                            :description="item[assetsProps.description]"
+                            :name="item[assetsProps.title]"
+                            :scale="scale"
                             :popup="false"
                             @handle-img-load="handleImgLoad"
-                            @click="updatePreview(item,index)"
+                            @click="updatePreview(item, index)"
                         />
                     </div>
                 </div>
@@ -254,7 +288,7 @@ export default {
     border-top-width: 0px;
     padding: 8px;
 }
-.language{
+.language {
     margin-bottom: 8px;
 }
 </style>
