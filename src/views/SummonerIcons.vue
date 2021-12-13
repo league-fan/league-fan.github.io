@@ -6,13 +6,19 @@ const grab = new Grab('chinese');
 export default {
     data() {
         return {
+            name: 'icons',
             emotes: [{
                 id: 0,
                 description: "",
-                name: "",
-                inventoryIcon: "",
+                title: "",
+                imagePath: "",
             }],
-            keyval: 0,
+            assetsProps: {
+                id: 'id',
+                src: 'imagePath',
+                description: 'description',
+                title: 'title',
+            },
         }
     },
     methods: {
@@ -21,35 +27,18 @@ export default {
                 this.emotes = res.data;
                 let newlist = []
                 for (const item of this.emotes) {
-                    Object.keys(item).forEach(key => {
-                        if (key === "title") {
-                            var newkey = "name";
-                            item[newkey] = item[key];
-                            delete item[key];
-                        }
-                        if (key === "imagePath") {
-                            var newkey = "inventoryIcon";
-                            item[newkey] = item[key];
-                            delete item[key];
-                        }
-                        if (key === "descriptions") {
-                            var newkey = "description";
-                            item[newkey] = item[key];
-                            delete item[key];
-                        }
-                        if (item.hasOwnProperty('description') && item.description !== undefined && item.description.length > 0) {
-                            item.description = item.description[0].description;
-                        }else{
-                            item.description = "";
-                        }
-                    })
+                    if (item.hasOwnProperty('descriptions') && item.description !== undefined && item.description.length > 0) {
+                        item.description = item.description[0].description;
+                    } else {
+                        item.description = "";
+                    }
+                    delete item.descriptions;
                     newlist.push(item);
                 }
                 newlist.sort((a, b) => { return a.id - b.id });
                 this.emotes = newlist.filter(item => {
-                    return item.inventoryIcon!==undefined;
+                    return item[this.assetsProps.src] !== undefined;
                 })
-                console.log(this.$store.state.settings.language);
                 this.keyval += 1;
             });
         },
@@ -63,5 +52,10 @@ export default {
 </script>
 
 <template>
-    <img-frame :assets-list="emotes" :key="keyval" @on-lang-change="getEmotes()" />
+    <img-frame
+        :name="name"
+        :assets-list="emotes"
+        :assets-props="assetsProps"
+        @on-lang-change="getEmotes()"
+    />
 </template>

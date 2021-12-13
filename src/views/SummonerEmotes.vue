@@ -6,13 +6,19 @@ const grab = new Grab('chinese');
 export default {
     data() {
         return {
+            name: 'emotes',
             emotes: [{
                 id: 0,
                 description: "",
                 name: "",
                 inventoryIcon: "",
             }],
-            keyval: 0,
+            assetsProps: {
+                id: 'id',
+                src: 'inventoryIcon',
+                description: 'description',
+                title: 'name',
+            }
         }
     },
     methods: {
@@ -37,5 +43,10 @@ export default {
 </script>
 
 <template>
-    <img-frame :assets-list="emotes" :key="keyval" @on-lang-change="getEmotes()"/>
+    <img-frame
+        :name="name"
+        :assets-list="emotes"
+        :assets-props="assetsProps"
+        @on-lang-change="getEmotes()"
+    />
 </template>

@@ -11,8 +11,13 @@ export const store = createStore({
         display: "none",
         language: "chinese",
       },
-      preview: {
-        index:0
+      icons:{
+        previewIndex:0,
+        page:1,
+      },
+      emotes:{
+        previewIndex:0,
+        page:1,
       }
     };
   },
