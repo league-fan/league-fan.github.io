@@ -9,7 +9,6 @@
             @mouseover="onHover"
             @mouseout="show = false"
             @mousemove="onMouseMove"
-            @load="$emit('handleImgLoad',1)"
         />
         <div
             class="terminal-card card"
