@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { routes } from './routes.js'
+import {store} from './vuex.js'
 import { createRouter, createWebHistory } from 'vue-router'
-import VueProgressBar from "@aacassandra/vue3-progressbar";
-
+import VueProgressBar from "./components/vue3-progressbar";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,7 +35,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-createApp(App)
-.use(router)
-.use(VueProgressBar, progressbarOptions)
-.mount('#app')
+createApp(App).use(router).use(store).use(VueProgressBar, progressbarOptions).mount('#app')

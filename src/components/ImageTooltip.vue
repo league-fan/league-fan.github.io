@@ -3,11 +3,13 @@
         <img
             :src="imgSrc"
             :alt="id"
+            :title="id"
             :style="scaleObject"
             @load="$emit('handleImgLoad',1)"
             @mouseover="onHover"
             @mouseout="show = false"
             @mousemove="onMouseMove"
+            @load="$emit('handleImgLoad',1)"
         />
         <div
             class="terminal-card card"
