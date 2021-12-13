@@ -7,7 +7,7 @@ import VueProgressBar from "./components/vue3-progressbar";
 
 const router = createRouter({
   history: createWebHistory(),
-  base: "/league-fan/",
+  base: "/",
   routes,
   linkActiveClass: "active",
 })
