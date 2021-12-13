@@ -27,6 +27,7 @@ export default {
                 this.emotes = this.$store.state[this.name].caches[this.$store.state.settings.language];
                 return;
             } else {
+                this.$Progress.start();
                 grab.get('summoner-emotes', this.$store.state.settings.language).then(res => {
                     this.emotes = res.data;
                     this.emotes.sort((a, b) => { return a.id - b.id });
@@ -34,6 +35,11 @@ export default {
                         return !item.inventoryIcon.includes("/lol-game-data/");
                     })
                     this.$store.state[this.name].caches[this.$store.state.settings.language] = this.emotes;
+                    this.$Progress.finish();
+                    return;
+                },err=>{
+                    this.$Progress.fail();
+                    console.log(err);
                     return;
                 });
             }

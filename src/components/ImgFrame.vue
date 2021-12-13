@@ -67,7 +67,7 @@ export default {
         if (window.innerWidth < 768) {
             this.pageSize = 24;
         }
-        this.onSliderChange(this.$store.state.slider.val, 0)
+        this.onImgColumeChange(this.$store.state.slider.val, 0)
     },
     methods: {
         filteredInfo() {
@@ -82,7 +82,7 @@ export default {
                 })
             }
         },
-        onSliderChange(value, index) {
+        onImgColumeChange(value, index) {
             // console.log(value, index);
             switch (value) {
                 case 1:
@@ -164,7 +164,7 @@ export default {
                         :data-value="'id'"
                         :data-label="'name'"
                         :tooltip="'none'"
-                        @change="onSliderChange"
+                        @change="onImgColumeChange"
                     ></vue-slider>
                 </div>
             </div>
