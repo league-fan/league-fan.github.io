@@ -1,7 +1,24 @@
-# Vue 3 + Vite
+# League Fan
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+[https://league-fan.github.io/](https://league-fan.github.io/)
 
-## Recommended IDE Setup
+The website is still under development, welcome to join in.
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+## Features
+
+- Automatically updated to the latest version
+- Two languages support (English and Chinese)
+- Keyword search (By title or id)
+
+## Todos
+
+- Decouple `ImgFrame.vue` and `ImgFrameList.vue`
+- Use datadragon as cdn instand of communitydragon (for profile icon and skins)
+- Hex Chests preview
+- Champion Skins preview
+
+## Credits
+
+- [Riot's API](https://developer.riotgames.com/docs/lol)
+- [CommunityDragon](https://github.com/communitydragon)'s [Docs](https://github.com/CommunityDragon/Docs) and [CDN](https://raw.communitydragon.org/latest/)
+- [Vue](https://v3.vuejs.org/guide/introduction.html)
