@@ -76,7 +76,7 @@ export default {
             if (this.search.keyword === "" || this.search.keyword === "Search") {
                 this.output = this.assetsList;
             } else {
-                this.output = this.assetsList.filter(item => {                   
+                this.output = this.assetsList.filter(item => {
                     return item[this.assetsProps.title].toLowerCase().includes(this.search.keyword.toLowerCase()) ||
                         String(item.id).includes(this.search.keyword.toLowerCase());
                 })
@@ -109,12 +109,14 @@ export default {
             })[0];
         },
         onPageChange(val) {
-            this.$Progress.set(0);
-            this.pageItemNum = this.output.slice((this.pageCurr - 1) * this.pageSize, this.pageCurr * this.pageSize).length;
-            this.pageLoaded = 0;
             this.pageCurr = val;
+            let page = this.pageCurr - 1;
+            this.$Progress.set(0);
+            this.pageItemNum = this.output.length - page * this.pageSize > this.pageSize ? this.pageSize : this.output.length - page * this.pageSize;
+            console.log(this.pageItemNum, this.pageItemNum);
+            this.pageLoaded = 0;
         },
-        onLangChange(){
+        onLangChange() {
             this.$emit('onLangChange')
         },
         handleImgLoad(load) {
@@ -148,10 +150,7 @@ export default {
             <div class="settings" :style="{ 'display': this.$store.state.settings.display }">
                 <div class="language">
                     <label for="select">Language:</label>
-                    <select
-                        v-model="this.$store.state.settings.language"
-                        @change="onLangChange"
-                    >
+                    <select v-model="this.$store.state.settings.language" @change="onLangChange">
                         <option :value="'chinese'">Chinese</option>
                         <option :value="'english'">English</option>
                     </select>
