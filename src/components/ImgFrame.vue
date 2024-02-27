@@ -135,18 +135,11 @@ export default {
     <div class="components components-grid">
         <aside id="menu">
             <div class="search">
-                <input
-                    type="text"
-                    placeholder="Search"
-                    v-model="search.keyword"
-                    @keyup.enter="filteredInfo"
-                />
+                <input type="text" placeholder="Search" v-model="search.keyword" @keyup.enter="filteredInfo" />
                 <span>Press Enter to search</span>
             </div>
-            <button
-                class="collapsible btn btn-default btn-ghost"
-                @click="this.$store.commit('toggleSettings')"
-            >Settings</button>
+            <button class="collapsible btn btn-default btn-ghost"
+                @click="this.$store.commit('toggleSettings')">Settings</button>
             <div class="settings" :style="{ 'display': this.$store.state.settings.display }">
                 <div class="language">
                     <label for="select">Language:</label>
@@ -157,27 +150,19 @@ export default {
                 </div>
                 <label>Col Items:</label>
                 <div class="slider">
-                    <vue-slider
-                        v-model="this.$store.state.settings.sliderVal"
-                        :vData="slider.data"
-                        :data-value="'id'"
-                        :data-label="'name'"
-                        :tooltip="'none'"
-                        @change="onImgColumeChange"
-                    ></vue-slider>
+                    <vue-slider v-model="this.$store.state.settings.sliderVal" :vData="slider.data" :data-value="'id'"
+                        :data-label="'name'" :tooltip="'none'" @change="onImgColumeChange"></vue-slider>
                 </div>
             </div>
 
             <div class="terminal-card card">
                 <header>ID: {{ preview[assetsProps.id] }}</header>
                 <div class="break-word">
-                    {{ preview[assetsProps.title] }}{{ (preview[assetsProps.description] && preview[assetsProps.title]) ? '\n' : '' }}{{ preview[assetsProps.description] }}
+                    {{ preview[assetsProps.title] }}
+                    <br v-if="(preview[assetsProps.description] && preview[assetsProps.title])" />
+                    {{ preview[assetsProps.description] }}
                     <br v-if="(preview[assetsProps.title] || preview[assetsProps.description])" />
-                    <a
-                        class="newtab"
-                        :href="preview[assetsProps.src]"
-                        target="_blank"
-                    >Open in new tab</a>
+                    <a class="newtab" :href="preview[assetsProps.src]" target="_blank">Open in new tab</a>
                 </div>
             </div>
         </aside>
@@ -185,29 +170,15 @@ export default {
             <section>
                 <header></header>
                 <div class="image-grid" :style="{ 'grid-template-columns': slider.mod }">
-                    <div
-                        @click.prevent
-                        v-for="(item,index) in output.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)"
-                    >
-                        <ImageTooltip
-                            :img-src="item[assetsProps.src]"
-                            :id="item[assetsProps.id]"
-                            :description="item[assetsProps.description]"
-                            :name="item[assetsProps.title]"
-                            :scale="scale"
-                            :popup="false"
-                            @handle-img-load="handleImgLoad"
-                            @click="updatePreview(item, index)"
-                        />
+                    <div @click.prevent
+                        v-for="(item, index) in output.slice((pageCurr - 1) * pageSize, pageCurr * pageSize)">
+                        <ImageTooltip :img-src="item[assetsProps.src]" :id="item[assetsProps.id]"
+                            :description="item[assetsProps.description]" :name="item[assetsProps.title]" :scale="scale"
+                            :popup="false" @handle-img-load="handleImgLoad" @click="updatePreview(item, index)" />
                     </div>
                 </div>
-                <Pagination
-                    :current="pageCurr"
-                    :total="output.length"
-                    :per-page="pageSize"
-                    @page-changed="onPageChange"
-                    text-before-input
-                />
+                <Pagination :current="pageCurr" :total="output.length" :per-page="pageSize" @page-changed="onPageChange"
+                    text-before-input />
             </section>
         </div>
     </div>
@@ -218,13 +189,11 @@ export default {
     display: grid;
     grid-gap: 1em;
     grid-template-rows: auto;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(calc(var(--page-width) / 12), 0.5fr)
-    );
+    grid-template-columns: repeat(auto-fit,
+            minmax(calc(var(--page-width) / 12), 0.5fr));
 }
 
-.image-grid > a {
+.image-grid>a {
     border: none;
 }
 
@@ -239,7 +208,7 @@ export default {
     margin-bottom: var(--global-line-height);
 }
 
-.search > span {
+.search>span {
     font-size: calc(var(--global-font-size) * 0.75);
 }
 
@@ -259,6 +228,7 @@ export default {
         grid-template-columns: 3fr 9fr;
     }
 }
+
 .newtab {
     display: inline-block;
     margin-top: 8px;
@@ -287,6 +257,7 @@ export default {
     border-top-width: 0px;
     padding: 8px;
 }
+
 .language {
     margin-bottom: 8px;
 }

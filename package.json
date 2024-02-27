@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview --host"
   },
   "dependencies": {
     "@aacassandra/vue3-progressbar": "^1.0.3",
