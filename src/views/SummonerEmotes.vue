@@ -30,7 +30,7 @@ export default {
                 this.$Progress.start();
                 grab.get('summoner-emotes', this.$store.state.settings.language).then(res => {
                     this.emotes = res.data;
-                    this.emotes.sort((a, b) => { return a.id - b.id });
+                    this.emotes.sort((a, b) => { return b.id - a.id });
                     this.emotes = this.emotes.filter(item => {
                         return !item.inventoryIcon.includes("/lol-game-data/");
                     })
