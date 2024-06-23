@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       spacing: {
-        '112': '28rem',
+        "112": "28rem",
       },
       colors: {
         navy: {

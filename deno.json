@@ -29,7 +29,9 @@
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
-    "$std/": "https://deno.land/std@0.216.0/"
+    "$std/": "https://deno.land/std@0.216.0/",
+    "react-icons/io5": "https://cdn.jsdelivr.net/gh/urielch/react-icons-io5@1.0.9/mod.ts",
+    "react-icons/io5/": "https://cdn.jsdelivr.net/gh/urielch/react-icons-io5@1.0.9/ico/"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

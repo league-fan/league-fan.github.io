@@ -9,8 +9,8 @@ import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $Avatars from "./islands/Avatars.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $Episodes from "./islands/Episodes.tsx";
 import * as $Header from "./islands/Header.tsx";
-import * as $MainPage from "./islands/MainPage.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -24,8 +24,8 @@ const manifest = {
   islands: {
     "./islands/Avatars.tsx": $Avatars,
     "./islands/Counter.tsx": $Counter,
+    "./islands/Episodes.tsx": $Episodes,
     "./islands/Header.tsx": $Header,
-    "./islands/MainPage.tsx": $MainPage,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
