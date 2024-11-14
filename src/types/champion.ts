@@ -4,6 +4,7 @@ export interface Champion {
   alias: string;
   squarePortraitPath: string;
   roles: Role[];
+  key: string;
 }
 
 export enum Role {
