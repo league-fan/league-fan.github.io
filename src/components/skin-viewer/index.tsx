@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
   Fragment,
+  JSX,
 } from "react";
 import classNames from "classnames";
 import { useSwipeable } from "react-swipeable";
@@ -32,14 +33,14 @@ import {
   rarity,
   useEscapeTo,
   useLocalStorageState,
-} from "../../data/helpers";
+} from "@/data/helpers";
 import { Popup } from "./popup";
 import styles from "./styles.module.scss";
 import { SkinWithMeta } from "./helpers";
 
 interface SkinViewerProps {
   backTo: string;
-  linkTo: string;
+  linkTo: (skin: SkinWithMeta) => string;
   collectionName: string;
   collectionIcon: string;
   prev: SkinWithMeta;
@@ -99,7 +100,7 @@ const canPlayWebM = () => {
   );
 };
 
-let draggingOrigin: any[] | null;
+let draggingOrigin: [number, number] | null = null;
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
 
@@ -123,7 +124,7 @@ function _SkinViewer({
     false
   );
   const [fill, setFill] = useLocalStorageState("viewer__fill", false);
-  const [deltaX, setDeltaX] = useState(0);
+  const [deltaX, setDeltaX] = useState("0px");
   const [smoothX, setSmoothX] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [loaded, setLoaded] = useState(true);
@@ -136,7 +137,7 @@ function _SkinViewer({
   const dimensions = useRef({ width: 1, height: 1 });
 
   useEffect(() => {
-    setDeltaX(0);
+    setDeltaX("0px");
     setSmoothX(false);
     setExiting(false);
     setLoaded(false);
@@ -189,7 +190,7 @@ function _SkinViewer({
   const r = rarity(skin);
 
   const goPrevious = useCallback(
-    (swipe) => {
+    (swipe: boolean) => {
       if (!prev || exiting) return;
       setExiting(true);
 
@@ -205,7 +206,7 @@ function _SkinViewer({
   );
 
   const goNext = useCallback(
-    (swipe) => {
+    (swipe: boolean) => {
       if (!next || exiting) return;
       setExiting(true);
 
@@ -247,7 +248,7 @@ function _SkinViewer({
   }, [imgPath, patch, skin]);
 
   useEffect(() => {
-    function onKeyDown(e) {
+    function onKeyDown(e: { key: string; code: string; }) {
       if (e.key === "ArrowLeft") goPrevious(false);
       if (e.key === "ArrowRight") goNext(false);
       if (meta.changes && e.key === "ArrowUp")
@@ -279,8 +280,8 @@ function _SkinViewer({
     return () => document.removeEventListener("click", onClick);
   });
 
-  const doPan = (x, y, isDelta = false) => {
-    const delta = isDelta
+  const doPan = (x: number, y: number, isDelta = false) => {
+    const delta = (isDelta || !draggingOrigin)
       ? [x, y]
       : [x - draggingOrigin[0], y - draggingOrigin[1]];
     const { width, height } = dimensions.current;
@@ -356,7 +357,7 @@ function _SkinViewer({
           ] || ""
         );
     },
-    preventDefaultTouchmoveEvent: true,
+    preventScrollOnSwipe: true,
     delta: { left: 3, right: 3, up: 50 },
   });
 
@@ -545,9 +546,10 @@ function _SkinViewer({
               style={{ objectFit, objectPosition }}
               onLoadedData={() => setLoaded(true)}
               onLoadedMetadata={(e) => {
+                const video = e.target as HTMLVideoElement;
                 dimensions.current = {
-                  width: e.target.videoWidth,
-                  height: e.target.videoHeight,
+                  width: video.videoWidth,
+                  height: video.videoHeight,
                 };
               }}
             >
@@ -562,7 +564,10 @@ function _SkinViewer({
               alt={skin.name}
               objectFit={objectFit}
               objectPosition={objectPosition}
-              onLoadingComplete={({ naturalHeight, naturalWidth }) => {
+              onLoadingComplete={({ naturalHeight, naturalWidth }: {
+                naturalHeight: number;
+                naturalWidth: number;
+              }) => {
                 dimensions.current = {
                   width: naturalWidth,
                   height: naturalHeight,
@@ -577,7 +582,7 @@ function _SkinViewer({
   );
 }
 
-export function SkinViewer(props) {
+export function SkinViewer(props: JSX.IntrinsicAttributes & SkinViewerProps) {
   const router = useRouter();
   if (router.isFallback) {
     return (

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Image from "../image";
 import Link from "next/link";
-import { asset, rarity } from "../../data/helpers";
+import { asset, rarity } from "@/data/helpers";
 import styles from "./styles.module.scss";
 import { Skin } from "@/types";
 

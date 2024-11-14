@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { User, Globe, Folder } from "lucide-react";
 import Link from "next/link";
-import styles from "../../styles/index.module.scss";
+import styles from "@/styles/index.module.scss";
 
 interface NavProps {
   active: string;
