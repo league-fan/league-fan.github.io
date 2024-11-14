@@ -1,95 +1,117 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Image from "@/components/image";
+import { ReactNode, useEffect, useMemo } from "react";
+import Head from "next/head";
+import { useProps } from "@/data/contexts";
+import styles from "@/styles/index.module.scss";
+import Link from "next/link";
+import {
+  asset,
+  classes,
+  makeDescription,
+  makeTitle,
+  useArrowNavigation,
+  useLocalStorageState,
+} from "@/data/helpers";
+import { store } from "@/data/store";
+import { Nav } from "@/components/nav";
+import { Layout } from "@/components";
+import { prepareAdditions } from "@/components/new-additions/helpers";
+import { Role } from "@/types/champion";
+import { Metadata, ResolvingMetadata } from "next";
 
-export default function Home() {
+function ChampionsList({ role }: { role: Role }) {
+  const { champions } = useProps();
+  const filteredChamps = useMemo(() => {
+    if (!role) return champions;
+
+    return champions.filter((c) => c.roles.includes(role));
+  }, [champions, role]);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className={styles.champions}>
+      {filteredChamps.map((c) => (
+        <Link
+          key={c.id}
+          href="/champions/[champId]"
+          as={`/champions/${c.key}`}
+          prefetch={false}
+        >
+          <a>
             <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              unoptimized
+              className={styles.img}
+              src={asset(c.squarePortraitPath)}
+              alt={c.name}
+              width={80}
+              height={80}
             />
-            Deploy now
+            <div>{c.name}</div>
           </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </Link>
+      ))}
     </div>
   );
+}
+
+
+export default function Index() {
+  const [champRole, setChampRole] = useLocalStorageState(
+    "champs_index__champRole",
+    ""
+  );
+
+  useEffect(() => {
+    localStorage.lastIndex = "/";
+  }, []);
+
+  const handlers = useArrowNavigation("/skinlines", "/universes");
+
+  const { champions } = useProps();
+
+  return (
+    <>
+      <Head>
+        {makeTitle()}
+        {makeDescription(
+          `Browse through League of Legends skins from the comfort of your browser. Take a look at these ${champions.length} champions!`
+        )}
+      </Head>
+      <div {...handlers} className={styles.container}>
+        <Nav
+          active="champions"
+          filters={
+            <label>
+              <span>Role</span>
+              <select
+                value={champRole}
+                onChange={(e) => setChampRole(e.target.value)}
+              >
+                <option value="">All</option>
+                {Object.entries(classes).map(([k, v]) => (
+                  <option key={k} value={k}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+            </label>
+          }
+        />
+        <main>
+          <ChampionsList role={champRole} />
+        </main>
+      </div>
+    </>
+  );
+}
+
+Index.getLayout = (page: ReactNode) => <Layout withNew>{page}</Layout>;
+
+export async function getStaticProps() {
+  return {
+    props: {
+      champions: store.patch.champions,
+      patch: store.patch.fullVersionString,
+      added: await prepareAdditions(),
+    },
+  };
 }
