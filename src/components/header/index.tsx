@@ -3,16 +3,16 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import classNames from "classnames";
 import logo from "../../assets/logo.png";
-import { useEscapeTo } from "../../data/helpers";
+import { useEscapeTo } from "@/data/helpers";
 import { ArrowLeft, ExternalLink, Menu, Search, X } from "lucide-react";
 import { useLayoutEffect, useEffect, useRef, useState } from "react";
 
 interface HeaderProps {
-  flat: boolean;
+  flat?: boolean;
   backTo?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ flat, backTo }) => {
+export const Header: React.FC<HeaderProps> = ({ flat, backTo } = { flat: false, backTo: undefined }) => {
   const back =
     typeof window !== "undefined" ? localStorage.lastIndex ?? backTo : backTo;
   useEscapeTo(back);

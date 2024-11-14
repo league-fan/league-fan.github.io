@@ -208,7 +208,7 @@ export function makeCanonical(url: string) {
   );
 }
 
-export function makeImage(url: string | undefined, alt = null) {
+export function makeImage(url: string | undefined, alt: string | null = null) {
   return (
     <>
       <meta name="twitter:card" content="summary_large_image" />

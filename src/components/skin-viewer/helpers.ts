@@ -1,13 +1,13 @@
 import { Champion, Skin, Skinline, Universe } from "@/types";
-import { splitId, modelviewerUrl } from "../../data/helpers";
-import { store } from "../../data/store";
+import { splitId, modelviewerUrl } from "@/data/helpers";
+import { store } from "@/data/store";
 
 export interface SkinWithMeta extends Skin {
   $skinExplorer: {
     changes: string[];
-    champion: Champion | undefined;
-    skinlines: Skinline[] | undefined;
-    universes: Universe[] | undefined;
+    champion: Champion;
+    skinlines: Skinline[];
+    universes: Universe[];
     modelviewerUrl: string;
     skinSpotlightsUrl: string;
   };
@@ -17,7 +17,14 @@ export async function prepareCollection(collection: SkinWithMeta[], idx: number)
   const skin = collection[idx];
   skin.$skinExplorer = {
     changes: [],
-    champion: undefined,
+    champion: {
+      id: 0,
+      name: "",
+      alias: "",
+      squarePortraitPath: "",
+      roles: [],
+      key: ""
+    } as Champion,
     skinlines: [],
     universes: [],
     modelviewerUrl: '',
@@ -30,10 +37,7 @@ export async function prepareCollection(collection: SkinWithMeta[], idx: number)
 
   meta.changes = changes[skin.id] ?? false;
   const [cId] = splitId(skin.id);
-  meta.champion = champions.find((c) => c.id === cId);
-  if (!meta.champion) {
-    throw new Error(`Champion not found for skin ${skin.id}`);
-  }
+  meta.champion = champions.find((c) => c.id === cId) ?? meta.champion;
   meta.skinlines = Array.from(
     new Map(
       (skin.skinLines ?? [])

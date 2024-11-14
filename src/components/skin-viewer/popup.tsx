@@ -11,11 +11,12 @@ import {
 } from "lucide-react";
 import Image from "../image";
 import Link from "next/link";
-import { asset } from "../../data/helpers";
+import { asset } from "@/data/helpers";
 import styles from "./styles.module.scss";
 import { useEffect, useState } from "react";
+import { SkinWithMeta } from "./helpers";
 
-export function Popup({ skin }) {
+export function Popup({ skin }: { skin: SkinWithMeta }) {
   const [showChromas, setShowChromas] = useState(false);
   useEffect(() => {
     setShowChromas(false);
@@ -73,14 +74,14 @@ export function Popup({ skin }) {
               {[skin, ...skin.chromas].map((chroma) => (
                 <div key={chroma.id}>
                   <a
-                    href={asset(chroma.chromaPath)}
+                    href={asset(chroma.chromaPath ?? '')}
                     target="_blank"
                     rel="noreferrer"
                   >
                     <Image
                       loading="eager"
                       unoptimized
-                      src={asset(chroma.chromaPath)}
+                      src={asset(chroma.chromaPath ?? '')}
                       layout="fill"
                       objectFit="contain"
                       alt={skin.name}

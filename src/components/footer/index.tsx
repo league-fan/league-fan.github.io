@@ -1,16 +1,16 @@
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import { useProps } from "../../data/contexts";
+import { useProps } from "@/data/contexts";
 import getConfig from "next/config";
 import { ReactNode } from "react";
 
 const { publicRuntimeConfig } = getConfig();
 
 interface FooterProps {
-    flat: boolean;
+    flat?: boolean;
 }
 
-export function Footer({ flat }: FooterProps) {
+export function Footer({ flat }: FooterProps = { flat: false }) {
     const { patch } = useProps();
     return (
         <footer className={classNames(styles.footer, { [styles.flat]: flat })}>
