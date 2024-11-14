@@ -1,7 +1,7 @@
 import Fuse from "fuse.js";
 import { Patch } from "./patch";
 import { splitId } from "./helpers";
-import { Champion, Skinline, Universe } from "@/types";
+import { Champion, Changes, Skinline, Universe } from "@/types";
 import { Skin } from "@/types/skins";
 
 const FUSE_OPTIONS = { keys: ["name", "searchString"], threshold: 0.3 };
@@ -22,7 +22,7 @@ interface SearchItem {
  */
 export class Store {
     patch = new Patch();
-    changes = require("./.cache/changes.json");
+    changes: Changes = require("./.cache/changes.json");
     fuse: Fuse<SearchItem> = new Fuse([], FUSE_OPTIONS);
 
     constructor() {

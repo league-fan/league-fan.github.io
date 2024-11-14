@@ -127,7 +127,7 @@ export function useSortedSkins(sortByRarity: boolean, skins: Skin[]) {
   return skins;
 }
 
-export function useEscapeTo(url: Url) {
+export function useEscapeTo(url: string) {
   const router = useRouter();
   useEffect(() => {
     function onKeyDown(e: { code: string; preventDefault: () => void; }) {
@@ -143,7 +143,7 @@ export function useEscapeTo(url: Url) {
   }, [router, url]);
 }
 
-export function useArrowNavigation(left: Url, right: Url) {
+export function useArrowNavigation(left: string, right: string) {
   const handlers = useSwipeable({
     delta: 50,
     onSwipedLeft(e) {
