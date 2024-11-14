@@ -174,7 +174,10 @@ export function useArrowNavigation(left: string, right: string) {
   return handlers;
 }
 
-export function makeTitle(...pages: any[]) {
+export function makeTitle(...pages: string[]) {
+  if (!pages) {
+    pages = [];
+  }
   let t = [...pages, "Skin Explorer"].join(" · ");
   if (pages.length === 0) {
     t = "Skin Explorer · League of Legends";
