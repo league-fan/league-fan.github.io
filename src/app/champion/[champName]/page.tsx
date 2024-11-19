@@ -1,29 +1,17 @@
-import Champ from '@/../.cache/champions.json'
-import { Champion } from '@/types'
-import { Role } from '@/types/champion'
+import { championSkins } from "@/data/helpers";
+import { store } from "@/data/store"
 
-interface Champion_if {
-    [key: string]: Champion[]
-}
-
-function convertRoles(champions: any): Champion_if {
-    const result: Champion_if = {}
-    for (const key in champions) {
-        result[key] = champions[key].map((champ: any) => ({
-            ...champ,
-            roles: champ.roles.map((role: string) => role as Role)
-        }))
-    }
-    return result
-}
 
 export default async function Page({
     params,
 }: {
     params: Promise<{ champName: string }>
 }) {
-    const champions: Champion_if = convertRoles(Champ);
+    const champions = store.patch.champions;
     const champName = (await params).champName
-    const champ = champions['default'].find((champ: Champion) => champ.name.toLowerCase() === champName.toLowerCase())
-    return <textarea defaultValue={champ ? JSON.stringify(champ, null, 4) : 'Champion not found'} />
+    const champ = champions.find((champ) => champ.name.toLowerCase() === champName.toLowerCase())
+    if (!champ) return <div>Champion not found</div>
+    const skins = store.patch.skins;
+    const champSkin = championSkins(champ.id, skins);
+    return <textarea defaultValue={JSON.stringify(champSkin, null, 2)} />
 }

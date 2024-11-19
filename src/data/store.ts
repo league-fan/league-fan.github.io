@@ -1,8 +1,11 @@
+'use client'
+
 import Fuse from "fuse.js";
 import { Patch } from "./patch";
 import { splitId } from "./helpers";
 import { Champion, Changes, Skinline, Universe } from "@/types";
 import { Skin } from "@/types/skins";
+import changes from "@/../.cache/changes.json";
 
 const FUSE_OPTIONS = { keys: ["name", "searchString"], threshold: 0.3 };
 const NON_ALPHANUMERIC_REGEX = /[^A-Za-z0-9]/g;
@@ -22,7 +25,7 @@ interface SearchItem {
  */
 export class Store {
     patch = new Patch();
-    changes: Changes = require("./.cache/changes.json");
+    changes: Changes = changes;
     fuse: Fuse<SearchItem> = new Fuse([], FUSE_OPTIONS);
 
     constructor() {
