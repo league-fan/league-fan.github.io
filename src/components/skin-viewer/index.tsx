@@ -1,3 +1,4 @@
+"use client"
 import { Loading } from "../loading";
 import {
   useCallback,
