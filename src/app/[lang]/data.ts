@@ -1,4 +1,3 @@
-'use client'
 import presistentVars from "@/../.cache/persistentVars.json";
 import supportedLanguages from "@/../.cache/supportedLanguages.json";
 import champions from "@/../.cache/champions.json";

@@ -3,10 +3,16 @@ import { PropsProvider, PropsContextType } from "./props"
 import Patch from "./data"
 
 export async function generateStaticParams() {
-    return [{ lang: 'default' }, { lang: 'de' }]
+    return [{ lang: 'default' }, { lang: 'zh_cn' }]
 }
 
-export default async  function Root({ children, params }: { children: ReactNode, params: { lang: string } }) {
+export default async function Root(props0: { children: ReactNode, params: Promise<{ lang: string }> }) {
+    const params = await props0.params;
+
+    const {
+        children
+    } = props0;
+
     const patch = new Patch(params.lang)
     const props: PropsContextType = {
         skins: patch.skins,
@@ -18,7 +24,7 @@ export default async  function Root({ children, params }: { children: ReactNode,
     return (
         <html>
             <body>
-                <PropsProvider value={{ ...props, lang: params.lang }}
+                <PropsProvider value={props}
                 >{children}</PropsProvider>
             </body>
         </html>
