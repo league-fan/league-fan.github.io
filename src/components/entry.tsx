@@ -1,27 +1,23 @@
 'use client';
 import { Header } from "./header";
 import { Footer, FooterContainer } from "./footer";
-import dynamic from "next/dynamic";
-
-const LazyNewAdditions = dynamic(() => import("./new-additions"), {
-  ssr: false,
-});
 
 interface LayoutProps {
-  children?: ReactNode;
+  children: ReactNode;
   flat?: boolean;
   backTo?: string;
   withNew?: boolean;
 }
 
 import { ReactNode } from "react";
+import NewAdditions from "./new-additions";
 
-export function Layout({ children, flat, backTo, withNew }: LayoutProps) {
+export default function Entry({ children, flat = false, backTo, withNew = false }: LayoutProps) {
   return (
     <FooterContainer>
       <div>
         <Header {...{ flat, backTo }} />
-        {withNew && <LazyNewAdditions />}
+        {withNew && <NewAdditions />}
         {children}
       </div>
       <Footer {...{ flat }} />

@@ -1,5 +1,9 @@
-import IndexLayout from "@/components/IndexLayout"
+import Champions from "@/components/champions"
 
 export default async function Page() {
-    return <IndexLayout />
+    return (
+        <div className="champions-page">
+            <Champions />
+        </div>
+    )
 }

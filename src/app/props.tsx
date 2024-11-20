@@ -4,7 +4,7 @@ import Patch from '@/data/patch';
 import { Champion, Skin, Skins } from '@/types';
 import { createContext, ReactNode } from 'react'
 
-interface SkinWithKey extends Skin {
+export interface SkinWithKey extends Skin {
     $$key: string;
 }
 

@@ -1,14 +1,15 @@
-import { useProps } from "@/data2/contexts";
+'use client';
 import Link from "next/link";
 import Image from "../image";
 import styles from "./style.module.scss";
-import { asset } from "@/data2/helpers";
-import { SkinWithKey } from "./helpers";
+import { useContext } from "react";
+import { PropsContext, SkinWithKey } from "@/app/props";
+import { asset } from "@/data/client_helpers";
 
 export default function NewAdditions() {
-    const { added } = useProps();
+    const { addedSkins } = useContext(PropsContext);
 
-    if (!added.length) {
+    if (!addedSkins.length) {
         return null;
     }
 
@@ -19,7 +20,7 @@ export default function NewAdditions() {
             <h3>Recently Added</h3>
             <div className={styles.gridContainer}>
                 <div className={styles.grid}>
-                    {added.map((skin) => {
+                    {addedSkins.map((skin) => {
                         return (
                             (<Link
                                 key={skin.id}
@@ -34,7 +35,7 @@ export default function NewAdditions() {
                                         loading="eager"
                                         src={asset(skin.tilePath)}
                                         alt={skin.name}
-                                        objectFit="cover"
+                                        style={{ objectFit: "cover" }}
                                         layout="fill"
                                     />
                                 </span>
