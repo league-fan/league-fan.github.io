@@ -1,6 +1,6 @@
 import { Champion, Skin, Skinline, Universe } from "@/types";
-import { splitId, modelviewerUrl } from "@/data/helpers";
-import { store } from "@/data/store";
+import { splitId, modelviewerUrl } from "@/data2/helpers";
+import { store } from "@/data2/store";
 
 export interface SkinWithMeta extends Skin {
   $skinExplorer: {

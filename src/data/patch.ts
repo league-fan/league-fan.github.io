@@ -1,7 +1,3 @@
-'use client'
-
-import { Champion, Skinline, Universe, Skins, Added } from "@/types";
-import { CDRAGON } from "./constants";
 import presistentVars from "@/../.cache/persistentVars.json";
 import supportedLanguages from "@/../.cache/supportedLanguages.json";
 import champions from "@/../.cache/champions.json";
@@ -9,39 +5,29 @@ import skinlines from "@/../.cache/skinlines.json";
 import universes from "@/../.cache/universes.json";
 import skins from "@/../.cache/skins.json";
 import added from "@/../.cache/added.json";
-import { Role } from "@/types/champion";
+import { Added, Champion, Skinline, Skins, Universe } from "@/types";
+import { splitId } from "@/data/helpers";
 
+export const CDRAGON = "https://raw.communitydragon.org";
+export const ROOT = "https://www.skinexplorer.lol";
 
-interface Assets {
-    champions: { [key: string]: Champion[] };
-    skins: { [key: string]: Skins };
-    skinlines: { [key: string]: Skinline[] };
-    universes: { [key: string]: Universe[] };
-}
-
-function convertRoles(champions: any): { [key: string]: Champion[] } {
-    const result: { [key: string]: Champion[] } = {}
-    for (const key in champions) {
-        result[key] = champions[key].map((champ: any) => ({
-            ...champ,
-            roles: champ.roles.map((role: string) => role as Role)
-        }))
-    }
-    return result
-}
-
-export class Patch {
+class Patch {
     fullVersionString = presistentVars.oldVersionString;
     supportedLanguages = supportedLanguages;
 
-    currLang = "zh_cn";
-    added: Added = added;
-    assets: Assets = {
-        champions: convertRoles(champions),
+    added = added as Added;
+    assets = {
+        champions: champions as { [key: string]: Champion[] },
         skins: skins as { [key: string]: Skins },
-        skinlines: skinlines,
-        universes: universes,
+        skinlines: skinlines as { [key: string]: Skinline[] },
+        universes: universes as { [key: string]: Universe[] },
+    };
+    lang = 'default';
+
+    constructor(lang = 'default') {
+        this.lang = lang;
     }
+
 
     url(path: string, name = 'pbe') {
         return `${CDRAGON}/${name}${path}`;
@@ -56,18 +42,20 @@ export class Patch {
     }
 
     get champions() {
-        return this.assets.champions[this.currLang];
+        return this.assets.champions[this.lang];
     }
 
     get skinlines() {
-        return this.assets.skinlines[this.currLang];
+        return this.assets.skinlines[this.lang];
     }
 
     get universes() {
-        return this.assets.universes[this.currLang];
+        return this.assets.universes[this.lang];
     }
 
     get skins() {
-        return this.assets.skins[this.currLang];
+        return this.assets.skins[this.lang];
     }
 }
+
+export default Patch;

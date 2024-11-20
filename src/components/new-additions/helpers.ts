@@ -1,5 +1,5 @@
-import { store } from "@/data/store";
-import { splitId } from "@/data/helpers";
+import { store } from "@/data2/store";
+import { splitId } from "@/data2/helpers";
 import { Skin } from "@/types";
 
 export interface SkinWithKey extends Skin {

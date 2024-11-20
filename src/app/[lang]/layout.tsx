@@ -1,32 +1,15 @@
-import { ReactNode } from "react"
-import { PropsProvider, PropsContextType } from "./props"
-import Patch from "./data"
+import { PropsProvider } from "./props"
+const DEFAULT_LANG = 'default'
 
-export async function generateStaticParams() {
-    return [{ lang: 'default' }, { lang: 'zh_cn' }]
+interface LangLayoutProps {
+    children: React.ReactNode;
+    params: Promise<{ lang: string }>
 }
 
-export default async function Root(props0: { children: ReactNode, params: Promise<{ lang: string }> }) {
-    const params = await props0.params;
+export default async function LangLayout({ children, params }: LangLayoutProps) {
 
-    const {
-        children
-    } = props0;
-
-    const patch = new Patch(params.lang)
-    const props: PropsContextType = {
-        skins: patch.skins,
-        champions: patch.champions,
-        addedSkins: patch.addedSkins,
-        patch: patch.fullVersionString,
-        lang: params.lang
-    }
+    const { lang } = await params || DEFAULT_LANG;
     return (
-        <html>
-            <body>
-                <PropsProvider value={props}
-                >{children}</PropsProvider>
-            </body>
-        </html>
+        <PropsProvider value={lang}>{children}</PropsProvider>
     )
 }

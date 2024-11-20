@@ -1,8 +1,8 @@
-import { useProps } from "@/data/contexts";
+import { useProps } from "@/data2/contexts";
 import Link from "next/link";
 import Image from "../image";
 import styles from "./style.module.scss";
-import { asset } from "@/data/helpers";
+import { asset } from "@/data2/helpers";
 import { SkinWithKey } from "./helpers";
 
 export default function NewAdditions() {

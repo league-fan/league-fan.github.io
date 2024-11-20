@@ -34,7 +34,7 @@ import {
   rarity,
   useEscapeTo,
   useLocalStorageState,
-} from "@/data/helpers";
+} from "@/data2/helpers";
 import { Popup } from "./popup";
 import styles from "./styles.module.scss";
 import { SkinWithMeta } from "./helpers";
