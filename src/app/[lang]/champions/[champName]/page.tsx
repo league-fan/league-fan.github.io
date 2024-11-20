@@ -1,6 +1,6 @@
 import { getChampionSkinsById, getChampionByName } from "@/data/helpers";
 import { useContext } from "react";
-import { PropsContext } from "../../props";
+import { PropsContext } from "../../../props";
 
 // export async function generateStaticParams() {
 //     const { champions, lang } = useContext(PropsContext);

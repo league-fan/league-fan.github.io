@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styles from "./styles.module.scss";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import classNames from "classnames";
 import logo from "../../assets/logo.png";
 import { useEscapeTo } from "@/data2/helpers";

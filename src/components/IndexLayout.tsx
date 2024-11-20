@@ -20,7 +20,6 @@ export default function IndexLayout() {
     );
 
     return (
-        <>
             <div className={styles.container}>
                 <Nav
                     active="champions"
@@ -45,6 +44,5 @@ export default function IndexLayout() {
                     <ChampionsList role={champRole} />
                 </main>
             </div>
-        </>
     )
 }
