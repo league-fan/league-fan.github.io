@@ -14,7 +14,7 @@ export function ChampionsList({ role }: { role: string }) {
     }, [champions, role]);
 
     return (
-        <div className={styles.champions}>
+        (<div className={styles.champions}>
             {filteredChamps.map((c) => (
                 <Link
                     key={c.id}
@@ -22,20 +22,20 @@ export function ChampionsList({ role }: { role: string }) {
                     as={`${lang}/champions/${c.key}`}
                     prefetch={false}
                 >
-                    <a>
-                        <Image
-                            unoptimized
-                            className={styles.img}
-                            src={asset(c.squarePortraitPath, { lang })}
-                            alt={c.name}
-                            width={80}
-                            height={80}
-                        />
-                        <div>{c.name}</div>
-                    </a>
+
+                    <Image
+                        unoptimized
+                        className={styles.img}
+                        src={asset(c.squarePortraitPath, { lang })}
+                        alt={c.name}
+                        width={80}
+                        height={80}
+                    />
+                    <div>{c.name}</div>
+
                 </Link>
             ))}
-        </div>
+        </div>)
     );
 
 }

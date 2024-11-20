@@ -363,225 +363,223 @@ function _SkinViewer({
     delta: { left: 3, right: 3, up: 50 },
   });
 
-  return (
-    <>
-      <Head>
-        {makeTitle(skin.name)}
-        {makeDescription(
-          skin.description || `Look at the splash art for ${skin.name}!`
-        )}
-        {makeImage(asset(skin.uncenteredSplashPath), skin.name)}
-        {makeCanonical(`/champions/${meta.champion.key}/skins/${skin.id}`)}
-        {prefetchLinks(skin)}
-        {meta.changes &&
-          meta.changes.map((patch) => (
-            <Fragment key={patch}>{prefetchLinks(skin, patch)}</Fragment>
-          ))}
-        {prev && prefetchLinks(prev)}
-        {next && prefetchLinks(next)}
-        <style>
-          {`
-          body {
-            overscroll-behavior: none;
-          }
-        `}
-        </style>
-      </Head>
+  return (<>
+    <Head>
+      {makeTitle(skin.name)}
+      {makeDescription(
+        skin.description || `Look at the splash art for ${skin.name}!`
+      )}
+      {makeImage(asset(skin.uncenteredSplashPath), skin.name)}
+      {makeCanonical(`/champions/${meta.champion.key}/skins/${skin.id}`)}
+      {prefetchLinks(skin)}
+      {meta.changes &&
+        meta.changes.map((patch) => (
+          <Fragment key={patch}>{prefetchLinks(skin, patch)}</Fragment>
+        ))}
+      {prev && prefetchLinks(prev)}
+      {next && prefetchLinks(next)}
+      <style>
+        {`
+        body {
+          overscroll-behavior: none;
+        }
+      `}
+      </style>
+    </Head>
+    <div
+      className={classNames(styles.viewer, {
+        [styles.exiting]: exiting,
+        [styles.smoothX]: smoothX,
+        [styles.loaded]: loaded,
+        [styles.fill]: fill,
+        [styles.show]: showUI,
+      })}
+    >
       <div
-        className={classNames(styles.viewer, {
-          [styles.exiting]: exiting,
-          [styles.smoothX]: smoothX,
-          [styles.loaded]: loaded,
-          [styles.fill]: fill,
-          [styles.show]: showUI,
-        })}
+        className={styles.hitbox}
+        {...handlers}
+        onTouchStart={() =>
+          setVelocity({
+            top: 0,
+            left: 0,
+          })
+        }
+        onDoubleClick={toggleFill}
+        onMouseDown={(e) => {
+          if (fill) {
+            draggingOrigin = [e.screenX, e.screenY];
+          }
+        }}
+        onMouseMove={(e) => {
+          if (fill && draggingOrigin) {
+            doPan(e.screenX, e.screenY);
+          }
+          setShowUI(true);
+        }}
+        onMouseUp={(e) => {
+          draggingOrigin = null;
+        }}
+        onWheel={(e) => {
+          if (fill) {
+            doPan(-e.deltaX, -e.deltaY, true);
+          }
+        }}
+      />
+      <div className={styles.overlay}>
+        <header>
+          <Link href={backTo} as={backTo} className={styles.backTo}>
+
+            <ArrowLeft />
+            <div>
+              {collectionIcon}
+              {collectionName}
+            </div>
+
+          </Link>
+          <div className={styles.controls}>
+            <div onClick={toggleFill} title="Fill Screen (Z)">
+              {fill ? <Minimize2 /> : <Maximize2 />}
+            </div>
+            <div onClick={toggleCentered} title="Centered (C)">
+              {centered ? <User /> : <Users />}
+            </div>
+            <div onClick={downloadActive} title="Download (D)">
+              <Download />
+            </div>
+
+            {meta.changes && (
+              <div className={styles.dropdown}>
+                <select
+                  value={patch}
+                  onChange={(e) => setPatch(e.target.value)}
+                >
+                  <option disabled>Patch</option>
+                  <option value="">PBE</option>
+                  {meta.changes.map((patch) => (
+                    <option key={patch} value={patch}>
+                      {patch}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+        </header>
+        {prev && (
+          <Link href={router.pathname} as={linkTo(prev)} replace className={styles.prev}>
+
+            <ArrowLeft />
+            <div>{prev.name}</div>
+
+          </Link>
+        )}
+        {next && (
+          <Link href={router.pathname} as={linkTo(next)} replace className={styles.next}>
+
+            <div>{next.name}</div>
+            <ArrowRight />
+
+          </Link>
+        )}
+      </div>
+      <div
+        className={classNames(styles.infoBox, { [styles.show]: showInfoBox })}
+        onClick={(e) => e.stopPropagation()}
       >
         <div
-          className={styles.hitbox}
-          {...handlers}
-          onTouchStart={() =>
-            setVelocity({
-              top: 0,
-              left: 0,
-            })
-          }
-          onDoubleClick={toggleFill}
-          onMouseDown={(e) => {
-            if (fill) {
-              draggingOrigin = [e.screenX, e.screenY];
-            }
-          }}
-          onMouseMove={(e) => {
-            if (fill && draggingOrigin) {
-              doPan(e.screenX, e.screenY);
-            }
-            setShowUI(true);
-          }}
-          onMouseUp={(e) => {
-            draggingOrigin = null;
-          }}
-          onWheel={(e) => {
-            if (fill) {
-              doPan(-e.deltaX, -e.deltaY, true);
-            }
-          }}
-        />
-        <div className={styles.overlay}>
-          <header>
-            <Link href={backTo} as={backTo}>
-              <a className={styles.backTo}>
-                <ArrowLeft />
-                <div>
-                  {collectionIcon}
-                  {collectionName}
-                </div>
-              </a>
-            </Link>
-            <div className={styles.controls}>
-              <div onClick={toggleFill} title="Fill Screen (Z)">
-                {fill ? <Minimize2 /> : <Maximize2 />}
-              </div>
-              <div onClick={toggleCentered} title="Centered (C)">
-                {centered ? <User /> : <Users />}
-              </div>
-              <div onClick={downloadActive} title="Download (D)">
-                <Download />
-              </div>
-
-              {meta.changes && (
-                <div className={styles.dropdown}>
-                  <select
-                    value={patch}
-                    onChange={(e) => setPatch(e.target.value)}
-                  >
-                    <option disabled>Patch</option>
-                    <option value="">PBE</option>
-                    {meta.changes.map((patch) => (
-                      <option key={patch} value={patch}>
-                        {patch}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          className={styles.name}
+          onClickCapture={(e) => setShowInfoBox(!showInfoBox)}
+        >
+          <div>
+            <span>
+              {r && (
+                <Image
+                  src={r[0]}
+                  title={r[1]}
+                  alt={r[1]}
+                  objectFit="contain"
+                  objectPosition="center"
+                  layout="fixed"
+                  width={18}
+                  height={18}
+                />
               )}
-            </div>
-          </header>
-          {prev && (
-            <Link href={router.pathname} as={linkTo(prev)} replace>
-              <a className={styles.prev}>
-                <ArrowLeft />
-                <div>{prev.name}</div>
-              </a>
-            </Link>
-          )}
-          {next && (
-            <Link href={router.pathname} as={linkTo(next)} replace>
-              <a className={styles.next}>
-                <div>{next.name}</div>
-                <ArrowRight />
-              </a>
-            </Link>
-          )}
-        </div>
-        <div
-          className={classNames(styles.infoBox, { [styles.show]: showInfoBox })}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div
-            className={styles.name}
-            onClickCapture={(e) => setShowInfoBox(!showInfoBox)}
-          >
-            <div>
-              <span>
-                {r && (
-                  <Image
-                    src={r[0]}
-                    title={r[1]}
-                    alt={r[1]}
-                    objectFit="contain"
-                    objectPosition="center"
-                    layout="fixed"
-                    width={18}
-                    height={18}
-                  />
-                )}
-                <h1>{skin.name}</h1>
-              </span>
-              <Info />
-            </div>
+              <h1>{skin.name}</h1>
+            </span>
+            <Info />
           </div>
-          <Popup skin={skin} />
         </div>
-        <div className={styles.letterBox}>
-          {vidPath ? (
-            <video
-              muted
-              autoPlay
-              loop
-              key={vidPath}
-              style={{ objectFit: "cover" }}
-            >
-              <source src={asset(vidPath, patch || "pbe")} />
-            </video>
-          ) : (
-            <Image
-              unoptimized
-              priority
-              src={asset(imgPath, patch || "pbe")}
-              layout="fill"
-              alt={skin.name}
-              objectFit="cover"
-            />
-          )}
-        </div>
-
-        <main
-          className={styles.main}
-          style={{ transform: `translateX(${deltaX})` }}
-        >
-          {vidPath ? (
-            <video
-              muted
-              autoPlay
-              loop
-              key={vidPath}
-              style={{ objectFit, objectPosition }}
-              onLoadedData={() => setLoaded(true)}
-              onLoadedMetadata={(e) => {
-                const video = e.target as HTMLVideoElement;
-                dimensions.current = {
-                  width: video.videoWidth,
-                  height: video.videoHeight,
-                };
-              }}
-            >
-              <source src={asset(vidPath, patch || "pbe")} />
-            </video>
-          ) : (
-            <Image
-              priority
-              unoptimized
-              src={asset(imgPath, patch || "pbe")}
-              layout="fill"
-              alt={skin.name}
-              objectFit={objectFit}
-              objectPosition={objectPosition}
-              onLoadingComplete={({ naturalHeight, naturalWidth }: {
-                naturalHeight: number;
-                naturalWidth: number;
-              }) => {
-                dimensions.current = {
-                  width: naturalWidth,
-                  height: naturalHeight,
-                };
-                setLoaded(true);
-              }}
-            />
-          )}
-        </main>
+        <Popup skin={skin} />
       </div>
-    </>
-  );
+      <div className={styles.letterBox}>
+        {vidPath ? (
+          <video
+            muted
+            autoPlay
+            loop
+            key={vidPath}
+            style={{ objectFit: "cover" }}
+          >
+            <source src={asset(vidPath, patch || "pbe")} />
+          </video>
+        ) : (
+          <Image
+            unoptimized
+            priority
+            src={asset(imgPath, patch || "pbe")}
+            layout="fill"
+            alt={skin.name}
+            objectFit="cover"
+          />
+        )}
+      </div>
+
+      <main
+        className={styles.main}
+        style={{ transform: `translateX(${deltaX})` }}
+      >
+        {vidPath ? (
+          <video
+            muted
+            autoPlay
+            loop
+            key={vidPath}
+            style={{ objectFit, objectPosition }}
+            onLoadedData={() => setLoaded(true)}
+            onLoadedMetadata={(e) => {
+              const video = e.target as HTMLVideoElement;
+              dimensions.current = {
+                width: video.videoWidth,
+                height: video.videoHeight,
+              };
+            }}
+          >
+            <source src={asset(vidPath, patch || "pbe")} />
+          </video>
+        ) : (
+          <Image
+            priority
+            unoptimized
+            src={asset(imgPath, patch || "pbe")}
+            layout="fill"
+            alt={skin.name}
+            objectFit={objectFit}
+            objectPosition={objectPosition}
+            onLoadingComplete={({ naturalHeight, naturalWidth }: {
+              naturalHeight: number;
+              naturalWidth: number;
+            }) => {
+              dimensions.current = {
+                width: naturalWidth,
+                height: naturalHeight,
+              };
+              setLoaded(true);
+            }}
+          />
+        )}
+      </main>
+    </div>
+  </>);
 }
 
 export function SkinViewer(props: JSX.IntrinsicAttributes & SkinViewerProps) {

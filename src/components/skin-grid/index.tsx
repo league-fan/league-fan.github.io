@@ -18,39 +18,39 @@ export function SkinGrid({ skins, linkTo }: SkinGridProps) {
       </div>
     );
   return (
-    <div className={styles.grid}>
+    (<div className={styles.grid}>
       {skins.map((skin) => {
         const r = rarity(skin);
         return (
-          <Link key={skin.id} href={linkTo(skin)} as={linkTo(skin)}>
-            <a>
-              <Image
-                className={styles.tile}
-                unoptimized
-                src={asset(skin.tilePath)}
-                alt={skin.name}
-                width={300}
-                height={300}
-              />
-              <div>
-                {skin.name}
-                <div className={classNames({ [styles.rarityBadge]: r })}>
-                  {r && (
-                    <Image
-                      src={r[0]}
-                      title={r[1]}
-                      alt={r[1]}
-                      objectFit="contain"
-                      objectPosition="center"
-                      layout="fill"
-                    />
-                  )}
-                </div>
+          (<Link key={skin.id} href={linkTo(skin)} as={linkTo(skin)}>
+
+            <Image
+              className={styles.tile}
+              unoptimized
+              src={asset(skin.tilePath)}
+              alt={skin.name}
+              width={300}
+              height={300}
+            />
+            <div>
+              {skin.name}
+              <div className={classNames({ [styles.rarityBadge]: r })}>
+                {r && (
+                  <Image
+                    src={r[0]}
+                    title={r[1]}
+                    alt={r[1]}
+                    objectFit="contain"
+                    objectPosition="center"
+                    layout="fill"
+                  />
+                )}
               </div>
-            </a>
-          </Link>
+            </div>
+
+          </Link>)
         );
       })}
-    </div>
+    </div>)
   );
 }

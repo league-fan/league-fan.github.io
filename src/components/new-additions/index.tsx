@@ -15,32 +15,36 @@ export default function NewAdditions() {
     const linkTo = (skin: SkinWithKey) => `/champions/${skin.$$key}/skins/${skin.id}`;
 
     return (
-        <div className={styles.container}>
+        (<div className={styles.container}>
             <h3>Recently Added</h3>
             <div className={styles.gridContainer}>
                 <div className={styles.grid}>
                     {added.map((skin) => {
                         return (
-                            <Link key={skin.id} href={linkTo(skin)} as={linkTo(skin)}>
-                                <a className={styles.skin}>
-                                    <span className={styles.imageContainer}>
-                                        <Image
-                                            className={styles.tile}
-                                            unoptimized
-                                            loading="eager"
-                                            src={asset(skin.tilePath)}
-                                            alt={skin.name}
-                                            objectFit="cover"
-                                            layout="fill"
-                                        />
-                                    </span>
-                                    <div>{skin.name}</div>
-                                </a>
-                            </Link>
+                            (<Link
+                                key={skin.id}
+                                href={linkTo(skin)}
+                                as={linkTo(skin)}
+                                className={styles.skin}>
+
+                                <span className={styles.imageContainer}>
+                                    <Image
+                                        className={styles.tile}
+                                        unoptimized
+                                        loading="eager"
+                                        src={asset(skin.tilePath)}
+                                        alt={skin.name}
+                                        objectFit="cover"
+                                        layout="fill"
+                                    />
+                                </span>
+                                <div>{skin.name}</div>
+
+                            </Link>)
                         );
                     })}
                 </div>
             </div>
-        </div>
+        </div>)
     );
 }
