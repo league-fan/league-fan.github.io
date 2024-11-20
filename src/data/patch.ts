@@ -38,7 +38,7 @@ export class Patch {
     added: Added = added;
     assets: Assets = {
         champions: convertRoles(champions),
-        skins: skins,
+        skins: skins as { [key: string]: Skins },
         skinlines: skinlines,
         universes: universes,
     }

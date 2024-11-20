@@ -18,15 +18,24 @@ export interface Skin {
   collectionCardHoverVideoPath: null | string;
   featuresText: null | string;
   chromaPath?: null | string;
-  emblems: null;
+  emblems: Emblem[] | null;
   regionRarityId: number;
-  rarityGemPath: null;
+  rarityGemPath: string | null;
   skinLines: SkinLine[] | null;
   description: null | string;
   loadScreenVintagePath?: string;
   chromas?: Chroma[];
   skinAugments?: SkinAugments;
   questSkinInfo?: QuestSkinInfo;
+}
+
+export interface Emblem {
+  name: string;
+  emblemPath: {
+    large: string;
+    small: string;
+  };
+  positions: object;
 }
 
 export interface Chroma {

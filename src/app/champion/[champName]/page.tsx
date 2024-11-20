@@ -2,6 +2,16 @@ import { championSkins } from "@/data/helpers";
 import { store } from "@/data/store"
 
 
+export async  function generateStaticParams() {
+    const champions = store.patch.champions;
+    console.log(champions)
+    return champions.map((champ) => ({
+        params: {
+            champName: champ.name
+        }
+    }))
+}
+
 export default async function Page({
     params,
 }: {
