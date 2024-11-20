@@ -1,3 +1,4 @@
+'use client';
 import { Header } from "./header";
 import { Footer, FooterContainer } from "./footer";
 import dynamic from "next/dynamic";

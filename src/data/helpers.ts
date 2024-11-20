@@ -6,7 +6,7 @@ export function splitId(id: number) {
 
 export function getChampionSkinsById(id: number, skins: Skins) {
     return Object.values(skins).filter((skin) => splitId(skin.id)[0] === id);
-  }  
+}
 
 export function getChampionByName(name: string, champions: Champion[]) {
     return champions.find((champ) => champ.name.toLowerCase() === name.toLowerCase());
