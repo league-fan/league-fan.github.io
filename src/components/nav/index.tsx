@@ -10,40 +10,40 @@ interface NavProps {
 
 export function Nav({ active, filters }: NavProps) {
   return (
-    <nav>
+    (<nav>
       <div className={styles.tabs}>
-        <Link href="/" as="/">
-          <a
-            className={classNames({
-              [styles.active]: active === "champions",
-            })}
-          >
-            <User />
-            Champions
-          </a>
+        <Link
+          href="/"
+          as="/"
+          className={classNames({
+            [styles.active]: active === "champions",
+          })}>
+
+          <User />Champions
+                    
         </Link>
-        <Link href="/universes" as="/universes">
-          <a
-            className={classNames({
-              [styles.active]: active === "universes",
-            })}
-          >
-            <Globe />
-            Universes
-          </a>
+        <Link
+          href="/universes"
+          as="/universes"
+          className={classNames({
+            [styles.active]: active === "universes",
+          })}>
+
+          <Globe />Universes
+                    
         </Link>
-        <Link href="/skinlines" as="/skinlines">
-          <a
-            className={classNames({
-              [styles.active]: active === "skinlines",
-            })}
-          >
-            <Folder />
-            Skinlines
-          </a>
+        <Link
+          href="/skinlines"
+          as="/skinlines"
+          className={classNames({
+            [styles.active]: active === "skinlines",
+          })}>
+
+          <Folder />Skinlines
+                    
         </Link>
       </div>
       {filters && <div className={styles.filters}>{filters}</div>}
-    </nav>
+    </nav>)
   );
 }

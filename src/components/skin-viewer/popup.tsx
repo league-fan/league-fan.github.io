@@ -23,14 +23,14 @@ export function Popup({ skin }: { skin: SkinWithMeta }) {
   }, [skin]);
   const meta = skin.$skinExplorer;
   return (
-    <aside className={styles.popup} onTouchStart={(e) => e.stopPropagation()}>
+    (<aside className={styles.popup} onTouchStart={(e) => e.stopPropagation()}>
       <nav>
         <div>
           <User />
           <Link href="/champions/[key]" as={`/champions/${meta.champion.key}`}>
-            <a>
-              <span>{meta.champion.name}</span>
-            </a>
+
+            <span>{meta.champion.name}</span>
+
           </Link>
         </div>
         {!!meta.universes.length && (
@@ -38,9 +38,9 @@ export function Popup({ skin }: { skin: SkinWithMeta }) {
             <Globe />
             {meta.universes.map((u) => (
               <Link key={u.id} href="/universes/[id]" as={`/universes/${u.id}`}>
-                <a>
-                  <span>{u.name}</span>
-                </a>
+
+                <span>{u.name}</span>
+
               </Link>
             ))}
           </div>
@@ -50,9 +50,9 @@ export function Popup({ skin }: { skin: SkinWithMeta }) {
             <Folder />
             {meta.skinlines.map((l) => (
               <Link key={l.id} href="/skinlines/[id]" as={`/skinlines/${l.id}`}>
-                <a>
-                  <span>{l.name}</span>
-                </a>
+
+                <span>{l.name}</span>
+
               </Link>
             ))}
           </div>
@@ -111,6 +111,6 @@ export function Popup({ skin }: { skin: SkinWithMeta }) {
           <ExternalLink />
         </h3>
       </a>
-    </aside>
+    </aside>)
   );
 }
