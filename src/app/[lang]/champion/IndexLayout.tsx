@@ -13,7 +13,7 @@ export const classes = {
     tank: "Tank",
 };
 
-export default function Index() {
+export default function IndexLayout() {
     const [champRole, setChampRole] = useLocalStorageState(
         "champs_index__champRole",
         ""

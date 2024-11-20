@@ -1,12 +1,10 @@
 import { Layout } from "@/components"
-import Index from "./Index"
+import IndexLayout from "./IndexLayout"
 
 export default async function Page({
     params,
 }: {
     params: Promise<{ champName: string }>
 }) {
-    return <Layout withNew>
-        <Index />
-    </Layout>
+    return <IndexLayout />
 }
