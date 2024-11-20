@@ -1,4 +1,5 @@
-import { PropsProvider } from "./props"
+import { PropsProvider } from "../props";
+
 const DEFAULT_LANG = 'default'
 
 interface LangLayoutProps {

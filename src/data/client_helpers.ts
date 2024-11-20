@@ -21,6 +21,11 @@ export function dataRoot({ patch = "pbe", lang = 'default' }) {
     return `${CDRAGON}/${patch}/plugins/rcp-be-lol-game-data/global/${lang}`;
 }
 
-export function asset(path: string, { patch = "pbe", lang = 'default' }) {
+interface AssetOptions {
+    patch?: string;
+    lang?: string;
+}
+
+export function asset(path: string, { patch = "pbe", lang = 'default' }: AssetOptions = {}) {
     return path.replace("/lol-game-data/assets", dataRoot({ patch, lang })).toLowerCase();
 }

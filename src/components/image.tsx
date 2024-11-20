@@ -1,14 +1,13 @@
-import NextImage from "next/legacy/image";
+import NextImage from "next/image";
 import { useState, useEffect } from "react";
 import placeholder from "../assets/placeholder.svg";
 
 interface ImageProps {
     src: string;
-    objectFit?: "contain" | "cover" | "fill" | "none" | "scale-down";
     [key: string]: any;
 }
 
-export default function Image({ src, objectFit, ...props }: ImageProps) {
+export default function Image({ src, ...props }: ImageProps) {
     const [exists, setExists] = useState(true);
     useEffect(() => setExists(true), [src]);
 
@@ -16,9 +15,12 @@ export default function Image({ src, objectFit, ...props }: ImageProps) {
 
     return (
         <NextImage
-            alt={""} src={actualSrc}
+            alt={""}
+            src={actualSrc}
             {...props}
-            objectFit={exists ? objectFit : "contain"}
-            onError={() => setExists(false)} />
+            onError={() => setExists(false)}
+            style={exists ? {
+                objectFit: 'contain',
+            } : {}} />
     );
 }
