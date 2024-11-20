@@ -14,7 +14,7 @@ import { useSwipeable } from "react-swipeable";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "../image";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -197,10 +197,11 @@ function _SkinViewer({
 
       if (swipe) {
         setDeltaX(swipe ? "100vw" : "80px");
-        router.prefetch(router.pathname, linkTo(prev));
-        setTimeout(() => router.replace(router.pathname, linkTo(prev)), 300);
+        const pathname = usePathname()
+        router.prefetch(pathname, );
+        setTimeout(() => router.replace(pathname, linkTo(prev)), 300);
       } else {
-        router.replace(router.pathname, linkTo(prev));
+        router.replace(pathname, linkTo(prev));
       }
     },
     [router, linkTo, prev, setExiting, setDeltaX, exiting]
