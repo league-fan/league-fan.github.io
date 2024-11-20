@@ -1,17 +1,15 @@
+'use client';
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import { useProps } from "@/data2/contexts";
-import getConfig from "next/config";
-import { ReactNode } from "react";
-
-const { publicRuntimeConfig } = getConfig();
+import { ReactNode, useContext } from "react";
+import { PropsContext } from "@/app/props";
 
 interface FooterProps {
     flat?: boolean;
 }
 
 export function Footer({ flat }: FooterProps = { flat: false }) {
-    const { patch } = useProps();
+    const { patch } = useContext(PropsContext);
     return (
         <footer className={classNames(styles.footer, { [styles.flat]: flat })}>
             <div>
@@ -68,7 +66,7 @@ export function Footer({ flat }: FooterProps = { flat: false }) {
                         style={{ textDecoration: "none" }}
                         rel="noreferrer"
                     >
-                        Skin Explorer v{publicRuntimeConfig?.version}
+                        Skin Explorer
                     </a>
                     <br />
                     Built by{" "}
