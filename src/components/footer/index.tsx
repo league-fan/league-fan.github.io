@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import { useProps } from "@/data/contexts";
+import { useProps } from "@/data2/contexts";
 import getConfig from "next/config";
 import { ReactNode } from "react";
 

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { makeTitle } from "@/data/helpers";
+import { makeTitle } from "@/data2/helpers";
 import { Footer, FooterContainer } from "./footer";
 import { Header } from "./header";
 import { Loading } from "./loading";

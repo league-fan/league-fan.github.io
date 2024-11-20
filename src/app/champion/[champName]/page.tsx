@@ -1,5 +1,5 @@
-import { championSkins } from "@/data/helpers";
-import { store } from "@/data/store"
+import { championSkins } from "@/data2/helpers";
+import { store } from "@/data2/store"
 
 
 export async  function generateStaticParams() {

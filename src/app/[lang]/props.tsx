@@ -1,4 +1,6 @@
 'use client'
+import { getAddedSkins } from '@/data/helpers';
+import Patch from '@/data/patch';
 import { Champion, Skin, Skins } from '@/types';
 import { createContext, ReactNode } from 'react'
 
@@ -28,9 +30,19 @@ function PropsProvider({
     children, value
 }: {
     children: ReactNode,
-    value: PropsContextType
+    value: string
 }) {
-    return <PropsContext.Provider value={value} > {children} </PropsContext.Provider>
+    const lang = value || 'default';
+    const patch = new Patch(lang)
+    const addedSkins = getAddedSkins(patch.added, patch.skins, patch.champions)
+    const props: PropsContextType = {
+        skins: patch.skins,
+        champions: patch.champions,
+        addedSkins: addedSkins,
+        patch: patch.fullVersionString,
+        lang: lang
+    }
+    return <PropsContext.Provider value={props} > {children} </PropsContext.Provider>
 }
 
 export { PropsContext, PropsProvider }

@@ -1,4 +1,3 @@
-"use client"
 import { CDRAGON, ROOT } from "./constants";
 import { useProps } from "./contexts";
 import { useState, useEffect } from "react";
