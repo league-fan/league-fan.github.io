@@ -6,7 +6,7 @@ import universes from "@/../.cache/universes.json";
 import skins from "@/../.cache/skins.json";
 import added from "@/../.cache/added.json";
 import { Added, Champion, Skinline, Skins, Universe } from "@/types";
-import { splitId } from "@/data/helpers";
+import { splitId } from "@/data/client_helpers";
 
 export const CDRAGON = "https://raw.communitydragon.org";
 export const ROOT = "https://www.skinexplorer.lol";
