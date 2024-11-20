@@ -35,7 +35,7 @@ export default function NewAdditions() {
                                         loading="eager"
                                         src={asset(skin.tilePath)}
                                         alt={skin.name}
-                                        style={{ objectFit: "cover" }}
+                                        objectFit="cover"
                                         layout="fill"
                                     />
                                 </span>
