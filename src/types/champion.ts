@@ -3,7 +3,7 @@ export interface Champion {
   name: string;
   alias: string;
   squarePortraitPath: string;
-  roles: Role[];
+  roles: string[];
   key: string;
 }
 
