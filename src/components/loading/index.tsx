@@ -1,6 +1,6 @@
 import styles from "./styles.module.scss";
 
-export default function Loading() {
+export default function LoadingSkeleton() {
   return (
     <div className={styles.preloader}>
       <div>
