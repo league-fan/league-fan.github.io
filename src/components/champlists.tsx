@@ -4,7 +4,7 @@ import { PropsContext } from "../data/propsContext";
 import styles from "@/styles/index.module.scss";
 import Link from "next/link";
 import Image from "@/components/image";
-import { asset } from "@/data/client_helpers";
+import { asset } from "@/data/helpers";
 
 export function ChampionsList({ role }: { role: string }) {
     const { champions, lang } = useContext(PropsContext);

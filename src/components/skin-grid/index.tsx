@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Image from "@/components/image";
 import Link from "next/link";
-import { asset, getRarityOfSkin } from "@/data/client_helpers";
+import { asset, getRarityOfSkin } from "@/data/helpers";
 import styles from "./styles.module.scss";
 import { Skin } from "@/types";
 

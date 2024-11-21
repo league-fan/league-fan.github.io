@@ -1,6 +1,6 @@
 import { PropsContext } from "@/data/propsContext";
 import { prepareCollection, SkinWithMeta } from "@/components/skin-viewer/helpers";
-import { getChampionById, getSkinsOfChampionById, splitId } from "@/data/client_helpers";
+import { getChampionById, getSkinsOfChampionById, splitId } from "@/data/helpers";
 import { Skin } from "@/types";
 import { createContext, ReactNode, useContext } from "react";
 
