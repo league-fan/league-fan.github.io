@@ -4,7 +4,7 @@ import Image from "../image";
 import styles from "./style.module.scss";
 import { useContext } from "react";
 import { PropsContext, SkinWithKey } from "@/data/propsContext";
-import { asset } from "@/data/client_helpers";
+import { asset } from "@/data/helpers";
 
 export default function NewAdditions() {
     const { addedSkins } = useContext(PropsContext);

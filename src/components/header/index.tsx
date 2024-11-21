@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import Image from "next/image";
 import classNames from "classnames";
 import logo from "../../assets/logo.png";
-import { useEscapeTo } from "@/data/client_helpers";
+import { useEscapeTo } from "@/data/helpers";
 import { ArrowLeft, ExternalLink, Menu, Search, X } from "lucide-react";
 import { useState } from "react";
 

@@ -1,5 +1,5 @@
 'use client'
-import { getAddedSkins } from '@/data/client_helpers';
+import { getAddedSkins } from '@/data/helpers';
 import Patch from '@/data/patch';
 import { Champion, Changes, Skin, Skinline, Skins, Universe } from '@/types';
 import { createContext, ReactNode } from 'react'

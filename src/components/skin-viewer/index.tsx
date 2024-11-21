@@ -28,11 +28,11 @@ import {
   asset,
   useEscapeTo,
   useLocalStorageState,
-} from "@/data/client_helpers";
+} from "@/data/helpers";
 import { Popup } from "./popup";
 import styles from "./styles.module.scss";
 import { SkinWithMeta } from "./helpers";
-import { getRarityOfSkin } from "@/data/client_helpers";
+import { getRarityOfSkin } from "@/data/helpers";
 import { Skin } from "@/types";
 import { SkinContext } from "@/data/skinContext";
 

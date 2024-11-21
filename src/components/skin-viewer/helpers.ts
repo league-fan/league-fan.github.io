@@ -1,7 +1,7 @@
 'use client'
 
 import { Champion, Skin, Skinline, Universe } from "@/types";
-import { splitId, modelviewerUrl } from "@/data/client_helpers";
+import { splitId, modelviewerUrl } from "@/data/helpers";
 import { useContext } from "react";
 import { PropsContext } from "@/data/propsContext";
 

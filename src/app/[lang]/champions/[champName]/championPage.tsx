@@ -2,7 +2,7 @@
 import { useContext, useMemo } from "react";
 import styles from '@/styles/collection.module.scss'
 import { PropsContext } from "@/data/propsContext";
-import { asset, getChampionByName, useLocalStorageState, sortSkins, getSkinsOfChampionById } from "@/data/client_helpers";
+import { asset, getChampionByName, useLocalStorageState, sortSkins, getSkinsOfChampionById } from "@/data/helpers";
 import { Skin } from "@/types";
 import Image from "@/components/image";
 import { SkinGrid } from "@/components/skin-grid";

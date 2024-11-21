@@ -1,7 +1,7 @@
 'use client'
 import { Nav } from "@/components/nav";
 import styles from "@/styles/index.module.scss";
-import { useLocalStorageState } from "@/data/client_helpers";
+import { useLocalStorageState } from "@/data/helpers";
 import { ChampionsList } from "./champlists";
 
 export const classes = {
