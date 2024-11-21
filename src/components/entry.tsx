@@ -1,6 +1,8 @@
 'use client';
 import { Header } from "@/components/header";
 import { Footer, FooterContainer } from "@/components/footer";
+import { ReactNode } from "react";
+import NewAdditions from "@/components/new-additions"
 
 interface LayoutProps {
     children: ReactNode;
@@ -9,10 +11,8 @@ interface LayoutProps {
     withNew?: boolean;
 }
 
-import { ReactNode } from "react";
-import NewAdditions from "@/components/new-additions"
 
-function Entry({ children, flat = false, backTo, withNew = false }: LayoutProps) {
+export function Entry({ children, flat = false, backTo, withNew = false }: LayoutProps) {
     return (
         <FooterContainer>
             <div>
@@ -23,8 +23,4 @@ function Entry({ children, flat = false, backTo, withNew = false }: LayoutProps)
             <Footer {...{ flat }} />
         </FooterContainer>
     );
-}
-
-export default function ChampionLayout({ children }: { children: React.ReactNode }) {
-    return (<div className="champion-layout"><Entry withNew>{children}</Entry></div>)
 }

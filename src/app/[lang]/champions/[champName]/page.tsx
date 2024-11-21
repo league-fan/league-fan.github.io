@@ -1,6 +1,3 @@
-
-import { useContext } from "react";
-import { PropsContext } from "@/app/props";
 import ChampionPage from "./championPage";
 
 // export async function generateStaticParams() {
