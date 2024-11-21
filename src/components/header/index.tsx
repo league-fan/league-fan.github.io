@@ -2,7 +2,7 @@ import Link from "next/link";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import classNames from "classnames";
-import logo from "../../assets/logo.png";
+import logo from "@/assets/logo.png";
 import { useEscapeTo } from "@/data/helpers";
 import { ArrowLeft, ExternalLink, Menu, Search, X } from "lucide-react";
 import { useState } from "react";
@@ -12,7 +12,7 @@ interface HeaderProps {
   backTo?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ flat, backTo } = { flat: false, backTo: undefined }) => {
+export function Header({ flat, backTo }: HeaderProps = { flat: false }) {
   const back =
     typeof window !== "undefined" ? localStorage.lastIndex ?? backTo : backTo;
   useEscapeTo(back);

@@ -18,7 +18,7 @@ export function ChampionsList({ role }: { role: string }) {
             <Link
                 key={c.id}
                 href={`champions/[champId]`}
-                as={`champions/${c.key}`}
+                as={`champions/${c.alias}`}
                 prefetch={false}
             >
                 <Image
