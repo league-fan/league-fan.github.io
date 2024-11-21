@@ -5,7 +5,7 @@ import classNames from "classnames";
 import logo from "../../assets/logo.png";
 import { useEscapeTo } from "@/data/client_helpers";
 import { ArrowLeft, ExternalLink, Menu, Search, X } from "lucide-react";
-import { useLayoutEffect, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 interface HeaderProps {
   flat?: boolean;

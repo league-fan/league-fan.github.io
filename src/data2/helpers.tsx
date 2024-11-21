@@ -94,7 +94,10 @@ export function rarity(skin: Skin) {
   if (!rarities[skin.rarity]) return null;
   const [imgName, name] = rarities[skin.rarity];
   const imgUrl = `${dataRoot()}/v1/rarity-gem-icons/${imgName}`;
-  return [imgUrl, name];
+  return {
+    imgUrl,
+    name,
+  }
 }
 
 export function modelviewerUrl(skin: Skin, champion: Champion) {

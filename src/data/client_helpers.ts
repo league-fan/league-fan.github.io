@@ -5,6 +5,31 @@ import { useEffect, useState } from "react";
 import { CDRAGON } from "./constants";
 import { useRouter } from "next/navigation";
 import { Added, Champion, Skin, Skins } from "@/types";
+import { RarityEnum } from "@/types/skins";
+
+export const raritiesMap: Partial<Record<RarityEnum, [string, string]>> = {
+    [RarityEnum.KUltimate]: ["ultimate.png", "Ultimate"],
+    [RarityEnum.KMythic]: ["mythic.png", "Mythic"],
+    [RarityEnum.KLegendary]: ["legendary.png", "Legendary"],
+    [RarityEnum.KEpic]: ["epic.png", "Epic"],
+    [RarityEnum.KTranscendent]: ["transcendent.png", "Transcendent"],
+};
+
+export function getRarityOfSkin(skin: Skin) {
+    if (!skin.rarity || !(skin.rarity in raritiesMap)) {
+        return null;
+    }
+    const rarityInfo = raritiesMap[skin.rarity];
+    if (!rarityInfo) {
+        return null;
+    }
+    const [imgName, name] = rarityInfo;
+    const imgUrl = `${dataRoot({})}/v1/rarity-gem-icons/${imgName}`;
+    return {
+        imgUrl,
+        name,
+    };
+}
 
 export function splitId(id: number) {
     return [Math.floor(id / 1000), id % 1000];
@@ -31,7 +56,7 @@ export function getAddedSkins(added: Added, skins: Skins, champions: Champion[])
         });
 }
 
-export function getChampionSkinsById(id: number, skins: Skins) {
+export function getSkinsOfChampionById(id: number, skins: Skins) {
     return Object.values(skins).filter((skin) => splitId(skin.id)[0] === id);
 }
 
@@ -39,6 +64,15 @@ export function getChampionByName(name: string, champions: Champion[]) {
     return champions.find((champ) => champ.alias.toLowerCase() === name.toLowerCase());
 }
 
+export function sortSkins(sortByRarity: boolean, skins: Skin[]) {
+    if (sortByRarity) {
+        const keys = Object.keys(raritiesMap).reverse();
+        return skins
+            .slice()
+            .sort((a, b) => keys.indexOf(b.rarity) - keys.indexOf(a.rarity));
+    }
+    return skins;
+}
 
 export function useLocalStorageState(name: string, initialValue: any) {
     const [value, _setValue] = useState(initialValue);
