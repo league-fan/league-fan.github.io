@@ -17,16 +17,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      // Basic redirect
-      {
-        source: '/',
-        destination: '/default/champions',
-        permanent: true,
-      },
-    ]
-  },
 };
 
 export default nextConfig;

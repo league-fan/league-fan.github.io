@@ -470,6 +470,7 @@ function _SkinViewer({
             <span>
               {rarity && (
                 <Image
+                  unoptimized
                   src={rarity.imgUrl}
                   title={rarity.name}
                   alt={rarity.name}

@@ -29,6 +29,7 @@ export const Header: React.FC<HeaderProps> = ({ flat, backTo } = { flat: false, 
 
         {backTo && <ArrowLeft />}
         <Image
+          unoptimized
           priority
           src={logo}
           alt="Skin Explorer"
