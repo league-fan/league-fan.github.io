@@ -18,9 +18,19 @@ export interface SkinWithMeta extends Skin {
 
 export function skinToSkinWithMeta(origin_skin: Skin): SkinWithMeta {
   const { champions, skinlines, universes, changes } = useContext(PropsContext);
-  let skin = origin_skin as SkinWithMeta;
+  let skin: SkinWithMeta = {
+    ...origin_skin,
+    $skinExplorer: {
+      changes: [],
+      champion: {} as Champion, // 使用类型断言将空对象转换为 Champion 类型
+      skinlines: [],
+      universes: [],
+      modelviewerUrl: "",
+      skinSpotlightsUrl: "",
+    },
+  };
   const meta = skin.$skinExplorer;
-  meta.changes = changes[skin.id] ?? false;
+  meta.changes = changes[skin.id] ?? [];
   const [cId] = splitId(skin.id);
   meta.champion = champions.find((c) => c.id === cId) ?? meta.champion;
   meta.skinlines = Array.from(

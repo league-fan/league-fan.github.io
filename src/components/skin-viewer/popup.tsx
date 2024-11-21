@@ -1,3 +1,4 @@
+'use client'
 import {
   Box,
   ChevronDown,
@@ -11,7 +12,7 @@ import {
 } from "lucide-react";
 import Image from "../image";
 import Link from "next/link";
-import { asset } from "@/data2/helpers";
+import { asset } from "@/data/client_helpers";
 import styles from "./styles.module.scss";
 import { useEffect, useState } from "react";
 import { SkinWithMeta } from "./helpers";
