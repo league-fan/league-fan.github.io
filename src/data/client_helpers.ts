@@ -64,6 +64,10 @@ export function getChampionByName(name: string, champions: Champion[]) {
     return champions.find((champ) => champ.alias.toLowerCase() === name.toLowerCase());
 }
 
+export function getChampionById(id: number, champions: Champion[]) {
+    return champions.find((champ) => champ.id === id);
+}
+
 export function sortSkins(sortByRarity: boolean, skins: Skin[]) {
     if (sortByRarity) {
         const keys = Object.keys(raritiesMap).reverse();
@@ -89,6 +93,12 @@ export function useLocalStorageState(name: string, initialValue: any) {
 
 export function dataRoot({ patch = "pbe", lang = 'default' }) {
     return `${CDRAGON}/${patch}/plugins/rcp-be-lol-game-data/global/${lang}`;
+}
+
+export function modelviewerUrl(skin: Skin) {
+    return `https://www.modelviewer.lol/en-US/model-viewer?id=${skin.id}`;
+    // const skinId = splitId(skin.id)[1];
+    // return `https://teemo.gg/model-viewer?game=league-of-legends&type=champions&object=${champion.alias.toLowerCase()}&skinid=${champion.alias.toLowerCase()}-${skinId}`;
 }
 
 interface AssetOptions {

@@ -1,6 +1,9 @@
+'use client'
+
 import { Champion, Skin, Skinline, Universe } from "@/types";
-import { splitId, modelviewerUrl } from "@/data2/helpers";
-import { store } from "@/data2/store";
+import { splitId, modelviewerUrl } from "@/data/client_helpers";
+import { useContext } from "react";
+import { PropsContext } from "@/data/propsContext";
 
 export interface SkinWithMeta extends Skin {
   $skinExplorer: {
@@ -13,28 +16,10 @@ export interface SkinWithMeta extends Skin {
   };
 }
 
-export async function prepareCollection(collection: SkinWithMeta[], idx: number) {
-  const skin = collection[idx];
-  skin.$skinExplorer = {
-    changes: [],
-    champion: {
-      id: 0,
-      name: "",
-      alias: "",
-      squarePortraitPath: "",
-      roles: [],
-      key: ""
-    } as Champion,
-    skinlines: [],
-    universes: [],
-    modelviewerUrl: '',
-    skinSpotlightsUrl: ''
-  };
+export function skinToSkinWithMeta(origin_skin: Skin): SkinWithMeta {
+  const { champions, skinlines, universes, changes } = useContext(PropsContext);
+  let skin = origin_skin as SkinWithMeta;
   const meta = skin.$skinExplorer;
-
-  const { champions, skinlines, universes } = store.patch;
-  const { changes } = store;
-
   meta.changes = changes[skin.id] ?? false;
   const [cId] = splitId(skin.id);
   meta.champion = champions.find((c) => c.id === cId) ?? meta.champion;
@@ -56,16 +41,25 @@ export async function prepareCollection(collection: SkinWithMeta[], idx: number)
     ).values()
   );
 
-  meta.modelviewerUrl = modelviewerUrl(skin, meta.champion);
+  meta.modelviewerUrl = modelviewerUrl(skin);
   meta.skinSpotlightsUrl = `https://www.youtube.com/c/SkinSpotlights/search?query=${skin.name.slice(
     skin.isBase ? 9 : 0
   )}`;
+
+  return skin;
+}
+
+export function prepareCollection(idx: number, collection: Skin[]) {
+  const origin_skin = collection[idx];
+  let skin = skinToSkinWithMeta(origin_skin);
 
   let prev = null,
     next = null;
   if (collection.length > 1) {
     prev = collection[(idx === 0 ? collection.length : idx) - 1];
     next = collection[(idx + 1) % collection.length];
+    next = skinToSkinWithMeta(next);
+    prev = skinToSkinWithMeta(prev);
   }
 
   return { skin, prev, next };

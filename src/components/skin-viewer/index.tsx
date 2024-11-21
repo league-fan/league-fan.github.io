@@ -1,19 +1,17 @@
 "use client"
-import { Loading } from "../loading";
 import {
   useCallback,
   useRef,
   useEffect,
   useMemo,
   useState,
-  Fragment,
-  JSX,
+  ReactNode,
+  useContext,
 } from "react";
 import classNames from "classnames";
 import { useSwipeable } from "react-swipeable";
-import Head from "next/head";
 import Link from "next/link";
-import Image from "../image";
+import Image from "@/components/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -27,26 +25,24 @@ import {
 } from "lucide-react";
 import {
   asset,
-  makeCanonical,
-  makeDescription,
-  makeImage,
-  makeTitle,
-  rarity,
   useEscapeTo,
   useLocalStorageState,
-} from "@/data2/helpers";
+} from "@/data/client_helpers";
 import { Popup } from "./popup";
 import styles from "./styles.module.scss";
 import { SkinWithMeta } from "./helpers";
+import { getRarityOfSkin } from "@/data/client_helpers";
+import { Skin } from "@/types";
+import { SkinContext } from "@/data/skinContext";
 
 interface SkinViewerProps {
   backTo: string;
-  linkTo: (skin: SkinWithMeta) => string;
+  linkTo: (skin: Skin) => string;
   collectionName: string;
-  collectionIcon: string;
-  prev: SkinWithMeta;
-  next: SkinWithMeta;
-  skin: SkinWithMeta; // 根据实际情况定义 skin 的类型
+  collectionIcon: ReactNode;
+  prev: SkinWithMeta | null;
+  next: SkinWithMeta | null;
+  skin: SkinWithMeta | null; // 根据实际情况定义 skin 的类型
 }
 
 const _supportsPrefetch = () => {
@@ -62,8 +58,8 @@ const _supportsPrefetch = () => {
 };
 
 const pseudoPrefetch = (skin: SkinWithMeta, patch = "pbe") => {
-  new window.Image().src = asset(skin.splashPath, patch || "pbe");
-  new window.Image().src = asset(skin.uncenteredSplashPath, patch || "pbe");
+  new window.Image().src = asset(skin.splashPath, { patch });
+  new window.Image().src = asset(skin.uncenteredSplashPath, { patch });
 };
 
 const prefetchLinks = (skin: SkinWithMeta, patch = "pbe") => {
@@ -71,22 +67,22 @@ const prefetchLinks = (skin: SkinWithMeta, patch = "pbe") => {
     <>
       <link
         rel="prefetch"
-        href={asset(skin.splashVideoPath, patch)}
+        href={asset(skin.splashVideoPath, { patch })}
         as="video"
       />
       <link
         rel="prefetch"
-        href={asset(skin.collectionSplashVideoPath ?? "", patch)}
+        href={asset(skin.collectionSplashVideoPath ?? "", { patch })}
         as="video"
       />
     </>
   ) : (
     <>
-      <link rel="prefetch" as="image" href={asset(skin.splashPath, patch)} />
+      <link rel="prefetch" as="image" href={asset(skin.splashPath, { patch })} />
       <link
         rel="prefetch"
         as="image"
-        href={asset(skin.uncenteredSplashPath, patch)}
+        href={asset(skin.uncenteredSplashPath, { patch })}
       />
     </>
   );
@@ -114,6 +110,8 @@ function _SkinViewer({
   next,
   skin,
 }: SkinViewerProps) {
+  if (!skin) return null;
+
   const meta = skin.$skinExplorer;
   const supportsVideo = useMemo(() => canPlayWebM(), []);
   const supportsPrefetch = useMemo(() => _supportsPrefetch(), []);
@@ -188,7 +186,7 @@ function _SkinViewer({
   const objectPosition = fill
     ? `${position.left * 100}% ${position.top * 100}% `
     : "center center";
-  const r = rarity(skin);
+  const rarity = getRarityOfSkin(skin);
 
   const goPrevious = useCallback(
     (swipe: boolean) => {
@@ -197,11 +195,10 @@ function _SkinViewer({
 
       if (swipe) {
         setDeltaX(swipe ? "100vw" : "80px");
-        const pathname = usePathname()
-        router.prefetch(pathname, );
-        setTimeout(() => router.replace(pathname, linkTo(prev)), 300);
+        router.prefetch(linkTo(prev));
+        setTimeout(() => router.replace(linkTo(prev)), 300);
       } else {
-        router.replace(pathname, linkTo(prev));
+        router.replace(linkTo(prev));
       }
     },
     [router, linkTo, prev, setExiting, setDeltaX, exiting]
@@ -214,10 +211,10 @@ function _SkinViewer({
 
       if (swipe) {
         setDeltaX(swipe ? "-100vw" : "-80px");
-        router.prefetch(router.pathname, linkTo(next));
-        setTimeout(() => router.replace(router.pathname, linkTo(next)), 300);
+        router.prefetch(linkTo(next));
+        setTimeout(() => router.replace(linkTo(next)), 300);
       } else {
-        router.replace(router.pathname, linkTo(next));
+        router.replace(linkTo(next));
       }
     },
     [router, linkTo, next, setExiting, setDeltaX, exiting]
@@ -235,7 +232,7 @@ function _SkinViewer({
    * decided that a[href][download] shouldn't work for CORS stuff.
    */
   const downloadActive = useCallback(async () => {
-    const image = await fetch(asset(imgPath, patch || "pbe"));
+    const image = await fetch(asset(imgPath, { patch }));
     const imageBlog = await image.blob();
     const imageURL = URL.createObjectURL(imageBlog);
 
@@ -363,29 +360,7 @@ function _SkinViewer({
     delta: { left: 3, right: 3, up: 50 },
   });
 
-  return (<>
-    <Head>
-      {makeTitle(skin.name)}
-      {makeDescription(
-        skin.description || `Look at the splash art for ${skin.name}!`
-      )}
-      {makeImage(asset(skin.uncenteredSplashPath), skin.name)}
-      {makeCanonical(`/champions/${meta.champion.key}/skins/${skin.id}`)}
-      {prefetchLinks(skin)}
-      {meta.changes &&
-        meta.changes.map((patch) => (
-          <Fragment key={patch}>{prefetchLinks(skin, patch)}</Fragment>
-        ))}
-      {prev && prefetchLinks(prev)}
-      {next && prefetchLinks(next)}
-      <style>
-        {`
-        body {
-          overscroll-behavior: none;
-        }
-      `}
-      </style>
-    </Head>
+  return (
     <div
       className={classNames(styles.viewer, {
         [styles.exiting]: exiting,
@@ -466,7 +441,7 @@ function _SkinViewer({
           </div>
         </header>
         {prev && (
-          <Link href={router.pathname} as={linkTo(prev)} replace className={styles.prev}>
+          <Link href={usePathname()} as={linkTo(prev)} replace className={styles.prev}>
 
             <ArrowLeft />
             <div>{prev.name}</div>
@@ -474,7 +449,7 @@ function _SkinViewer({
           </Link>
         )}
         {next && (
-          <Link href={router.pathname} as={linkTo(next)} replace className={styles.next}>
+          <Link href={usePathname()} as={linkTo(next)} replace className={styles.next}>
 
             <div>{next.name}</div>
             <ArrowRight />
@@ -492,11 +467,11 @@ function _SkinViewer({
         >
           <div>
             <span>
-              {r && (
+              {rarity && (
                 <Image
-                  src={r[0]}
-                  title={r[1]}
-                  alt={r[1]}
+                  src={rarity.imgUrl}
+                  title={rarity.name}
+                  alt={rarity.name}
                   objectFit="contain"
                   objectPosition="center"
                   layout="fixed"
@@ -520,13 +495,13 @@ function _SkinViewer({
             key={vidPath}
             style={{ objectFit: "cover" }}
           >
-            <source src={asset(vidPath, patch || "pbe")} />
+            <source src={asset(vidPath, { patch })} />
           </video>
         ) : (
           <Image
             unoptimized
             priority
-            src={asset(imgPath, patch || "pbe")}
+            src={asset(imgPath, { patch })}
             layout="fill"
             alt={skin.name}
             objectFit="cover"
@@ -554,13 +529,13 @@ function _SkinViewer({
               };
             }}
           >
-            <source src={asset(vidPath, patch || "pbe")} />
+            <source src={asset(vidPath, { patch })} />
           </video>
         ) : (
           <Image
             priority
             unoptimized
-            src={asset(imgPath, patch || "pbe")}
+            src={asset(imgPath, { patch })}
             layout="fill"
             alt={skin.name}
             objectFit={objectFit}
@@ -579,27 +554,20 @@ function _SkinViewer({
         )}
       </main>
     </div>
-  </>);
+  );
 }
 
-export function SkinViewer(props: JSX.IntrinsicAttributes & SkinViewerProps) {
-  const router = useRouter();
-  if (router.isFallback) {
-    return (
-      <>
-        <div
-          style={{
-            display: "flex",
-            height: "100vh",
-            alignContent: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Loading />
-        </div>
-      </>
-    );
+export function SkinViewer(props: { collectionIcon: ReactNode }) {
+  const { name, key, skin, prev, next, patch } = useContext(SkinContext);
+  const skinProps: SkinViewerProps = {
+    backTo: `/champions/${key}`,
+    linkTo: (skin: Skin) => `/champions/${key}/skins/${skin.id}`,
+    collectionName: name,
+    collectionIcon: props.collectionIcon,
+    prev,
+    next,
+    skin,
   }
 
-  return <_SkinViewer {...props} />;
+  return <_SkinViewer {...skinProps} />;
 }

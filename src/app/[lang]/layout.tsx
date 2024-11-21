@@ -1,4 +1,4 @@
-import { PropsProvider } from "../props";
+import { PropsProvider } from "@/data/propsContext";
 
 const DEFAULT_LANG = 'default'
 

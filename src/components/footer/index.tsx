@@ -2,7 +2,7 @@
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import { ReactNode, useContext } from "react";
-import { PropsContext } from "@/app/props";
+import { PropsContext } from "@/data/propsContext";
 
 interface FooterProps {
     flat?: boolean;

@@ -1,7 +1,7 @@
 'use client'
 import { getAddedSkins } from '@/data/client_helpers';
 import Patch from '@/data/patch';
-import { Champion, Skin, Skins } from '@/types';
+import { Champion, Changes, Skin, Skinline, Skins, Universe } from '@/types';
 import { createContext, ReactNode } from 'react'
 
 export interface SkinWithKey extends Skin {
@@ -11,6 +11,9 @@ export interface SkinWithKey extends Skin {
 export interface PropsContextType {
     skins: Skins;
     champions: Champion[];
+    skinlines: Skinline[];
+    universes: Universe[];
+    changes: Changes;
     addedSkins: SkinWithKey[];
     patch: string;
     lang: string;
@@ -19,6 +22,9 @@ const value: PropsContextType = {
     skins: {},
     champions: [],
     addedSkins: [],
+    skinlines: [],
+    universes: [],
+    changes: {},
     patch: '',
     lang: 'default'
 };
@@ -39,6 +45,9 @@ function PropsProvider({
         skins: patch.skins,
         champions: patch.champions,
         addedSkins: addedSkins,
+        skinlines: patch.skinlines,
+        universes: patch.universes,
+        changes: patch.changes,
         patch: patch.fullVersionString,
         lang: lang
     }
