@@ -24,7 +24,7 @@ export function getRarityOfSkin(skin: Skin) {
         return null;
     }
     const [imgName, name] = rarityInfo;
-    const imgUrl = `${dataRoot({})}/v1/rarity-gem-icons/${imgName}`;
+    const imgUrl = `${dataRoot()}/v1/rarity-gem-icons/${imgName}`;
     return {
         imgUrl,
         name,
@@ -91,8 +91,15 @@ export function useLocalStorageState(name: string, initialValue: any) {
     return [value, setValue];
 }
 
-export function dataRoot({ patch = "pbe", lang = 'default' }) {
-    return `${CDRAGON}/${patch}/plugins/rcp-be-lol-game-data/global/${lang}`;
+interface AssetOptions {
+    patch?: string;
+    lang?: string;
+}
+
+export function dataRoot({ patch, lang }: AssetOptions = { patch: "pbe", lang: "default" }) {
+    const effectivePatch = patch || "pbe";
+    const effectiveLang = lang || "default";
+    return `${CDRAGON}/${effectivePatch}/plugins/rcp-be-lol-game-data/global/${effectiveLang}`;
 }
 
 export function modelviewerUrl(skin: Skin) {
@@ -101,12 +108,7 @@ export function modelviewerUrl(skin: Skin) {
     // return `https://teemo.gg/model-viewer?game=league-of-legends&type=champions&object=${champion.alias.toLowerCase()}&skinid=${champion.alias.toLowerCase()}-${skinId}`;
 }
 
-interface AssetOptions {
-    patch?: string;
-    lang?: string;
-}
-
-export function asset(path: string, { patch = "pbe", lang = 'default' }: AssetOptions = {}) {
+export function asset(path: string, { patch, lang }: AssetOptions = { patch: "pbe", lang: "default" }) {
     return path.replace("/lol-game-data/assets", dataRoot({ patch, lang })).toLowerCase();
 }
 
