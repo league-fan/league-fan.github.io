@@ -1,4 +1,4 @@
-import { ChampionPage } from "./championPage";
+import { ChampionIcon } from "../championPage"
 
 // export async function generateStaticParams() {
 //     const { champions, lang } = useContext(PropsContext);
@@ -15,6 +15,6 @@ export default async function Page({
 }) {
     const champName = (await params).champName
     return (
-        <ChampionPage champName={champName} />
+        <ChampionIcon champName={champName} />
     )
 }

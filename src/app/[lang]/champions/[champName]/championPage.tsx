@@ -1,14 +1,61 @@
 'use client';
-
+import { useContext, useMemo } from "react";
+import styles from '@/styles/collection.module.scss'
 import { PropsContext } from "@/app/props";
-import { getChampionByName, getChampionSkinsById } from "@/data/client_helpers";
-import { useContext } from "react";
+import { asset, getChampionByName, useLocalStorageState, sortSkins, getSkinsOfChampionById } from "@/data/client_helpers";
+import { Skin } from "@/types";
+import Image from "@/components/image";
+import { SkinGrid } from "@/components/skin-grid";
 
-export default function ChampionPage({ champName }: { champName: string }) {
-    const { champions, skins } = useContext(PropsContext);
-    const champ = getChampionByName(champName, champions);
-    if (!champ) return <div>Champion not found</div>
-    const champSkin = getChampionSkinsById(champ.id, skins);
-    return <div>{JSON.stringify(champSkin, null, 2)}</div>
+export function ChampionIcon({ champName }: { champName: string }) {
+    const { skins } = useContext(PropsContext);
+
+    const base = useMemo(() => Object.values(skins).find(skin => skin.isBase), [skins]);
+    if (!base) { return null; }
+    return (
+        <Image
+            unoptimized
+            layout="fill"
+            objectFit="cover"
+            src={asset(base.uncenteredSplashPath)}
+            alt={champName}
+        />
+    )
 }
 
+export function ChampionPage({ champName }: { champName: string }) {
+    const { champions, skins } = useContext(PropsContext);
+    const [sortBy, setSortBy] = useLocalStorageState(
+        "champion__sortBy",
+        "release"
+    );
+    const champion = getChampionByName(champName, champions);
+    if (!champion) return <div>Champion not found</div>;
+    const champSkins = getSkinsOfChampionById(champion.id, skins);
+
+    const linkTo = (skin: Skin) => `/champions/${champName}/skins/${skin.id}`;
+    const sortedSkins = sortSkins(sortBy === "rarity", champSkins);
+
+    return (
+        <div>
+            <h1 className={styles.title}>{champion.name}</h1>
+            <div className={styles.controls}>
+                <label>
+                    <span>Sort By</span>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                    >
+                        <option value="release">Release</option>
+                        <option value="rarity">Rarity</option>
+                    </select>
+                </label>
+            </div>
+            <SkinGrid
+                skins={sortedSkins}
+                linkTo={linkTo}
+            // viewerPage="/champions/[key]/skins/[id]"
+            />
+        </div>
+    )
+}
