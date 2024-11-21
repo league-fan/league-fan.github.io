@@ -5,8 +5,8 @@ import skinlines from "@/../.cache/skinlines.json";
 import universes from "@/../.cache/universes.json";
 import skins from "@/../.cache/skins.json";
 import added from "@/../.cache/added.json";
-import { Added, Champion, Skinline, Skins, Universe } from "@/types";
-import { splitId } from "@/data/client_helpers";
+import changes from "@/../.cache/changes.json";
+import { Added, Champion, Changes, Skinline, Skins, Universe } from "@/types";
 
 export const CDRAGON = "https://raw.communitydragon.org";
 export const ROOT = "https://www.skinexplorer.lol";
@@ -39,6 +39,10 @@ class Patch {
 
     asset(path: string) {
         return this.data(path.replace("/lol-game-data/assets", "").toLowerCase());
+    }
+
+    get changes() {
+        return changes as Changes;
     }
 
     get champions() {

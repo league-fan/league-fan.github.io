@@ -1,7 +1,7 @@
 'use client';
 import { useContext, useMemo } from "react";
 import styles from '@/styles/collection.module.scss'
-import { PropsContext } from "@/app/props";
+import { PropsContext } from "@/data/propsContext";
 import { asset, getChampionByName, useLocalStorageState, sortSkins, getSkinsOfChampionById } from "@/data/client_helpers";
 import { Skin } from "@/types";
 import Image from "@/components/image";
@@ -33,7 +33,7 @@ export function ChampionPage({ champName }: { champName: string }) {
     if (!champion) return <div>Champion not found</div>;
     const champSkins = getSkinsOfChampionById(champion.id, skins);
 
-    const linkTo = (skin: Skin) => `/champions/${champName}/skins/${skin.id}`;
+    const linkTo = (skin: Skin) => `${champName}/skins/${skin.id}`;
     const sortedSkins = sortSkins(sortBy === "rarity", champSkins);
 
     return (

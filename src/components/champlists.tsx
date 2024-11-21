@@ -1,6 +1,6 @@
 'use client';
 import { useContext, useMemo } from "react";
-import { PropsContext } from "../app/props";
+import { PropsContext } from "../data/propsContext";
 import styles from "@/styles/index.module.scss";
 import Link from "next/link";
 import Image from "@/components/image";
