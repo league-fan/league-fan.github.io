@@ -9,7 +9,7 @@ export async function generateStaticParams() {
     const getSkinsOfChampionById = (champId: number, skins: Skins) => Object.values(skins).filter((skin) => splitId(skin.id)[0] === champId);
     
     const params = languages.map(lang => (
-        champs[lang].map(champ => getSkinsOfChampionById(champ.id, skins[lang]).map(skin => ({ champName: champ.name, skinId: skin.id.toString(), lang }))
+        champs[lang].map(champ => getSkinsOfChampionById(champ.id, skins[lang]).map(skin => ({ champName: champ.alias, skinId: skin.id.toString(), lang }))
         ).flat(1))).flat(1);
     return params;
 }
