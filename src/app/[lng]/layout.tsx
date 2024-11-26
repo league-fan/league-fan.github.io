@@ -1,17 +1,21 @@
-import { PropsProvider } from "@/data/propsContext";
+import { ReactNode } from "react";
+import { dir } from "i18next";
+import { languages } from "@/i18n/settings";
 
-const DEFAULT_LANG = 'default'
-
-interface LangLayoutProps {
-    children: React.ReactNode;
-    params: Promise<{ lang: string }>
+type RootLayoutProps = { children: ReactNode; params: Promise<{ lng: string }> };
+export async function generateStaticParams() {
+    return languages.map((lng) => ({ lng }));
 }
 
-export default async function LangLayout({ children, params }: LangLayoutProps) {
-    const { lang } = (await params) || DEFAULT_LANG;
+export default async function RootLayout({
+    children,
+    params,
+}: RootLayoutProps) {
+    const { lng } = await params;
     return (
-        <PropsProvider value={lang}>
-                {children}
-        </PropsProvider>
-    )
+        <html lang={lng} dir={dir(lng)}>
+            <head />
+            <body>{children}</body>
+        </html>
+    );
 }
