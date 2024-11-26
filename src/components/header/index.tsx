@@ -4,8 +4,14 @@ import Image from "next/image";
 import classNames from "classnames";
 import logo from "@/assets/logo.png";
 import { useEscapeTo } from "@/data/helpers";
-import { ArrowLeft, ExternalLink, Menu, Search, X } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, ExternalLink, Languages, Menu, Search, X } from "lucide-react";
+import { useContext, useState } from "react";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+import { useTranslation } from "@/i18n/client";
+import { PropsContext } from "@/data/propsContext";
+import { languages } from "@/data/constants";
+import { usePathname, useRouter } from "next/navigation";
+import { languageZoneToName } from "@/types/languagezone";
 
 interface HeaderProps {
   flat?: boolean;
@@ -16,9 +22,11 @@ export function Header({ flat, backTo }: HeaderProps = { flat: false }) {
   const back =
     typeof window !== "undefined" ? localStorage.lastIndex ?? backTo : backTo;
   useEscapeTo(back);
-
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [langOpen, setLangOpen] = useState(false);
+  const { lang } = useContext(PropsContext);
+  const { t } = useTranslation(lang, "ui");
+  const pathname = usePathname();
   return (<>
     <header
       className={classNames(styles.header, {
@@ -38,6 +46,25 @@ export function Header({ flat, backTo }: HeaderProps = { flat: false }) {
         />
 
       </Link>
+      <div
+        className={classNames(styles.menuIcon, { [styles.open]: menuOpen })}
+        onClick={() => setLangOpen(!langOpen)}
+      >
+        <Languages />
+        <ul>
+          {languages
+            .filter((l) => lang !== l)
+            .map((l) => {
+              return (
+                <li key={l}>
+                  <Link href={pathname.replace(lang, l)}>
+                    {languageZoneToName[l]}
+                  </Link>
+                </li>
+              );
+            })}
+        </ul>
+      </div>
       <div
         className={classNames(styles.menuIcon, { [styles.open]: menuOpen })}
         onClick={() => setMenuOpen(!menuOpen)}

@@ -60,6 +60,37 @@ export const languageZoneToBCP47: Record<LanguageZone, string> = {
     [LanguageZone.ChineseTaiwan]: "zh-TW",
 };
 
+export const languageZoneToName: Partial<Record<LanguageZone, string>> = {
+    [LanguageZone.Default]: "Default",
+    [LanguageZone.EnglishDefault]: "English",
+    [LanguageZone.ChineseTaiwan]: "繁体中文",
+    [LanguageZone.ChineseChina]: "简体中文",
+    [LanguageZone.ChineseMalaysia]: "简体中文",
+    [LanguageZone.Vietnamese]: "Tiếng Việt",
+    [LanguageZone.Turkish]: "Türkçe",
+    [LanguageZone.Thai]: "ไทย",
+    [LanguageZone.Russian]: "Русский",
+    [LanguageZone.Romanian]: "Română",
+    [LanguageZone.PortugueseBrazil]: "Português",
+    [LanguageZone.Polish]: "Polski",
+    [LanguageZone.Korean]: "한국어",
+    [LanguageZone.Japanese]: "日本語",
+    [LanguageZone.Italian]: "Italiano",
+    [LanguageZone.Hungarian]: "Magyar",
+    [LanguageZone.FrenchFrance]: "Français",
+    [LanguageZone.SpanishMexico]: "Español",
+    [LanguageZone.SpanishSpain]: "Español",
+    [LanguageZone.SpanishArgentina]: "Español",
+    [LanguageZone.EnglishSingapore]: "English",
+    [LanguageZone.EnglishPhilippines]: "English",
+    [LanguageZone.EnglishGreatBritain]: "English",
+    [LanguageZone.EnglishAustralia]: "English",
+    [LanguageZone.Greek]: "Ελληνικά",
+    [LanguageZone.German]: "Deutsch",
+    [LanguageZone.Czech]: "Čeština",
+    [LanguageZone.Arabic]: "العربية",
+};
+
 export const bcp47ToLanguageZone: Record<string, LanguageZone> = Object.fromEntries(
     Object.entries(languageZoneToBCP47).map(([key, value]) => [value, key as LanguageZone])
 );
