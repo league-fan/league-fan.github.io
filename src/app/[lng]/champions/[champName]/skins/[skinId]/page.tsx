@@ -8,8 +8,8 @@ export async function generateStaticParams() {
     const splitId = (id: number) => [Math.floor(id / 1000), id % 1000];
     const getSkinsOfChampionById = (champId: number, skins: Skins) => Object.values(skins).filter((skin) => splitId(skin.id)[0] === champId);
     
-    const params = languages.map(lang => (
-        champs[lang].map(champ => getSkinsOfChampionById(champ.id, skins[lang]).map(skin => ({ champName: champ.alias, skinId: skin.id.toString(), lang }))
+    const params = languages.map(lng => (
+        champs[lng].map(champ => getSkinsOfChampionById(champ.id, skins[lng]).map(skin => ({ champName: champ.alias, skinId: skin.id.toString(), lng }))
         ).flat(1))).flat(1);
     return params;
 }

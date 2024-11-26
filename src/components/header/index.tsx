@@ -6,7 +6,6 @@ import logo from "@/assets/logo.png";
 import { useEscapeTo } from "@/data/helpers";
 import { ArrowLeft, ExternalLink, Languages, Menu, Search, X } from "lucide-react";
 import { useContext, useState } from "react";
-import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useTranslation } from "@/i18n/client";
 import { PropsContext } from "@/data/propsContext";
 import { languages } from "@/data/constants";
