@@ -7,7 +7,7 @@ import { fetchSkinChanges } from "./changes";
 import { substitute } from "./helpers";
 import { Champion, LanguageZone, Skinline, Skins, Universe } from "@/types";
 import { exit } from "process";
-import { LangAssets } from "@/types/languagezone";
+import { ext_languages, LangAssets } from "@/types/languagezone";
 
 axiosRetry(axios, {
     retries: 4,
@@ -162,6 +162,10 @@ async function scrape(langs_extra: LanguageZone[] = []) {
             if (lang === LanguageZone.Default) {
                 const added = await getAdded(champions, skinlines, skins, universes);
                 await cache.set("added", added);
+                champions_dict[LanguageZone.EnglishDefault] = champions;
+                skinlines_dict[LanguageZone.EnglishDefault] = skinlines;
+                skins_dict[LanguageZone.EnglishDefault] = skins;
+                universes_dict[LanguageZone.EnglishDefault] = universes;
             }
 
             champions_dict[lang] = champions;
@@ -218,7 +222,7 @@ async function scrape(langs_extra: LanguageZone[] = []) {
 }
 
 async function main() {
-    const langs_extra = [LanguageZone.ChineseChina];
+    const langs_extra = ext_languages;
     const shouldRebuild = await scrape(langs_extra);
     if (shouldRebuild) {
         if (!process.env.DEPLOY_HOOK)

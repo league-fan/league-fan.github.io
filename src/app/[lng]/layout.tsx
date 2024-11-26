@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { dir } from "i18next";
 import { languages } from "@/i18n/settings";
+import { PropsProvider } from "@/data/propsContext";
 
 type RootLayoutProps = { children: ReactNode; params: Promise<{ lng: string }> };
 export async function generateStaticParams() {
@@ -15,7 +16,11 @@ export default async function RootLayout({
     return (
         <html lang={lng} dir={dir(lng)}>
             <head />
-            <body>{children}</body>
+            <body>
+                <PropsProvider value={lng}>
+                    {children}
+                </PropsProvider>
+            </body>
         </html>
     );
 }
