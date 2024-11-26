@@ -1,16 +1,19 @@
-export const fallbackLng = "en";
-export const languages = [fallbackLng, "zh-CN"];
+import { LanguageZone } from "@/types";
+import { ext_languages } from "@/types/languagezone";
+
+export const fallbackLng = LanguageZone.EnglishDefault;
+export const languages = [fallbackLng, ...ext_languages];
 export const cookieName = 'i18next'
-export const defaultNS = "translation";
+export const defaultNS = "ui";
 
 export function getOptions(lng = fallbackLng, ns = defaultNS) {
     return {
-      // debug: true,
-      supportedLngs: languages,
-      fallbackLng,
-      lng,
-      fallbackNS: defaultNS,
-      defaultNS,
-      ns,
+        // debug: true,
+        supportedLngs: languages,
+        fallbackLng,
+        lng,
+        fallbackNS: defaultNS,
+        defaultNS,
+        ns,
     };
-  }
+}

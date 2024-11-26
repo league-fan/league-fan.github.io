@@ -4,6 +4,7 @@ import { createInstance } from "i18next";
 import resourcesToBackend from "i18next-resources-to-backend";
 import { initReactI18next } from "react-i18next/initReactI18next";
 import { getOptions } from "./settings";
+import { LanguageZone } from "@/types";
 
 const initI18next = async (lng: string, ns: string) => {
     const i18nInstance = createInstance();
@@ -14,7 +15,7 @@ const initI18next = async (lng: string, ns: string) => {
                 (lng: string, ns: string) => import(`./locales/${ns}/${lng}.json`)
             )
         )
-        .init(getOptions(lng, ns));
+        .init(getOptions(lng as LanguageZone, ns));
     return i18nInstance;
 };
 
