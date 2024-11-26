@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import acceptLanguage from "accept-language";
-import { fallbackLng, languages, cookieName } from "@/i18n/settings";
+import { cookieName } from "@/i18n/settings";
 import { bcp47ToLanguageZone, languageZoneToBCP47 } from "./types/languagezone";
+import { fallbackLng, languages } from "./data/constants";
 
 acceptLanguage.languages(languages.map((l) => languageZoneToBCP47[l]));
 

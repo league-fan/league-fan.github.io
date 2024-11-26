@@ -5,9 +5,6 @@ import { languages } from "@/data/constants";
 import { PropsProvider } from "@/data/propsContext";
 
 type RootLayoutProps = { children: ReactNode; params: Promise<{ lng: string }> };
-export async function generateStaticParams() {
-    return languages.map((lng) => ({ lng }));
-}
 
 export default async function RootLayout({
     children,
