@@ -60,11 +60,8 @@ export const languageZoneToBCP47: Record<LanguageZone, string> = {
     [LanguageZone.ChineseTaiwan]: "zh-TW",
 };
 
-// 创建一个字典来映射 BCP47 语言标签到 LanguageZone
 export const bcp47ToLanguageZone: Record<string, LanguageZone> = Object.fromEntries(
     Object.entries(languageZoneToBCP47).map(([key, value]) => [value, key as LanguageZone])
 );
 
 export type LangAssets<T> = Partial<Record<LanguageZone, T>>;
-
-export const ext_languages = [LanguageZone.ChineseChina, LanguageZone.ChineseTaiwan];

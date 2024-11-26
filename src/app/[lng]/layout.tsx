@@ -1,6 +1,7 @@
+import "@/styles/globals.scss";
 import { ReactNode } from "react";
 import { dir } from "i18next";
-import { languages } from "@/i18n/settings";
+import { languages } from "@/data/constants";
 import { PropsProvider } from "@/data/propsContext";
 
 type RootLayoutProps = { children: ReactNode; params: Promise<{ lng: string }> };

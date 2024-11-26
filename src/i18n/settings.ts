@@ -1,8 +1,4 @@
-import { LanguageZone } from "@/types";
-import { ext_languages } from "@/types/languagezone";
-
-export const fallbackLng = LanguageZone.EnglishDefault;
-export const languages = [fallbackLng, ...ext_languages];
+import { languages, fallbackLng } from "@/data/constants";
 export const cookieName = 'i18next'
 export const defaultNS = "ui";
 

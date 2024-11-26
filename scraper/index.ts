@@ -7,7 +7,8 @@ import { fetchSkinChanges } from "./changes";
 import { substitute } from "./helpers";
 import { Champion, LanguageZone, Skinline, Skins, Universe } from "@/types";
 import { exit } from "process";
-import { ext_languages, LangAssets } from "@/types/languagezone";
+import { LangAssets } from "@/types/languagezone";
+import { ext_languages } from "@/data/constants";
 
 axiosRetry(axios, {
     retries: 4,

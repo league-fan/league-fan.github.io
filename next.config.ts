@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 const { version } = require("./package.json");
 
 const nextConfig: NextConfig = {
-  // output: "export",
+  output: "export",
   publicRuntimeConfig: { version },
   eslint: {
     ignoreDuringBuilds: true,
