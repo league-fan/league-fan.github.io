@@ -33,7 +33,7 @@ export function ChampionPage({ lng, champName }: { lng: string, champName: strin
     if (!champion) return <div>Champion not found</div>;
     const champSkins = getSkinsOfChampionById(champion.id, skins);
 
-    const linkTo = (skin: Skin) => `/${lng}/${champName}/skins/${skin.id}`;
+    const linkTo = (skin: Skin) => `/${lng}/champions/${champName}/skins/${skin.id}`;
     const sortedSkins = sortSkins(sortBy === "rarity", champSkins);
 
     return (

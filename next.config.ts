@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
     ],
   },
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  sassOptions: {
+    silenceDeprecations: ['legacy-js-api'],
+  }
 };
 
 export default withMDX(nextConfig);
