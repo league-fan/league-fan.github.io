@@ -13,10 +13,23 @@ export const classes = {
     tank: "Tank",
 };
 
+export const sortClasses = {
+    id: "By Release Date",
+    id_rev: "By Release Date (Reversed)",
+    name: "By Name (A-Z)",
+    name_rev: "By Name (Z-A)",
+    alias: "By Alias (A-Z)",
+    alias_rev: "By Alias (Z-A)",
+}
+
 export default function Champions() {
     const [champRole, setChampRole] = useLocalStorageState(
         "champs_index__champRole",
         ""
+    );
+    const [champSort, setChampSort] = useLocalStorageState(
+        "champs_index__champSort",
+        "id"
     );
 
     return (
@@ -24,6 +37,7 @@ export default function Champions() {
             <Nav
                 active="champions"
                 filters={
+                    <>
                     <label>
                         <span>Role</span>
                         <select
@@ -38,10 +52,25 @@ export default function Champions() {
                             ))}
                         </select>
                     </label>
+                    <span> &nbsp; </span>
+                    <label>
+                        <span>Sort</span>
+                        <select
+                            value={champSort}
+                            onChange={(e) => setChampSort(e.target.value)}
+                        >
+                            {Object.entries(sortClasses).map(([k, v]) => (
+                                <option key={k} value={k}>
+                                    {v}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    </>
                 }
             />
             <main>
-                <ChampionsList role={champRole} />
+                <ChampionsList role={champRole} sort={champSort} />
             </main>
         </div>
     )

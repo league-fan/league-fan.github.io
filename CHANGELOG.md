@@ -1,13 +1,20 @@
 # Changelog
 
+This project([League-fan](https://github.com/league-fan/league-fan.github.io)) are planned to be _REFACTORING_ and _REDESIGNING_.
+
+Basically, the initial source are forked from [lol-skin-explorer](https://github.com/preyneyv/lol-skin-explorer). 
+
+Special thanks to [@preyneyv](https://github.com/preyneyv) for the excellent work.
+
+
+## Keep a changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### TODO
-
-- [] fix skin-viewer layout.
+## [Unreleased]
 
 ## 0.0.3 (2024-11-27)
 

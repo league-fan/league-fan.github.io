@@ -25,7 +25,7 @@ export function Footer({ flat }: FooterProps = { flat: false }) {
                     and the{" "}
                     <a
                         target="_blank"
-                        href="https://leagueoflegends.fandom.com/"
+                        href="https://wiki.leagueoflegends.com/"
                         rel="noreferrer"
                     >
                         League of Legends Wiki
