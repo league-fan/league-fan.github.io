@@ -14,8 +14,8 @@ export const classes = {
 };
 
 export const sortClasses = {
-    id: "By Release Date",
-    id_rev: "By Release Date (Reversed)",
+    id: "By ID",
+    id_rev: "By ID (Descending)",
     name: "By Name (A-Z)",
     name_rev: "By Name (Z-A)",
     alias: "By Alias (A-Z)",
