@@ -1,6 +1,7 @@
 import { languages } from "@/data/constants";
-import { ChampionPage } from "./championPage";
 import { Champion } from "@/types";
+import PageClient from "./pageClient";
+
 
 export async function generateStaticParams() {
     const champs: {
@@ -14,10 +15,10 @@ export async function generateStaticParams() {
 export default async function Page({
     params,
 }: {
-    params: Promise<{ champName: string }>
+    params: Promise<{ lng: string, champName: string }>
 }) {
-    const champName = (await params).champName
+    const { lng, champName } = (await params)
     return (
-        <ChampionPage champName={champName} />
+        <PageClient params={{ lng, champName }} />
     )
 }

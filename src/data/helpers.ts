@@ -2,7 +2,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { CDRAGON } from "./constants";
+import { CDRAGON, fallbackLng } from "./constants";
 import { useRouter } from "next/navigation";
 import { Added, Champion, Skin, Skins } from "@/types";
 import { RarityEnum } from "@/types/skins";

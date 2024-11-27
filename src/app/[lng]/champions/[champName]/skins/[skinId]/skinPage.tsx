@@ -9,9 +9,9 @@ import { User } from "lucide-react";
 export default function SkinPage({
     params,
 }: {
-    params: { skinId: string }
+    params: { lng: string, skinId: string }
 }) {
-    const { skinId } = params;
+    const { lng, skinId } = params;
     const { skins } = useContext(PropsContext);
     const skin = Object.values(skins).find(skin => skin.id.toString() === skinId);
     if (!skin) return null;
@@ -20,6 +20,7 @@ export default function SkinPage({
         <SkinProvider value={skin}>
             <SkinViewer
                 collectionIcon={<User />}
+                lng={lng}
             /></SkinProvider>
     );
 }

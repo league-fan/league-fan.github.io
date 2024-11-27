@@ -23,7 +23,7 @@ export function ChampionIcon({ champName }: { champName: string }) {
     )
 }
 
-export function ChampionPage({ champName }: { champName: string }) {
+export function ChampionPage({ lng, champName }: { lng: string, champName: string }) {
     const { champions, skins } = useContext(PropsContext);
     const [sortBy, setSortBy] = useLocalStorageState(
         "champion__sortBy",
@@ -33,7 +33,7 @@ export function ChampionPage({ champName }: { champName: string }) {
     if (!champion) return <div>Champion not found</div>;
     const champSkins = getSkinsOfChampionById(champion.id, skins);
 
-    const linkTo = (skin: Skin) => `${champName}/skins/${skin.id}`;
+    const linkTo = (skin: Skin) => `/${lng}/${champName}/skins/${skin.id}`;
     const sortedSkins = sortSkins(sortBy === "rarity", champSkins);
 
     return (

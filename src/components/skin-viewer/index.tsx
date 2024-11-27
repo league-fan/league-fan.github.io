@@ -439,6 +439,7 @@ function _SkinViewer({
                 </select>
               </div>
             )}
+
           </div>
         </header>
         {prev && (
@@ -559,11 +560,11 @@ function _SkinViewer({
   );
 }
 
-export function SkinViewer(props: { collectionIcon: ReactNode }) {
-  const { name, key, skin, prev, next, patch } = useContext(SkinContext);
+export function SkinViewer(props: { collectionIcon: ReactNode, lng: string }) {
+  const { name, key, skin, prev, next } = useContext(SkinContext);
   const skinProps: SkinViewerProps = {
-    backTo: `/champions/${key}`,
-    linkTo: (skin: Skin) => `/champions/${key}/skins/${skin.id}`,
+    backTo: `/${props.lng}/champions/${key}`,
+    linkTo: (skin: Skin) => `/${props.lng}/champions/${key}/skins/${skin.id}`,
     collectionName: name,
     collectionIcon: props.collectionIcon,
     prev,
