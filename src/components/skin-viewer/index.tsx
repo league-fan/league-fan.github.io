@@ -561,10 +561,10 @@ function _SkinViewer({
 }
 
 export function SkinViewer(props: { collectionIcon: ReactNode, lng: string }) {
-  const { name, key, skin, prev, next } = useContext(SkinContext);
+  const { name, alias, skin, prev, next } = useContext(SkinContext);
   const skinProps: SkinViewerProps = {
-    backTo: `/${props.lng}/champions/${key}`,
-    linkTo: (skin: Skin) => `/${props.lng}/champions/${key}/skins/${skin.id}`,
+    backTo: `/${props.lng}/champions/${alias}`,
+    linkTo: (skin: Skin) => `/${props.lng}/champions/${alias}/skins/${skin.id}`,
     collectionName: name,
     collectionIcon: props.collectionIcon,
     prev,

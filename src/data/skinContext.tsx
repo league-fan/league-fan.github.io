@@ -6,7 +6,7 @@ import { createContext, ReactNode, useContext } from "react";
 
 interface SkinContextType {
     name: string;
-    key: string;
+    alias: string;
     skin: SkinWithMeta | null;
     prev: SkinWithMeta | null;
     next: SkinWithMeta | null;
@@ -15,7 +15,7 @@ interface SkinContextType {
 
 const value: SkinContextType = {
     name: "",
-    key: "",
+    alias: "",
     skin: null,
     prev: null,
     next: null,
@@ -39,7 +39,7 @@ function SkinProvider({
     const { skin, prev, next } = prepareCollection(currIdx, champSkins)
     const props: SkinContextType = {
         name: champ.name,
-        key: champ.key,
+        alias: champ.alias,
         skin,
         prev,
         next,
