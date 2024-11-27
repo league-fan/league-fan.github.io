@@ -1,4 +1,4 @@
-import Champions from "@/components/champions"
+import Champions from "./champions";
 import { Entry } from "@/components/entry";
 import { languages } from "@/data/constants";
 

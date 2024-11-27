@@ -1,5 +1,5 @@
 import { languages } from "@/data/constants";
-import Skinlines from "@/components/skinlines";
+import Skinlines from "@/app/[lng]/skinlines/skinlines";
 import { Entry } from "@/components/entry";
 
 export async function generateStaticParams() {

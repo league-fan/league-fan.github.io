@@ -56,6 +56,18 @@ export function getAddedSkins(added: Added, skins: Skins, champions: Champion[])
         });
 }
 
+export function skinlineSkins(id: number, skins: Skins, champions: Champion[]) {
+    return Object.values(skins)
+        .filter((skin) => skin.skinLines?.some((line) => line.id === id))
+        .sort((a, b) => {
+            const aId = splitId(a.id)[0];
+            const bId = splitId(b.id)[0];
+            const aIndex = champions.findIndex((c) => c.id === aId);
+            const bIndex = champions.findIndex((c) => c.id === bId);
+            return aIndex - bIndex;
+        });
+}
+
 export function getSkinsOfChampionById(id: number, skins: Skins) {
     return Object.values(skins).filter((skin) => splitId(skin.id)[0] === id);
 }

@@ -1,5 +1,5 @@
 import { Entry } from "@/components/entry";
-import Universes from "@/components/universes";
+import Universes from "@/app/[lng]/universes/universes";
 import { languages } from "@/data/constants";
 
 export async function generateStaticParams() {
