@@ -1,5 +1,8 @@
 import { LanguageZone } from "@/types";
 import { dir } from "i18next";
+import { Entry } from "../[lng]/champions/(champions)/layout";
+import "@/styles/globals.scss";
+import styles from "@/styles/static.module.scss";
 
 export default async function RootLayout({
     children
@@ -9,7 +12,11 @@ export default async function RootLayout({
         <html lang={lng} dir={dir(lng)}>
             <head />
             <body>
-                {children}
+                <div className="main-layout">
+                    <Entry backTo="/">
+                        <main className={styles.main}>{children}</main>
+                    </Entry>
+                </div>
             </body>
         </html>
     );

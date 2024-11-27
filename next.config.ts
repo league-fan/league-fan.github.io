@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
-const { version } = require("./package.json");
+import nextMdx from '@next/mdx'
+
+const withMDX = nextMdx({
+  extension: /\.mdx?$/,
+})
 
 const nextConfig: NextConfig = {
   output: "export",
-  publicRuntimeConfig: { version },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -17,6 +20,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 };
 
-export default nextConfig;
+export default withMDX(nextConfig);

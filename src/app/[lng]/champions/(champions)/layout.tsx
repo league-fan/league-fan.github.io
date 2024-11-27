@@ -12,7 +12,7 @@ interface LayoutProps {
 }
 
 
-function Entry({ children, flat = false, backTo, withNew = false }: LayoutProps) {
+export function Entry({ children, flat = false, backTo, withNew = false }: LayoutProps) {
     return (
         <FooterContainer>
             <div>
