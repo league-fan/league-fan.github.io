@@ -51,8 +51,8 @@ export function getAddedSkins(added: Added, skins: Skins, champions: Champion[])
                 console.error("Missing skin id", skin);
             }
             const cId = splitId(skin.id)[0];
-            const champ = champions.find((c) => c.id === cId) || { key: "" };
-            return { ...skin, $$key: champ.key };
+            const champ = champions.find((c) => c.id === cId) || champions[0];
+            return { ...skin, $$alias: champ.alias };
         });
 }
 

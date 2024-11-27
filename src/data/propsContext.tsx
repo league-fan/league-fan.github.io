@@ -5,7 +5,7 @@ import { Champion, Changes, LanguageZone, Skin, Skinline, Skins, Universe } from
 import { createContext, ReactNode } from 'react'
 
 export interface SkinWithKey extends Skin {
-    $$key: string;
+    $$alias: string;
 }
 
 export interface PropsContextType {
