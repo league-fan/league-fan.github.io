@@ -1,10 +1,8 @@
-'use client';
-
 import { Entry } from "@/components/entry";
 
-export default function ChampionLayout({ children }: { children: React.ReactNode }) {
+export default function SkinlineLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="champion-layout">
+        <div className="skinline-layout">
             <Entry withNew>
                 {children}
             </Entry>

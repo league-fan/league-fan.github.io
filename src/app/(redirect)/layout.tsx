@@ -1,6 +1,6 @@
 import { LanguageZone } from "@/types";
 import { dir } from "i18next";
-import { Entry } from "../[lng]/champions/(champions)/layout";
+import { Entry } from "@/components/entry";
 import "@/styles/globals.scss";
 import styles from "@/styles/static.module.scss";
 

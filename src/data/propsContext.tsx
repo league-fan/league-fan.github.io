@@ -16,7 +16,7 @@ export interface PropsContextType {
     changes: Changes;
     addedSkins: SkinWithKey[];
     patch: string;
-    lang: LanguageZone;
+    lng: LanguageZone;
 }
 const value: PropsContextType = {
     skins: {},
@@ -26,7 +26,7 @@ const value: PropsContextType = {
     universes: [],
     changes: {},
     patch: '',
-    lang: LanguageZone.EnglishDefault
+    lng: LanguageZone.EnglishDefault
 };
 
 const PropsContext = createContext<PropsContextType>(value);
@@ -38,8 +38,8 @@ function PropsProvider({
     children: ReactNode,
     value: LanguageZone
 }) {
-    const lang = value || LanguageZone.EnglishDefault;
-    const patch = new Patch(lang)
+    const lng = value || LanguageZone.EnglishDefault;
+    const patch = new Patch(lng)
     const addedSkins = getAddedSkins(patch.added, patch.skins, patch.champions)
     const props: PropsContextType = {
         skins: patch.skins,
@@ -49,7 +49,7 @@ function PropsProvider({
         universes: patch.universes,
         changes: patch.changes,
         patch: patch.fullVersionString,
-        lang: lang
+        lng
     }
     return <PropsContext.Provider value={props} > {children} </PropsContext.Provider>
 }

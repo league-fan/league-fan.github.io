@@ -8,7 +8,7 @@ import { asset } from "@/data/helpers";
 import { languageZoneToBCP47 } from "@/types/languagezone";
 
 export function ChampionsList({ role, sort }: { role: string, sort?: string }) {
-    const { champions, lang } = useContext(PropsContext);
+    const { champions, lng: lang } = useContext(PropsContext);
     const filteredChamps = useMemo(() => {
         let sortedChamps = champions;
         if (sort) {

@@ -23,7 +23,7 @@ export function Header({ flat, backTo }: HeaderProps = { flat: false }) {
   useEscapeTo(back);
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const { lang } = useContext(PropsContext);
+  const { lng: lang } = useContext(PropsContext);
   const { t } = useTranslation(lang, "ui");
   const pathname = usePathname();
   return (<>
