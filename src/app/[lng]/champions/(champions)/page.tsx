@@ -1,4 +1,5 @@
 import Champions from "@/components/champions"
+import { Entry } from "@/components/entry";
 import { languages } from "@/data/constants";
 
 export async function generateStaticParams() {
@@ -7,8 +8,10 @@ export async function generateStaticParams() {
 
 export default async function Page() {
     return (
-        <div className="champions-page">
-            <Champions />
-        </div>
+        <Entry withNew>
+            <div className="champions-page">
+                <Champions />
+            </div>
+        </Entry>
     )
 }
