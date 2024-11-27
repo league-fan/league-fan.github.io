@@ -9,10 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [] fix skin-viewer layout.
 
-## [Unreleased]
+## 0.0.3 (2024-11-27)
 
-- [x] fix language detection and language routing.
-- [x] add language switcher.
+### Feat
+
+- add MDX support and enhance layout structure with new components
+- refactor language handling in champion pages and remove unused static params
+- enhance internationalization support with language selection and routing updates
+- update internationalization setup with new language constants and redirect logic
+- enhance internationalization support with dynamic language handling and remove deprecated second page
+- implement internationalization support with language detection and routing
+- remove unused layout component and associated imports
 
 ## 0.0.2 (2024-11-22)
 
