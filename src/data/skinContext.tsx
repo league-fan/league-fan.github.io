@@ -35,7 +35,7 @@ function SkinProvider({
 }) {
     const { skins, champions, skinlines, patch } = useContext(PropsContext);
     const type = value.type ?? 'champion'
-    const id = value.id ?? (type === 'champion' ? champions[0].id.toString() : skins[0].id.toString())
+    const id = value.id ?? (type === 'champion' ? champions[0].alias.toString() : skins[0].id.toString())
     let skinsSet: Skin[] = [];
     let name = '';
     let currIdx = 0;

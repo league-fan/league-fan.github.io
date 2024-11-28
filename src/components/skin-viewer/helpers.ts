@@ -22,7 +22,7 @@ export function skinToSkinWithMeta(origin_skin: Skin): SkinWithMeta {
     ...origin_skin,
     $skinExplorer: {
       changes: [],
-      champion: {} as Champion, // 使用类型断言将空对象转换为 Champion 类型
+      champion: {} as Champion,
       skinlines: [],
       universes: [],
       modelviewerUrl: "",
@@ -62,14 +62,13 @@ export function skinToSkinWithMeta(origin_skin: Skin): SkinWithMeta {
 export function prepareCollection(idx: number, collection: Skin[]) {
   const origin_skin = collection[idx];
   let skin = skinToSkinWithMeta(origin_skin);
-
-  let prev = null,
-    next = null;
+  let prev: SkinWithMeta | null = null,
+    next: SkinWithMeta | null = null;
   if (collection.length > 1) {
-    prev = collection[(idx === 0 ? collection.length : idx) - 1];
-    next = collection[(idx + 1) % collection.length];
-    next = skinToSkinWithMeta(next);
-    prev = skinToSkinWithMeta(prev);
+    const prev_skin = collection[(idx === 0 ? collection.length : idx) - 1];
+    const next_skin = collection[(idx + 1) % collection.length];
+    next = skinToSkinWithMeta(next_skin);
+    prev = skinToSkinWithMeta(prev_skin);
   }
 
   return { skin, prev, next };

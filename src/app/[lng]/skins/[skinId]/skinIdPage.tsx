@@ -7,6 +7,7 @@ import { PropsContext } from "@/data/propsContext";
 import { Folder, User } from "lucide-react";
 import { redirect, useSearchParams } from "next/navigation";
 import { Skin } from "@/types";
+import { getChampionById, splitId } from "@/data/helpers";
 
 type skinsIdPageSearchParams = {
     type: 'champion' | 'skinline',
@@ -22,19 +23,30 @@ export default function SkinIdPage({
     const { lng, skinId } = params;
     const searchParams = useSearchParams()
     const type = searchParams.get('type');
-    if (!type || type !== 'champion' && type !== 'skinline') return redirect(`/${lng}/skins/${skinId}?type=champion&id=${champions[0].alias.toString()}`);
+
+    const skin = Object.values(skins).find(skin => skin.id.toString() === skinId);
+    if (!skin) return <div>Skin Not found</div>
+
+    if (!type || type !== 'champion' && type !== 'skinline') {
+        const defaultChampion = getChampionById(splitId(Number(skinId))[0], champions);
+        if (!defaultChampion) return <div>Champion Not found</div>
+        return redirect(`/${lng}/skins/${skinId}?type=champion&id=${defaultChampion.alias.toString()}`);
+    }
     let id = searchParams.get('id');
     if (!id) {
         if (type === 'champion') {
-            id = champions[0].alias.toString()
+            const defaultChampion = getChampionById(splitId(Number(skinId))[0], champions);
+            if (!defaultChampion) return <div>Champion Not found</div>
+            id = defaultChampion.alias.toString()
         }
         if (type === 'skinline') {
-            id = skinlines[0].id.toString()
+            const defaultSkinline = skin.skinLines;
+            if (!defaultSkinline) return <div>Skinline Not found</div>
+            id = defaultSkinline[0].id.toString()
         }
         redirect(`/${lng}/skins/${skinId}?type=${type}&id=${id}`);
     }
 
-    const skin = Object.values(skins).find(skin => skin.id.toString() === skinId);
     if (!skin) return <div>Skin Not found</div>
 
     const collectionIcon = type === 'champion' ? (<User />) : (<Folder />)
