@@ -56,9 +56,9 @@ export function getAddedSkins(added: Added, skins: Skins, champions: Champion[])
         });
 }
 
-export function getSkinsOfSkinline(id: number, skins: Skins, champions: Champion[]) {
+export function getSkinsOfSkinline(skinline_id: number, skins: Skins, champions: Champion[]) {
     return Object.values(skins)
-        .filter((skin) => skin.skinLines?.some((line) => line.id === id))
+        .filter((skin) => skin.skinLines?.some((line) => line.id === skinline_id))
         .sort((a, b) => {
             const aId = splitId(a.id)[0];
             const bId = splitId(b.id)[0];

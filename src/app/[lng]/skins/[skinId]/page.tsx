@@ -6,7 +6,7 @@ export async function generateStaticParams() {
     const skins = (await import("@/../.cache/skins.json").then((skins) => skins.default)) as { [key: string]: Skins };
     const params = languages.map(lng => (
         Object.keys(skins[lng]).map(skinId => ({ lng, skinId }))
-    ).flat(1));
+    )).flat(1);
     return params;
 }
 

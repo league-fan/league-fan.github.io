@@ -8,13 +8,13 @@ import Image from "@/components/image";
 import { SkinGrid } from "@/components/skin-grid";
 import { Footer, FooterContainer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { Folder, Globe } from "lucide-react";
 import Link from "next/link";
 import { get } from "http";
 
 type skinsGridPageSearchParams = {
-    type: 'champion' | 'skinline' | 'universe',
+    type: 'champion' | 'skinline',
     id: string,
 }
 
@@ -201,21 +201,19 @@ export function UniversePage({ params }: { params: { lng: string, universe: Univ
 
 export default function SkinGridPage({ params }: { params: { lng: string } }) {
     const { champions, skins, skinlines, universes } = useContext(PropsContext)
+    const { lng } = params
     const searchParams = useSearchParams()
-    const type = searchParams.get('type') || 'champion'
+    const type = searchParams.get('type');
+    if (!type) return redirect(`/${lng}/skins?type=champion&id=${champions[0].id.toString()}`);
     let id = searchParams.get('id');
     if (!id) {
         if (type === 'champion') {
             id = champions[0].id.toString()
-        }
-        if (type === 'skinline') {
+        } else {
             id = skinlines[0].id.toString()
         }
-        if (type === 'universe') {
-            id = universes[0].id.toString()
-        }
+        redirect(`/${lng}/skins?type=${type}&id=${id}`);
     }
-    const { lng } = params
     if (type === 'skinline') {
         const skinline = getSkinlineById(Number(id), skinlines);
         if (!skinline) return <div>Skinline not found</div>;

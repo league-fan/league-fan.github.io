@@ -1,12 +1,11 @@
 import { PropsContext } from "@/data/propsContext";
 import { prepareCollection, SkinWithMeta } from "@/components/skin-viewer/helpers";
-import { getChampionById, getSkinsOfChampionById, splitId } from "@/data/helpers";
-import { Skin } from "@/types";
+import { getChampionById, getSkinlineById, getSkinsOfChampionById, getSkinsOfSkinline, splitId } from "@/data/helpers";
+import { Skin, Skinline } from "@/types";
 import { createContext, ReactNode, useContext } from "react";
 
 interface SkinContextType {
     name: string;
-    alias: string;
     skin: SkinWithMeta | null;
     prev: SkinWithMeta | null;
     next: SkinWithMeta | null;
@@ -15,7 +14,6 @@ interface SkinContextType {
 
 const value: SkinContextType = {
     name: "",
-    alias: "",
     skin: null,
     prev: null,
     next: null,
@@ -31,31 +29,38 @@ function SkinProvider({
     children: ReactNode,
     value: {
         skin: Skin;
-        type?: 'champion' | 'skinline' | 'universe',
+        type?: 'champion' | 'skinline',
+        id?: string;
     }
 }) {
-    const { skins, champions, patch } = useContext(PropsContext);
+    const { skins, champions, skinlines, patch } = useContext(PropsContext);
     const type = value.type ?? 'champion'
-    if (type === 'universe') {
-        return
-    } else if (type === 'skinline') {
-        return
+    const id = value.id ?? (type === 'champion' ? champions[0].id.toString() : skins[0].id.toString())
+    let skinsSet: Skin[] = [];
+    let name = '';
+    let currIdx = 0;
+
+    if (type === 'skinline') {
+        const skinline = getSkinlineById(Number(id), skinlines) ?? skinlines[0];
+        skinsSet = getSkinsOfSkinline(skinline.id, skins, champions)
+        name = skinline.name;
     } else {
         const champId = splitId(value.skin.id)[0]
         const champ = getChampionById(champId, champions) ?? champions[0]
-        const champSkins = getSkinsOfChampionById(champId, skins)
-        const currIdx = champSkins.findIndex(skin => skin.id === value.skin.id)
-        const { skin, prev, next } = prepareCollection(currIdx, champSkins)
-        const props: SkinContextType = {
-            name: champ.name,
-            alias: champ.alias,
-            skin,
-            prev,
-            next,
-            patch,
-        }
-        return <SkinContext.Provider value={props} > {children} </SkinContext.Provider>
+        skinsSet = getSkinsOfChampionById(champId, skins)
+        name = champ.name;
     }
+
+    currIdx = skinsSet.findIndex(skin => skin.id === value.skin.id)
+    const { skin, prev, next } = prepareCollection(currIdx, skinsSet)
+    const props: SkinContextType = {
+        name,
+        skin,
+        prev,
+        next,
+        patch,
+    }
+    return <SkinContext.Provider value={props} > {children} </SkinContext.Provider>
 }
 
 export { SkinContext, SkinProvider }
