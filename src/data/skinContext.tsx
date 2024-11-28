@@ -29,23 +29,33 @@ function SkinProvider({
     children, value
 }: {
     children: ReactNode,
-    value: Skin
+    value: {
+        skin: Skin;
+        type?: 'champion' | 'skinline' | 'universe',
+    }
 }) {
     const { skins, champions, patch } = useContext(PropsContext);
-    const champId = splitId(value.id)[0]
-    const champ = getChampionById(champId, champions) ?? champions[0]
-    const champSkins = getSkinsOfChampionById(champId, skins)
-    const currIdx = champSkins.findIndex(skin => skin.id === value.id)
-    const { skin, prev, next } = prepareCollection(currIdx, champSkins)
-    const props: SkinContextType = {
-        name: champ.name,
-        alias: champ.alias,
-        skin,
-        prev,
-        next,
-        patch,
+    const type = value.type ?? 'champion'
+    if (type === 'universe') {
+        return
+    } else if (type === 'skinline') {
+        return
+    } else {
+        const champId = splitId(value.skin.id)[0]
+        const champ = getChampionById(champId, champions) ?? champions[0]
+        const champSkins = getSkinsOfChampionById(champId, skins)
+        const currIdx = champSkins.findIndex(skin => skin.id === value.skin.id)
+        const { skin, prev, next } = prepareCollection(currIdx, champSkins)
+        const props: SkinContextType = {
+            name: champ.name,
+            alias: champ.alias,
+            skin,
+            prev,
+            next,
+            patch,
+        }
+        return <SkinContext.Provider value={props} > {children} </SkinContext.Provider>
     }
-    return <SkinContext.Provider value={props} > {children} </SkinContext.Provider>
 }
 
 export { SkinContext, SkinProvider }
