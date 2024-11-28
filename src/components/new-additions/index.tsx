@@ -7,13 +7,13 @@ import { PropsContext, SkinWithKey } from "@/data/propsContext";
 import { asset } from "@/data/helpers";
 
 export default function NewAdditions() {
-    const { addedSkins } = useContext(PropsContext);
+    const { addedSkins, lng } = useContext(PropsContext);
 
     if (!addedSkins.length) {
         return null;
     }
 
-    const linkTo = (skin: SkinWithKey) => `/champions/${skin.$$alias}/skins/${skin.id}`;
+    const linkTo = (skin: SkinWithKey) => `/${lng}/champions/${skin.$$alias}/skins/${skin.id}`;
 
     return (
         (<div className={styles.container}>

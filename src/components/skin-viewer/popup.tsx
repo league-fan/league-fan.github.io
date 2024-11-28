@@ -14,10 +14,12 @@ import Image from "../image";
 import Link from "next/link";
 import { asset } from "@/data/helpers";
 import styles from "./styles.module.scss";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SkinWithMeta } from "./helpers";
+import { PropsContext } from "@/data/propsContext";
 
 export function Popup({ skin }: { skin: SkinWithMeta }) {
+  const { lng } = useContext(PropsContext);
   const [showChromas, setShowChromas] = useState(false);
   useEffect(() => {
     setShowChromas(false);
@@ -28,7 +30,7 @@ export function Popup({ skin }: { skin: SkinWithMeta }) {
       <nav>
         <div>
           <User />
-          <Link href="/champions/[key]" as={`/champions/${meta.champion.key}`}>
+          <Link href={`/${lng}/champions/[alias]`} as={`/${lng}/champions/${meta.champion.alias}`}>
 
             <span>{meta.champion.name}</span>
 
