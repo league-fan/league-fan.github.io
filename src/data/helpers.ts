@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { CDRAGON, fallbackLng } from "./constants";
 import { useRouter } from "next/navigation";
-import { Added, Champion, Skin, Skins } from "@/types";
+import { Added, Champion, Skin, Skinline, Skins, Universe } from "@/types";
 import { RarityEnum } from "@/types/skins";
 
 export const raritiesMap: Partial<Record<RarityEnum, [string, string]>> = {
@@ -56,7 +56,7 @@ export function getAddedSkins(added: Added, skins: Skins, champions: Champion[])
         });
 }
 
-export function skinlineSkins(id: number, skins: Skins, champions: Champion[]) {
+export function getSkinsOfSkinline(id: number, skins: Skins, champions: Champion[]) {
     return Object.values(skins)
         .filter((skin) => skin.skinLines?.some((line) => line.id === id))
         .sort((a, b) => {
@@ -66,6 +66,11 @@ export function skinlineSkins(id: number, skins: Skins, champions: Champion[]) {
             const bIndex = champions.findIndex((c) => c.id === bId);
             return aIndex - bIndex;
         });
+}
+
+export function getSkinlinesOfUniverse(universe: Universe, skinlines: Skinline[]) {
+    return skinlines
+        .filter((line) => universe.skinSets.includes(line.id))
 }
 
 export function getSkinsOfChampionById(id: number, skins: Skins) {
@@ -78,6 +83,14 @@ export function getChampionByName(name: string, champions: Champion[]) {
 
 export function getChampionById(id: number, champions: Champion[]) {
     return champions.find((champ) => champ.id === id);
+}
+
+export function getSkinlineById(id: number, skinlines: Skinline[]) {
+    return skinlines.find((line) => line.id === id);
+}
+
+export function getUniverseById(id: number, universes: Universe[]) {
+    return universes.find((u) => u.id === id);
 }
 
 export function sortSkins(sortByRarity: boolean, skins: Skin[]) {

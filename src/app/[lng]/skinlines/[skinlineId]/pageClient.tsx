@@ -1,6 +1,6 @@
 'use client';
 
-import { asset, skinlineSkins, sortSkins, useLocalStorageState } from "@/data/helpers";
+import { asset, getSkinsOfSkinline, sortSkins, useLocalStorageState } from "@/data/helpers";
 import { PropsContext } from "@/data/propsContext";
 import { Skin } from "@/types";
 import { useContext } from "react";
@@ -22,7 +22,7 @@ export default function pageClient({ params }: { params: { lng: string, skinline
         "champion"
     );
 
-    const skins = skinlineSkins(skinline.id, allSkins, champions)
+    const skins = getSkinsOfSkinline(skinline.id, allSkins, champions)
     const universes = allUniverses.filter((u) =>
         u.skinSets.includes(skinline.id)
     );
