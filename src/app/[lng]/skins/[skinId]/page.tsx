@@ -1,6 +1,7 @@
 import { languages } from "@/data/constants";
 import SkinIdPage from "./skinIdPage";
 import { Champion, Skins } from "@/types";
+import { Suspense } from "react";
 
 export async function generateStaticParams() {
     const skins = (await import("@/../.cache/skins.json").then((skins) => skins.default)) as { [key: string]: Skins };
@@ -18,7 +19,9 @@ export default async function Page({
     const { lng, skinId } = await params;
     return (
         <>
-            <SkinIdPage params={{ lng, skinId }} />
+            <Suspense>
+                <SkinIdPage params={{ lng, skinId }} />
+            </Suspense>
         </>
     )
 }

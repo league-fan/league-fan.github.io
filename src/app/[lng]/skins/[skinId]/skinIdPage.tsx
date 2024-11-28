@@ -6,7 +6,6 @@ import { useContext } from "react";
 import { PropsContext } from "@/data/propsContext";
 import { Folder, User } from "lucide-react";
 import { redirect, useSearchParams } from "next/navigation";
-import { getSkinlineById } from "@/data/helpers";
 import { Skin } from "@/types";
 
 type skinsIdPageSearchParams = {
@@ -23,11 +22,11 @@ export default function SkinIdPage({
     const { lng, skinId } = params;
     const searchParams = useSearchParams()
     const type = searchParams.get('type');
-    if (!type) return redirect(`/${lng}/skins/${skinId}?type=champion&id=${champions[0].id.toString()}`);
+    if (!type || type !== 'champion' && type !== 'skinline') return redirect(`/${lng}/skins/${skinId}?type=champion&id=${champions[0].alias.toString()}`);
     let id = searchParams.get('id');
     if (!id) {
         if (type === 'champion') {
-            id = champions[0].id.toString()
+            id = champions[0].alias.toString()
         }
         if (type === 'skinline') {
             id = skinlines[0].id.toString()
@@ -39,12 +38,8 @@ export default function SkinIdPage({
     if (!skin) return <div>Skin Not found</div>
 
     const collectionIcon = type === 'champion' ? (<User />) : (<Folder />)
-    const backTo = type === 'champion' ?
-        `/${lng}/champions/${id}/skins` :
-        `/${lng}/skinlines/${id}/skins`
-    const linkTo = type === 'champion' ?
-        (skin: Skin) => `/${lng}/champions/${id}/skins/${skin.id}` :
-        (skin: Skin) => `/${lng}/skinlines/${id}/skins/${skin.id}`
+    const backTo = `/${lng}/skins?type=${type}&id=${id}`
+    const linkTo = (skin: Skin) => `/${lng}/skins/${skin.id}?type=${type}&id=${id}`
     return (
         <SkinProvider value={{ skin }}>
             <SkinViewer

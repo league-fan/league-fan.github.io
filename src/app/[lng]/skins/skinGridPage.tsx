@@ -11,10 +11,9 @@ import { Header } from "@/components/header";
 import { redirect, useSearchParams } from "next/navigation";
 import { Folder, Globe } from "lucide-react";
 import Link from "next/link";
-import { get } from "http";
 
 type skinsGridPageSearchParams = {
-    type: 'champion' | 'skinline',
+    type: 'champion' | 'skinline' | 'universe',
     id: string,
 }
 
@@ -59,7 +58,7 @@ export function ChampionPage({ params }: { params: { lng: string, champion: Cham
     if (!champion) return <div>Champion not found</div>;
     const champSkins = getSkinsOfChampionById(champion.id, skins);
 
-    const linkTo = (skin: Skin) => `/${lng}/champions/${champion.alias}/skins/${skin.id}`;
+    const linkTo = (skin: Skin) => `/${lng}/skins/${skin.id}?type=champion&id=${champion.alias}`;
     const sortedSkins = sortSkins(sortBy === "rarity", champSkins);
 
     return (
@@ -140,11 +139,12 @@ export function SkinlinePage({ params }: { params: { lng: string, skinline: Skin
     )
 }
 
-export function SkinlineInUniverse({ params }: { params: { lng: string, skinline: Skinline, linkTo: (skin: Skin) => string, sortByRarity: boolean } }) {
+export function SkinlineInUniverse({ params }: { params: { lng: string, skinline: Skinline, linkTo: (skin: Skin, skinline: Skinline) => string, sortByRarity: boolean } }) {
     const { skins, champions } = useContext(PropsContext);
     const { lng, skinline, linkTo, sortByRarity } = params;
     const skinsOfSkinline = getSkinsOfSkinline(skinline.id, skins, champions);
     const sortedSkins = sortSkins(sortByRarity, skinsOfSkinline);
+    const newLinkTo = (skin: Skin) => linkTo(skin, skinline);
     return (
         <>
             <h2 className={styles.subtitle}>
@@ -155,7 +155,7 @@ export function SkinlineInUniverse({ params }: { params: { lng: string, skinline
             </h2>
             <SkinGrid
                 skins={sortedSkins}
-                linkTo={linkTo}
+                linkTo={newLinkTo}
             />
         </>
     )
@@ -169,7 +169,7 @@ export function UniversePage({ params }: { params: { lng: string, universe: Univ
         "universe__sortBy",
         "champion"
     );
-    const linkTo = (skin: Skin) => `/universes/${universe.id}/skins/${skin.id}`;
+    const linkTo = (skin: Skin, skinline: Skinline) => `/${lng}/skins/${skin.id}?type=skinline&id=${skinline.id}`;
     return (
         <div>
             <h2 className={styles.subtitle}>
@@ -204,13 +204,15 @@ export default function SkinGridPage({ params }: { params: { lng: string } }) {
     const { lng } = params
     const searchParams = useSearchParams()
     const type = searchParams.get('type');
-    if (!type) return redirect(`/${lng}/skins?type=champion&id=${champions[0].id.toString()}`);
+    if (!type) return redirect(`/${lng}/skins?type=champion&id=${champions[0].alias.toString()}`);
     let id = searchParams.get('id');
     if (!id) {
-        if (type === 'champion') {
-            id = champions[0].id.toString()
-        } else {
+        if (type === 'skinline') {
             id = skinlines[0].id.toString()
+        } else if (type === 'universe') {
+            id = universes[0].id.toString()
+        } else {
+            id = champions[0].alias.toString()
         }
         redirect(`/${lng}/skins?type=${type}&id=${id}`);
     }
@@ -256,7 +258,7 @@ export default function SkinGridPage({ params }: { params: { lng: string } }) {
             </div>
         )
     } else {
-        const champion = champions.find(champ => champ.id.toString() === id);
+        const champion = getChampionByName(id, champions);
         if (!champion) return <div>Champion not found</div>;
 
         return (

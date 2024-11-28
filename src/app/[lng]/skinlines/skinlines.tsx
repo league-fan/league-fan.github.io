@@ -12,8 +12,8 @@ function SkinlinesList() {
             {skinlines.map((l) => (
                 <div key={l.id}>
                     <Link
-                        href={`/${lng}/skinlines/[skinlineId]`}
-                        as={`/${lng}/skinlines/${l.id}`}
+                        href={`/${lng}/skins`}
+                        as={`/${lng}/skins?type=skinline&id=${l.id}`}
                         prefetch={false}
                     >
                         {l.name}

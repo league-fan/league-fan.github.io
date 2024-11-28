@@ -1,6 +1,6 @@
 import { PropsContext } from "@/data/propsContext";
 import { prepareCollection, SkinWithMeta } from "@/components/skin-viewer/helpers";
-import { getChampionById, getSkinlineById, getSkinsOfChampionById, getSkinsOfSkinline, splitId } from "@/data/helpers";
+import { getChampionById, getChampionByName, getSkinlineById, getSkinsOfChampionById, getSkinsOfSkinline, splitId } from "@/data/helpers";
 import { Skin, Skinline } from "@/types";
 import { createContext, ReactNode, useContext } from "react";
 
@@ -45,9 +45,8 @@ function SkinProvider({
         skinsSet = getSkinsOfSkinline(skinline.id, skins, champions)
         name = skinline.name;
     } else {
-        const champId = splitId(value.skin.id)[0]
-        const champ = getChampionById(champId, champions) ?? champions[0]
-        skinsSet = getSkinsOfChampionById(champId, skins)
+        const champ = getChampionByName(id, champions) ?? champions[0];
+        skinsSet = getSkinsOfChampionById(champ.id, skins)
         name = champ.name;
     }
 

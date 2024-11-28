@@ -20,8 +20,8 @@ function UniversesList() {
                 return (
                     <div key={u.id}>
                         <Link
-                            href={`/${lng}/universes/[universeId]`}
-                            as={`/${lng}/universes/${u.id}`}
+                            href={`/${lng}/skins`}
+                            as={`/${lng}/skins?type=universe&id=${u.id}`}
                             prefetch={false}
                         >
                             {u.name}
@@ -31,8 +31,8 @@ function UniversesList() {
                                 {skinSets.map(({ name, id }) => (
                                     <li key={id}>
                                         <Link
-                                            href={`/${lng}/skinlines/[skinlineId]`}
-                                            as={`/${lng}/skinlines/${id}`}
+                                            href={`/${lng}/skins`}
+                                            as={`/${lng}/skins?type=skinline&id=${id}`}
                                             prefetch={false}
                                         >
                                             {name}

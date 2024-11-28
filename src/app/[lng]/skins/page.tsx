@@ -1,5 +1,6 @@
 import { languages } from "@/data/constants";
 import SkinGridPage from "./skinGridPage";
+import { Suspense } from "react";
 
 export async function generateStaticParams() {
     return languages.map(lng => (
@@ -14,6 +15,8 @@ export default async function Page({
 }) {
     const { lng } = (await params)
     return (
-        <SkinGridPage params={{ lng }} />
+        <Suspense>
+            <SkinGridPage params={{ lng }} />
+        </Suspense>
     )
 }
