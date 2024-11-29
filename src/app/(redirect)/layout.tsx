@@ -1,8 +1,8 @@
 import { LanguageZone } from "@/types";
 import { dir } from "i18next";
-import { Entry } from "@/components/entry";
 import "@/styles/globals.scss";
 import styles from "@/styles/static.module.scss";
+import { Common } from "@/layouts/common";
 
 export default async function RootLayout({
     children
@@ -12,11 +12,11 @@ export default async function RootLayout({
         <html lang={lng} dir={dir(lng)}>
             <head />
             <body>
-                <div className="main-layout">
-                    <Entry backTo="/">
+                <Common lng={lng} backTo="/">
+                    <div className="main-layout">
                         <main className={styles.main}>{children}</main>
-                    </Entry>
-                </div>
+                    </div>
+                </Common>
             </body>
         </html>
     );

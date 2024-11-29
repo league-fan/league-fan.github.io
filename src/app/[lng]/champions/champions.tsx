@@ -95,6 +95,7 @@ export default function Champions({ champions, lng }: Props) {
     return (
         <div className={styles.container}>
             <Nav
+                lng={lng}
                 active="champions"
                 filters={
                     <>

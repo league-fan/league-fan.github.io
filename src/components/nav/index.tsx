@@ -1,18 +1,16 @@
-'use client';
 import classNames from "classnames";
 import { User, Globe, Folder } from "lucide-react";
 import Link from "next/link";
 import styles from "@/styles/index.module.scss";
-import { useContext } from "react";
-import { PropsContext } from "@/data/propsContext";
+import { allowedLng } from "@/data/constants";
 
 interface NavProps {
+  lng: allowedLng
   active: string;
   filters?: React.ReactNode;
 }
 
-export function Nav({ active, filters }: NavProps) {
-  const { lng } = useContext(PropsContext);
+export function Nav({ lng, active, filters }: NavProps) {
   return (
     (<nav>
       <div className={styles.tabs}>
