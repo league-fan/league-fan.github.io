@@ -1,17 +1,33 @@
+import NewAdditions from "@/components/new-additions";
 import Champions from "./champions";
-import { Entry } from "@/components/entry";
-import { languages } from "@/data/constants";
+import { allowedLng, Langs, languages } from "@/data/constants";
+import { Common } from "@/layouts/common";
+import { Added, Champion, Skins } from "@/types";
+import { getAddedSkins, local_fetch, LocalData } from "@/data/server";
 
 export async function generateStaticParams() {
     return languages.map(lng => ({ lng }));
 }
 
-export default async function Page() {
+type PageProps = {
+    params: Promise<{ lng: string }>
+}
+
+export default async function Page({ params }: PageProps) {
+    const lng = (await params).lng as allowedLng;
+    const skins = local_fetch<Langs<Skins>>(LocalData.skins)[lng];
+    const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
+    const added = local_fetch<Added>(LocalData.added);
+
+    const addedSkins = getAddedSkins(added, skins, champions);
+
     return (
-        <Entry withNew>
+        <Common lng={lng} newAddidions={(
+            <NewAdditions lng={lng} addedSkins={addedSkins} />
+        )}>
             <div className="champions-page">
-                <Champions />
+                <Champions lng={lng} champions={champions} />
             </div>
-        </Entry>
+        </Common>
     )
 }

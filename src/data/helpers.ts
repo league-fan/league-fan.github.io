@@ -7,30 +7,6 @@ import { useRouter } from "next/navigation";
 import { Added, Champion, Skin, Skinline, Skins, Universe } from "@/types";
 import { RarityEnum } from "@/types/skins";
 
-export const raritiesMap: Partial<Record<RarityEnum, [string, string]>> = {
-    [RarityEnum.KUltimate]: ["ultimate.png", "Ultimate"],
-    [RarityEnum.KMythic]: ["mythic.png", "Mythic"],
-    [RarityEnum.KLegendary]: ["legendary.png", "Legendary"],
-    [RarityEnum.KEpic]: ["epic.png", "Epic"],
-    [RarityEnum.KTranscendent]: ["transcendent.png", "Transcendent"],
-};
-
-export function getRarityOfSkin(skin: Skin) {
-    if (!skin.rarity || !(skin.rarity in raritiesMap)) {
-        return null;
-    }
-    const rarityInfo = raritiesMap[skin.rarity];
-    if (!rarityInfo) {
-        return null;
-    }
-    const [imgName, name] = rarityInfo;
-    const imgUrl = `${dataRoot()}/v1/rarity-gem-icons/${imgName}`;
-    return {
-        imgUrl,
-        name,
-    };
-}
-
 export function splitId(id: number) {
     return [Math.floor(id / 1000), id % 1000];
 }
@@ -119,22 +95,6 @@ export function useLocalStorageState(name: string, initialValue: any) {
 interface AssetOptions {
     patch?: string;
     lang?: string;
-}
-
-export function dataRoot({ patch, lang }: AssetOptions = { patch: "pbe", lang: "default" }) {
-    const effectivePatch = patch || "pbe";
-    const effectiveLang = lang || "default";
-    return `${CDRAGON}/${effectivePatch}/plugins/rcp-be-lol-game-data/global/${effectiveLang}`;
-}
-
-export function modelviewerUrl(skin: Skin) {
-    return `https://www.modelviewer.lol/en-US/model-viewer?id=${skin.id}`;
-    // const skinId = splitId(skin.id)[1];
-    // return `https://teemo.gg/model-viewer?game=league-of-legends&type=champions&object=${champion.alias.toLowerCase()}&skinid=${champion.alias.toLowerCase()}-${skinId}`;
-}
-
-export function asset(path: string, { patch, lang }: AssetOptions = { patch: "pbe", lang: "default" }) {
-    return path.replace("/lol-game-data/assets", dataRoot({ patch, lang })).toLowerCase();
 }
 
 function isTextBox(element: Element | null) {

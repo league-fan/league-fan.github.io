@@ -1,3 +1,4 @@
+'use client'
 import NextImage from "next/legacy/image";
 import { useState, useEffect } from "react";
 import placeholder from "../assets/placeholder.svg";

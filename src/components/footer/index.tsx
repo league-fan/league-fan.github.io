@@ -1,15 +1,13 @@
-'use client';
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import { ReactNode, useContext } from "react";
-import { PropsContext } from "@/data/propsContext";
+import { ReactNode } from "react";
 
 interface FooterProps {
+    patch?: string;
     flat?: boolean;
 }
 
-export function Footer({ flat }: FooterProps = { flat: false }) {
-    const { patch } = useContext(PropsContext);
+export function Footer({ flat, patch }: FooterProps) {
     return (
         <footer className={classNames(styles.footer, { [styles.flat]: flat })}>
             <div>

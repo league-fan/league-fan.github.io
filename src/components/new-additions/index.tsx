@@ -1,19 +1,22 @@
-'use client';
 import Link from "next/link";
 import Image from "../image";
 import styles from "./style.module.scss";
-import { useContext } from "react";
-import { PropsContext, SkinWithKey } from "@/data/propsContext";
-import { asset } from "@/data/helpers";
+import { asset } from "@/data/server";
+import { Skin } from "@/types";
 
-export default function NewAdditions() {
-    const { addedSkins, lng } = useContext(PropsContext);
+type AddedSkin = Skin & { $$alias: string };
 
+type Props = {
+    addedSkins: Array<AddedSkin>;
+    lng: string;
+}
+
+export default function NewAdditions({ addedSkins, lng }: Props) {
     if (!addedSkins.length) {
         return null;
     }
 
-    const linkTo = (skin: SkinWithKey) => `/${lng}/skins/${skin.id}?type=champion&id=${skin.$$alias}`;
+    const linkTo = (skin: AddedSkin) => `/${lng}/skins/${skin.id}?type=champion&id=${skin.$$alias}`;
 
     return (
         (<div className={styles.container}>
@@ -33,7 +36,7 @@ export default function NewAdditions() {
                                         className={styles.tile}
                                         unoptimized
                                         loading="eager"
-                                        src={asset(skin.tilePath)}
+                                        src={asset(skin.tilePath, {})}
                                         alt={skin.name}
                                         objectFit="cover"
                                         layout="fill"

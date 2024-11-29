@@ -2,12 +2,13 @@
 import { Nav } from "@/components/nav";
 import styles from "@/styles/index.module.scss";
 import { useLocalStorageState } from "@/data/helpers";
-import { useContext, useMemo } from "react";
-import { PropsContext } from "@/data/propsContext";
+import { useMemo } from "react";
 import Link from "next/link";
 import Image from "@/components/image";
-import { asset } from "@/data/helpers";
+import { asset } from "@/data/server";
 import { languageZoneToBCP47 } from "@/types/languagezone";
+import { Champion } from "@/types";
+import { allowedLng } from "@/data/constants";
 
 export const classes = {
     assassin: "Assassin",
@@ -27,10 +28,14 @@ export const sortClasses = {
     alias_rev: "By Alias (Z-A)",
 }
 
+type ChampionsListProps = {
+    lng: allowedLng,
+    champions: Champion[],
+    role: string,
+    sort?: string
+}
 
-export function ChampionsList({ params }: { params: { role: string, sort?: string } }) {
-    const { champions, lng } = useContext(PropsContext);
-    const { role, sort } = params;
+export function ChampionsList({ lng, champions, role, sort }: ChampionsListProps) {
     const filteredChamps = useMemo(() => {
         let sortedChamps = champions;
         if (sort) {
@@ -59,7 +64,7 @@ export function ChampionsList({ params }: { params: { role: string, sort?: strin
                 <Image
                     unoptimized
                     className={styles.img}
-                    src={asset(c.squarePortraitPath)}
+                    src={asset(c.squarePortraitPath, {})}
                     alt={c.name}
                     width={80}
                     height={80}
@@ -72,7 +77,12 @@ export function ChampionsList({ params }: { params: { role: string, sort?: strin
 
 }
 
-export default function Champions() {
+type Props = {
+    champions: Champion[],
+    lng: allowedLng
+}
+
+export default function Champions({ champions, lng }: Props) {
     const [champRole, setChampRole] = useLocalStorageState(
         "champs_index__champRole",
         ""
@@ -120,7 +130,7 @@ export default function Champions() {
                 }
             />
             <main>
-                <ChampionsList params={{ role: champRole, sort: champSort }} />
+                <ChampionsList lng={lng} champions={champions} role={champRole} sort={champSort} />
             </main>
         </div>
     )
