@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+This version refactor App router structure. Optimize for SSR and SSG.
+
 ## 0.0.3 (2024-11-27)
 
 ### Feat
