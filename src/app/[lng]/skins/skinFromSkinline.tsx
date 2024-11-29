@@ -31,7 +31,7 @@ export function SkinFromSkinline({ skinlineSkins, lng, skinline, skinlineUnivers
             </h2>
             <h1 className={styles.title}>{skinline.name}</h1>
             {skinlineUniverse.map((u) => (
-                <div className={styles.parents}>
+                <div className={styles.parents} key={`${u.id}__${skinline.id}`}>
                     <Link
                         key={u.id}
                         href={`/${lng}/universes/[universeId]`}

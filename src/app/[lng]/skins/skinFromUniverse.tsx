@@ -3,9 +3,10 @@ import { allowedLng } from "@/data/constants";
 import { Skin, Skinline, Universe } from "@/types";
 import styles from '@/styles/collection.module.scss'
 import { SkinGrid } from "@/components/skin-grid";
-import { sortSkins, useLocalStorageState } from "@/data/helpers";
+import { useLocalStorageState } from "@/data/helpers";
 import { Folder, Globe } from "lucide-react";
 import Link from "next/link";
+import { sortSkins } from "@/data/server";
 
 type Props = {
     lng: allowedLng,
