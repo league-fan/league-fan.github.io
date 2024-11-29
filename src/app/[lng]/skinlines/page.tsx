@@ -20,8 +20,9 @@ export default async function Page({ params }: PageProps) {
     const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
     const added = local_fetch<Added>(LocalData.added);
     const addedSkins = getAddedSkins(added, skins, champions);
+    const patch = local_fetch<{ [key: string]: string }>(LocalData.presistentVars).oldVersionString;
     return (
-        <Common lng={lng} newAddidions={(
+        <Common lng={lng} patch={patch} newAddidions={(
             <NewAdditions lng={lng} addedSkins={addedSkins} />
         )}>
             <div className="skinline-page">

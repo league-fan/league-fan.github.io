@@ -1,11 +1,11 @@
 import { Header } from "@/components/header";
 import { Footer, FooterContainer } from "@/components/footer";
 import { ReactNode } from "react";
-import { LanguageZone } from "@/types";
+import { allowedLng } from "@/data/constants";
 
 interface LayoutProps {
     children: ReactNode;
-    lng: LanguageZone;
+    lng: allowedLng;
     flat?: boolean;
     backTo?: string;
     patch?: string;
@@ -15,11 +15,11 @@ export function Common({ children, lng, backTo, flat, patch, newAddidions }: Lay
     return (
         <FooterContainer>
             <div>
-                <Header {...{ lng, flat, backTo }} />
+                <Header lng={lng} flat={flat} backTo={backTo} />
                 {newAddidions}
                 {children}
             </div>
-            <Footer {...{ patch, flat }} />
+            <Footer patch={patch} flat={flat} />
         </FooterContainer>
     );
 }

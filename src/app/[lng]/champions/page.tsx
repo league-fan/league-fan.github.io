@@ -18,11 +18,12 @@ export default async function Page({ params }: PageProps) {
     const skins = local_fetch<Langs<Skins>>(LocalData.skins)[lng];
     const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
     const added = local_fetch<Added>(LocalData.added);
+    const patch = local_fetch<{ [key: string]: string }>(LocalData.presistentVars).oldVersionString;
 
     const addedSkins = getAddedSkins(added, skins, champions);
 
     return (
-        <Common lng={lng} newAddidions={(
+        <Common lng={lng} patch={patch} newAddidions={(
             <NewAdditions lng={lng} addedSkins={addedSkins} />
         )}>
             <div className="champions-page">

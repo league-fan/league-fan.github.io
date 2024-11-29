@@ -50,6 +50,7 @@ export function TitleIcon({ item, skins }: TitleIconProps) {
 }
 
 type Props = {
+    patch: string,
     lng: allowedLng,
     champions: Champion[],
     skins: Skin[],
@@ -59,7 +60,7 @@ type Props = {
 
 const allowType = ['champion', 'skinline', 'universe'];
 
-export default function SkinGridPage({ lng, champions, skins, skinlines, universes }: Props) {
+export default function SkinGridPage({ patch, lng, champions, skins, skinlines, universes }: Props) {
     const searchParams = useSearchParams()
     const type = searchParams.get('type');
     if (!type || !allowType.includes(type)) return <NotFound title="Type not found" lng={lng} back={`/${lng}/champions`} />;
@@ -93,7 +94,7 @@ export default function SkinGridPage({ lng, champions, skins, skinlines, univers
                             <SkinFromSkinline skinlineSkins={skinlineSkins} lng={lng} skinline={skinline} skinlineUniverse={skinlineUniverse} />
                         </main>
                     </div>
-                    <Footer flat />
+                    <Footer patch={patch} flat />
                 </FooterContainer>
             </div>
         )
@@ -121,7 +122,7 @@ export default function SkinGridPage({ lng, champions, skins, skinlines, univers
                             <SkinFromUniverse universe={universe} lng={lng} universeSkinlineSkins={universeSkinlineSkins} universeSkinlines={universeSkinlines} />
                         </main>
                     </div>
-                    <Footer flat />
+                    <Footer patch={patch} flat />
                 </FooterContainer>
             </div>
         )
@@ -141,7 +142,7 @@ export default function SkinGridPage({ lng, champions, skins, skinlines, univers
                             <SkinFromChampion champion={champion} lng={lng} champSkins={champSkins} />
                         </main>
                     </div>
-                    <Footer flat />
+                    <Footer patch={patch} flat />
                 </FooterContainer>
             </div>
         )

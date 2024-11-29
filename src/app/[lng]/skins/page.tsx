@@ -21,9 +21,11 @@ export default async function Page({
     const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
     const universes = local_fetch<Langs<Universe[]>>(LocalData.universes)[lng];
     const skins = Object.values(skinsDict);
+    const patch = local_fetch<{ [key: string]: string }>(LocalData.presistentVars).oldVersionString;
+
     return (
         <Suspense>
-            <SkinGridPage lng={lng} skinlines={skinlines} skins={skins} champions={champions} universes={universes} />
+            <SkinGridPage patch={patch} lng={lng} skinlines={skinlines} skins={skins} champions={champions} universes={universes} />
         </Suspense>
     )
 }

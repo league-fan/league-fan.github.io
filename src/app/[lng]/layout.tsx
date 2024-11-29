@@ -1,10 +1,8 @@
 import "@/styles/globals.scss";
 import { ReactNode } from "react";
 import { dir } from "i18next";
-import { fallbackLng, languages } from "@/data/constants";
-import { PropsProvider } from "@/data/propsContext";
+import { allowedLng, fallbackLng, languages } from "@/data/constants";
 import { redirect } from "next/navigation";
-import { LanguageZone } from "@/types";
 
 type RootLayoutProps = { children: ReactNode; params: Promise<{ lng: string }> };
 
@@ -12,8 +10,8 @@ export default async function RootLayout({
     children,
     params,
 }: RootLayoutProps) {
-    const { lng } = await params;
-    if (!languages.includes(lng as LanguageZone)) {
+    const lng = (await params).lng;
+    if (!languages.includes(lng as allowedLng)) {
         redirect(`/${fallbackLng}/champions`);
     }
 
@@ -21,9 +19,7 @@ export default async function RootLayout({
         <html lang={lng} dir={dir(lng)}>
             <head />
             <body>
-                <PropsProvider value={lng as LanguageZone}>
-                    {children}
-                </PropsProvider>
+                {children}
             </body>
         </html>
     );
