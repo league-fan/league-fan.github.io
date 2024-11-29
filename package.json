@@ -19,11 +19,7 @@
     "@next/mdx": "^15.0.3",
     "@types/mdx": "^2.0.13",
     "accept-language": "^3.0.20",
-    "axios": "^1.7.7",
-    "axios-retry": "^4.5.0",
-    "cheerio": "^1.0.0",
     "classnames": "^2.5.1",
-    "fuse.js": "^7.0.0",
     "i18next": "^24.0.2",
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-resources-to-backend": "^1.2.1",
@@ -46,6 +42,10 @@
     "lint-staged": "^15.2.10",
     "prettier": "3.4.1",
     "sass": "^1.81.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "axios": "^1.7.7",
+    "axios-retry": "^4.5.0",
+    "cheerio": "^1.0.0",
+    "fuse.js": "^7.0.0"
   }
 }
