@@ -32,9 +32,8 @@ export function getAddedSkins(added: Added, skins: Skins, champions: Champion[])
         });
 }
 
-export function getSkinsOfSkinline(skinline_id: number, skins: Skins, champions: Champion[]) {
-    return Object.values(skins)
-        .filter((skin) => skin.skinLines?.some((line) => line.id === skinline_id))
+export function getSkinsOfSkinline(skinline_id: number, skins: Skin[], champions: Champion[]) {
+    return skins.filter((skin) => skin.skinLines?.some((line) => line.id === skinline_id))
         .sort((a, b) => {
             const aId = splitId(a.id)[0];
             const bId = splitId(b.id)[0];
@@ -49,8 +48,8 @@ export function getSkinlinesOfUniverse(universe: Universe, skinlines: Skinline[]
         .filter((line) => universe.skinSets.includes(line.id))
 }
 
-export function getSkinsOfChampionById(id: number, skins: Skins) {
-    return Object.values(skins).filter((skin) => splitId(skin.id)[0] === id);
+export function getSkinsOfChampionById(id: number, skins: Skin[]) {
+    return skins.filter((skin) => splitId(skin.id)[0] === id);
 }
 
 export function getChampionByName(name: string, champions: Champion[]) {
@@ -67,16 +66,6 @@ export function getSkinlineById(id: number, skinlines: Skinline[]) {
 
 export function getUniverseById(id: number, universes: Universe[]) {
     return universes.find((u) => u.id === id);
-}
-
-export function sortSkins(sortByRarity: boolean, skins: Skin[]) {
-    if (sortByRarity) {
-        const keys = Object.keys(raritiesMap).reverse();
-        return skins
-            .slice()
-            .sort((a, b) => keys.indexOf(b.rarity) - keys.indexOf(a.rarity));
-    }
-    return skins;
 }
 
 export function useLocalStorageState(name: string, initialValue: any) {

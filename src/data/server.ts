@@ -103,11 +103,12 @@ export function asset(path: string, { patch, lang }: { patch?: string, lang?: st
     return path.replace("/lol-game-data/assets", dataRoot({ patch, lang })).toLowerCase();
 }
 
-export function getRarityOfSkin(skin: Skin) {
-    if (!skin.rarity || !(skin.rarity in raritiesMap)) {
+export function getRarityOfSkin(rarity: String) {
+    const skinRarity = rarity as RarityEnum;
+    if (!skinRarity || !(skinRarity in raritiesMap)) {
         return null;
     }
-    const rarityInfo = raritiesMap[skin.rarity];
+    const rarityInfo = raritiesMap[skinRarity];
     if (!rarityInfo) {
         return null;
     }
@@ -117,4 +118,14 @@ export function getRarityOfSkin(skin: Skin) {
         imgUrl,
         name,
     };
+}
+
+export function sortSkins(sortByRarity: boolean, skins: Skin[]) {
+    if (sortByRarity) {
+        const keys = Object.keys(raritiesMap).reverse();
+        return skins
+            .slice()
+            .sort((a, b) => keys.indexOf(b.rarity) - keys.indexOf(a.rarity));
+    }
+    return skins;
 }

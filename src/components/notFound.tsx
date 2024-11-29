@@ -1,12 +1,20 @@
-'use client'
+import { allowedLng } from "@/data/constants";
+import { Common } from "@/layouts/common";
+import Link from "next/link";
 
-import {Entry} from "@/components/entry";
+export type NotFoundProps = {
+    lng: allowedLng,
+    title: string,
+    description?: string
+    back?: string
+}
 
-export default function NotFound({params}: {params: {title: string, description?: string}}) {
+export default function NotFound({ lng, title, description, back }: NotFoundProps) {
     return (
-        <Entry>
-            <h1>{params.title}</h1>
-            {params.description && <p>{params.description}</p>}
-        </Entry>
+        <Common lng={lng}>
+            <h1>{title}</h1>
+            {description && <p>{description}</p>}
+            {back && <Link href={back}>Go to Last Page</Link>}
+        </Common>
     )
 }

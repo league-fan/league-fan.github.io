@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import Image from "@/components/image";
 import Link from "next/link";
-import { asset, getRarityOfSkin } from "@/data/helpers";
+import { asset, getRarityOfSkin } from "@/data/server";
 import styles from "./styles.module.scss";
-import { Skin } from "@/types";
 
 interface SkinGridProps {
-  skins: Skin[];
-  linkTo: (skin: Skin) => string;
+  skins: { id: number, tilePath: string, name: string, rarity: string }[];
+  linkTo: (skinId: string) => string;
 }
 
 export function SkinGrid({ skins, linkTo }: SkinGridProps) {
@@ -20,13 +19,13 @@ export function SkinGrid({ skins, linkTo }: SkinGridProps) {
   return (
     (<div className={styles.grid}>
       {skins.map((skin) => {
-        const rarity = getRarityOfSkin(skin);
+        const rarity = getRarityOfSkin(skin.rarity);
         return (
-          (<Link key={skin.id} href={linkTo(skin)} as={linkTo(skin)}>
+          (<Link key={skin.id} href={linkTo(skin.id.toString())} as={linkTo(skin.id.toString())}>
             <Image
               className={styles.tile}
               unoptimized
-              src={asset(skin.tilePath)}
+              src={asset(skin.tilePath, {})}
               alt={skin.name}
               width={300}
               height={300}
@@ -36,7 +35,7 @@ export function SkinGrid({ skins, linkTo }: SkinGridProps) {
               <div className={classNames({ [styles.rarityBadge]: rarity })}>
                 {rarity && (
                   <Image
-                  unoptimized
+                    unoptimized
                     src={rarity.imgUrl}
                     title={rarity.name}
                     alt={rarity.name}
