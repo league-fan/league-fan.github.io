@@ -294,7 +294,9 @@
     // display: flex;
     cursor: default;
     // align-items: center;
-    transition: background 300ms ease, opacity 300ms ease;
+    transition:
+      background 300ms ease,
+      opacity 300ms ease;
     pointer-events: auto;
 
     h1 {
@@ -331,7 +333,9 @@
     right: 0;
     background: rgb(22, 33, 48);
     opacity: 0;
-    transition: opacity 300ms ease, transform 300ms ease;
+    transition:
+      opacity 300ms ease,
+      transform 300ms ease;
     padding: 8px;
     font-size: 1em;
     transform: translateY(6px);

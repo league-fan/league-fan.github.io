@@ -15,29 +15,29 @@ interface HeaderProps {
 
 export function Header({ lng, flat, backTo }: HeaderProps) {
   const back =
-    typeof window !== "undefined" ? localStorage.lastIndex ?? backTo : backTo;
-  return (<>
-    <header
-      className={classNames(styles.header, {
-        [styles.flat]: flat,
-      })}
-    >
-      <Link href={back ?? "/"} as={back ?? "/"} className={styles.logo}>
-
-        {backTo && <ArrowLeft />}
-        <Image
-          unoptimized
-          priority
-          src={logo}
-          alt="Skin Explorer"
-          height={36}
-          width={178}
-        />
-
-      </Link>
-      <HeaderMenuLanguage lng={lng} />
-      <HeaderMenu />
-    </header>
-    <div className={styles.headerSpacer} />
-  </>);
-};
+    typeof window !== "undefined" ? (localStorage.lastIndex ?? backTo) : backTo;
+  return (
+    <>
+      <header
+        className={classNames(styles.header, {
+          [styles.flat]: flat,
+        })}
+      >
+        <Link href={back ?? "/"} as={back ?? "/"} className={styles.logo}>
+          {backTo && <ArrowLeft />}
+          <Image
+            unoptimized
+            priority
+            src={logo}
+            alt="Skin Explorer"
+            height={36}
+            width={178}
+          />
+        </Link>
+        <HeaderMenuLanguage lng={lng} />
+        <HeaderMenu />
+      </header>
+      <div className={styles.headerSpacer} />
+    </>
+  );
+}

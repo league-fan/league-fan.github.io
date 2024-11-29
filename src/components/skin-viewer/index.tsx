@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   useCallback,
@@ -23,10 +23,7 @@ import {
   User,
   Users,
 } from "lucide-react";
-import {
-  useEscapeTo,
-  useLocalStorageState,
-} from "@/data/helpers";
+import { useEscapeTo, useLocalStorageState } from "@/data/helpers";
 import styles from "./styles.module.scss";
 import { getRarityUrl, asset } from "@/data/server";
 import { Skin } from "@/types";
@@ -64,7 +61,11 @@ const prefetchLinks = (skin: Skin, patch = "pbe") => {
     </>
   ) : (
     <>
-      <link rel="prefetch" as="image" href={asset(skin.splashPath, { patch })} />
+      <link
+        rel="prefetch"
+        as="image"
+        href={asset(skin.splashPath, { patch })}
+      />
       <link
         rel="prefetch"
         as="image"
@@ -117,7 +118,7 @@ export function SkinViewer({
   useEscapeTo(backTo);
   const [centered, setCentered] = useLocalStorageState(
     "viewer__centered",
-    false
+    false,
   );
   const [fill, setFill] = useLocalStorageState("viewer__fill", false);
   const [deltaX, setDeltaX] = useState("0px");
@@ -197,7 +198,7 @@ export function SkinViewer({
         router.replace(linkTo(prev));
       }
     },
-    [router, linkTo, prev, setExiting, setDeltaX, exiting]
+    [router, linkTo, prev, setExiting, setDeltaX, exiting],
   );
 
   const goNext = useCallback(
@@ -213,14 +214,14 @@ export function SkinViewer({
         router.replace(linkTo(next));
       }
     },
-    [router, linkTo, next, setExiting, setDeltaX, exiting]
+    [router, linkTo, next, setExiting, setDeltaX, exiting],
   );
 
   const toggleFill = useCallback(() => setFill(!fill), [fill, setFill]);
 
   const toggleCentered = useCallback(
     () => setCentered(!centered),
-    [centered, setCentered]
+    [centered, setCentered],
   );
 
   /**
@@ -234,8 +235,9 @@ export function SkinViewer({
 
     const link = document.createElement("a");
     link.href = imageURL;
-    link.download = `${skin.name}${patch ? " - Patch " + patch.replaceAll(".", "_") : ""
-      }`;
+    link.download = `${skin.name}${
+      patch ? " - Patch " + patch.replaceAll(".", "_") : ""
+    }`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -243,7 +245,7 @@ export function SkinViewer({
   }, [imgPath, patch, skin]);
 
   useEffect(() => {
-    function onKeyDown(e: { key: string; code: string; }) {
+    function onKeyDown(e: { key: string; code: string }) {
       if (e.key === "ArrowLeft") goPrevious(false);
       if (e.key === "ArrowRight") goNext(false);
       if (e.code === "KeyZ") toggleFill();
@@ -252,14 +254,7 @@ export function SkinViewer({
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [
-    goNext,
-    goPrevious,
-    toggleFill,
-    toggleCentered,
-    downloadActive,
-    patch,
-  ]);
+  }, [goNext, goPrevious, toggleFill, toggleCentered, downloadActive, patch]);
 
   useEffect(() => {
     function onClick() {
@@ -271,19 +266,22 @@ export function SkinViewer({
   });
 
   const doPan = (x: number, y: number, isDelta = false) => {
-    const delta = (isDelta || !draggingOrigin)
-      ? [x, y]
-      : [x - draggingOrigin[0], y - draggingOrigin[1]];
+    const delta =
+      isDelta || !draggingOrigin
+        ? [x, y]
+        : [x - draggingOrigin[0], y - draggingOrigin[1]];
     const { width, height } = dimensions.current;
     !isDelta && (draggingOrigin = [x, y]);
     setPosition({
       left: clamp(
         position.left -
-        delta[0] / ((width / height) * window.innerHeight - window.innerWidth)
+          delta[0] /
+            ((width / height) * window.innerHeight - window.innerWidth),
       ),
       top: clamp(
         position.top -
-        delta[1] / ((height / width) * window.innerWidth - window.innerHeight)
+          delta[1] /
+            ((height / width) * window.innerWidth - window.innerHeight),
       ),
     });
   };
@@ -380,13 +378,11 @@ export function SkinViewer({
       <div className={styles.overlay}>
         <header>
           <Link href={backTo} as={backTo} className={styles.backTo}>
-
             <ArrowLeft />
             <div>
               {collectionIcon}
               {collectionName}
             </div>
-
           </Link>
           <div className={styles.controls}>
             <div onClick={toggleFill} title="Fill Screen (Z)">
@@ -401,13 +397,23 @@ export function SkinViewer({
           </div>
         </header>
         {prev && (
-          <Link href={usePathname()} as={linkTo(prev)} replace className={styles.prev}>
+          <Link
+            href={usePathname()}
+            as={linkTo(prev)}
+            replace
+            className={styles.prev}
+          >
             <ArrowLeft />
             <div>{prev.name}</div>
           </Link>
         )}
         {next && (
-          <Link href={usePathname()} as={linkTo(next)} replace className={styles.next}>
+          <Link
+            href={usePathname()}
+            as={linkTo(next)}
+            replace
+            className={styles.next}
+          >
             <div>{next.name}</div>
             <ArrowRight />
           </Link>
@@ -497,7 +503,10 @@ export function SkinViewer({
             alt={skin.name}
             objectFit={objectFit}
             objectPosition={objectPosition}
-            onLoadingComplete={({ naturalHeight, naturalWidth }: {
+            onLoadingComplete={({
+              naturalHeight,
+              naturalWidth,
+            }: {
               naturalHeight: number;
               naturalWidth: number;
             }) => {

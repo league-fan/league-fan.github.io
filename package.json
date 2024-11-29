@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "scrape": "bun scraper/index.ts"
+    "scrape": "bun scraper/index.ts",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
@@ -33,12 +37,15 @@
     "remeda": "^2.17.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
-    "sass": "^1.81.0"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "3.4.1",
+    "sass": "^1.81.0",
+    "typescript": "^5"
   }
 }

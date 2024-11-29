@@ -5,7 +5,7 @@ import { asset, getRarityUrl } from "@/data/server";
 import styles from "./styles.module.scss";
 
 interface SkinGridProps {
-  skins: { id: number, tilePath: string, name: string, rarity: string }[];
+  skins: { id: number; tilePath: string; name: string; rarity: string }[];
   linkTo: (skinId: string) => string;
 }
 
@@ -17,11 +17,15 @@ export function SkinGrid({ skins, linkTo }: SkinGridProps) {
       </div>
     );
   return (
-    (<div className={styles.grid}>
+    <div className={styles.grid}>
       {skins.map((skin) => {
         const rarity = getRarityUrl(skin.rarity);
         return (
-          (<Link key={skin.id} href={linkTo(skin.id.toString())} as={linkTo(skin.id.toString())}>
+          <Link
+            key={skin.id}
+            href={linkTo(skin.id.toString())}
+            as={linkTo(skin.id.toString())}
+          >
             <Image
               className={styles.tile}
               unoptimized
@@ -46,10 +50,9 @@ export function SkinGrid({ skins, linkTo }: SkinGridProps) {
                 )}
               </div>
             </div>
-
-          </Link>)
+          </Link>
         );
       })}
-    </div>)
+    </div>
   );
 }

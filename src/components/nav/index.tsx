@@ -5,47 +5,47 @@ import styles from "@/styles/index.module.scss";
 import { allowedLng } from "@/data/constants";
 
 interface NavProps {
-  lng: allowedLng
+  lng: allowedLng;
   active: string;
   filters?: React.ReactNode;
 }
 
 export function Nav({ lng, active, filters }: NavProps) {
   return (
-    (<nav>
+    <nav>
       <div className={styles.tabs}>
         <Link
           href={`/${lng}/champions`}
           as={`/${lng}/champions`}
           className={classNames({
             [styles.active]: active === "champions",
-          })}>
-
-          <User />Champions
-
+          })}
+        >
+          <User />
+          Champions
         </Link>
         <Link
           href={`/${lng}/universes`}
           as={`/${lng}/universes`}
           className={classNames({
             [styles.active]: active === "universes",
-          })}>
-
-          <Globe />Universes
-
+          })}
+        >
+          <Globe />
+          Universes
         </Link>
         <Link
           href={`/${lng}/skinlines`}
           as={`/${lng}/skinlines`}
           className={classNames({
             [styles.active]: active === "skinlines",
-          })}>
-
-          <Folder />Skinlines
-
+          })}
+        >
+          <Folder />
+          Skinlines
         </Link>
       </div>
       {filters && <div className={styles.filters}>{filters}</div>}
-    </nav>)
+    </nav>
   );
 }

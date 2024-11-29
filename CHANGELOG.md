@@ -2,10 +2,9 @@
 
 This project([League-fan](https://github.com/league-fan/league-fan.github.io)) are planned to be _REFACTORING_ and _REDESIGNING_.
 
-Basically, the initial source are forked from [lol-skin-explorer](https://github.com/preyneyv/lol-skin-explorer). 
+Basically, the initial source are forked from [lol-skin-explorer](https://github.com/preyneyv/lol-skin-explorer).
 
 Special thanks to [@preyneyv](https://github.com/preyneyv) for the excellent work.
-
 
 ## Keep a changelog
 

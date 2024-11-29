@@ -1,25 +1,24 @@
-import {
-  Box,
-  ExternalLink,
-  Folder,
-  Globe,
-  User,
-  Video,
-} from "lucide-react";
+import { Box, ExternalLink, Folder, Globe, User, Video } from "lucide-react";
 import Link from "next/link";
 import styles from "./styles.module.scss";
 import { Champion, Skin, Skinline, Universe } from "@/types";
 import { allowedLng } from "@/data/constants";
 
 type Props = {
-  lng: allowedLng
+  lng: allowedLng;
   skin: Skin;
   skinChamp: Champion;
-  skinSkinlines: Skinline[],
-  skinUniverse: Universe[]
-}
+  skinSkinlines: Skinline[];
+  skinUniverse: Universe[];
+};
 
-export function Popup({ lng, skin, skinChamp, skinSkinlines, skinUniverse }: Props) {
+export function Popup({
+  lng,
+  skin,
+  skinChamp,
+  skinSkinlines,
+  skinUniverse,
+}: Props) {
   const skinSpotlightsUrl = (skin: Skin) => {
     const name = skin.name.slice(skin.isBase ? 9 : 0);
     switch (lng) {
@@ -28,18 +27,21 @@ export function Popup({ lng, skin, skinChamp, skinSkinlines, skinUniverse }: Pro
       default:
         return `https://search.bilibili.com/all?keyword=${name}`;
     }
-  }
+  };
 
   const modelviewerUrl = (skin: Skin) => {
     return `https://www.modelviewer.lol/en-US/model-viewer?id=${skin.id}`;
-  }
+  };
 
   return (
-    (<aside className={styles.popup}>
+    <aside className={styles.popup}>
       <nav>
         <div>
           <User />
-          <Link href={`/${lng}/skins`} as={`/${lng}/skins?type=champion&id=${skinChamp.alias}`}>
+          <Link
+            href={`/${lng}/skins`}
+            as={`/${lng}/skins?type=champion&id=${skinChamp.alias}`}
+          >
             <span>{skinChamp.name}</span>
           </Link>
         </div>
@@ -47,7 +49,11 @@ export function Popup({ lng, skin, skinChamp, skinSkinlines, skinUniverse }: Pro
           <div>
             <Globe />
             {skinUniverse.map((u) => (
-              <Link key={u.id} href="/skins" as={`/${lng}/skins?type=universe&id=${u.id}`}>
+              <Link
+                key={u.id}
+                href="/skins"
+                as={`/${lng}/skins?type=universe&id=${u.id}`}
+              >
                 <span>{u.name}</span>
               </Link>
             ))}
@@ -57,7 +63,11 @@ export function Popup({ lng, skin, skinChamp, skinSkinlines, skinUniverse }: Pro
           <div>
             <Folder />
             {skinSkinlines.map((l) => (
-              <Link key={l.id} href="/skins" as={`/${lng}/skins?type=skinline&id=${l.id}`}>
+              <Link
+                key={l.id}
+                href="/skins"
+                as={`/${lng}/skins?type=skinline&id=${l.id}`}
+              >
                 <span>{l.name}</span>
               </Link>
             ))}
@@ -86,6 +96,6 @@ export function Popup({ lng, skin, skinChamp, skinSkinlines, skinUniverse }: Pro
           <ExternalLink />
         </h3>
       </a>
-    </aside>)
+    </aside>
   );
 }

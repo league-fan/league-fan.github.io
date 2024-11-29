@@ -12,7 +12,9 @@
   // padding: 0 10px;
   gap: 10px;
 
-  transition: background-color 300ms, border-color 300ms;
+  transition:
+    background-color 300ms,
+    border-color 300ms;
 
   .logo {
     display: flex;
@@ -56,7 +58,9 @@
   .menuIcon {
     position: relative;
     border-left: 1px solid rgb(31, 39, 48);
-    transition: background 200ms, border-color 200ms;
+    transition:
+      background 200ms,
+      border-color 200ms;
 
     ul {
       list-style: none;
@@ -83,7 +87,9 @@
         padding: 8px 12px;
         min-width: 200px;
         color: rgb(165, 178, 196);
-        transition: color 200ms, background 200ms;
+        transition:
+          color 200ms,
+          background 200ms;
 
         &:hover {
           background: rgba(121, 163, 207, 0.1);

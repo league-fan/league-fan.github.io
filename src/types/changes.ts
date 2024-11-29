@@ -1,3 +1,3 @@
 export type Changes = {
-    [key: string]: string[];
+  [key: string]: string[];
 };

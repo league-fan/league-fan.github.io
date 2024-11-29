@@ -6,30 +6,34 @@ import { Common } from "@/layouts/common";
 import NewAdditions from "@/components/new-additions";
 
 export async function generateStaticParams() {
-    return languages.map(lng => ({ lng }));
+  return languages.map((lng) => ({ lng }));
 }
 
 type PageProps = {
-    params: Promise<{ lng: string }>
-}
+  params: Promise<{ lng: string }>;
+};
 
 export default async function Page({ params }: PageProps) {
-    const lng = (await params).lng as allowedLng;
-    const skinlines = local_fetch<Langs<Skinline[]>>(LocalData.skinlines)[lng];
-    const universes = local_fetch<Langs<Universe[]>>(LocalData.universes)[lng];
-    const skins = local_fetch<Langs<Skins>>(LocalData.skins)[lng];
-    const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
-    const added = local_fetch<Added>(LocalData.added);
-    const patch = local_fetch<{ [key: string]: string }>(LocalData.presistentVars).oldVersionString;
+  const lng = (await params).lng as allowedLng;
+  const skinlines = local_fetch<Langs<Skinline[]>>(LocalData.skinlines)[lng];
+  const universes = local_fetch<Langs<Universe[]>>(LocalData.universes)[lng];
+  const skins = local_fetch<Langs<Skins>>(LocalData.skins)[lng];
+  const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
+  const added = local_fetch<Added>(LocalData.added);
+  const patch = local_fetch<{ [key: string]: string }>(
+    LocalData.presistentVars,
+  ).oldVersionString;
 
-    const addedSkins = getAddedSkins(added, skins, champions);
-    return (
-        <Common lng={lng} patch={patch} newAddidions={(
-            <NewAdditions lng={lng} addedSkins={addedSkins} />
-        )}>
-            <div className="universe-page">
-                <Universes lng={lng} skinlines={skinlines} universes={universes} />
-            </div>
-        </Common>
-    )
+  const addedSkins = getAddedSkins(added, skins, champions);
+  return (
+    <Common
+      lng={lng}
+      patch={patch}
+      newAddidions={<NewAdditions lng={lng} addedSkins={addedSkins} />}
+    >
+      <div className="universe-page">
+        <Universes lng={lng} skinlines={skinlines} universes={universes} />
+      </div>
+    </Common>
+  );
 }

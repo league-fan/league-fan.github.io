@@ -12,54 +12,53 @@ export const CDRAGON = "https://raw.communitydragon.org";
 export const ROOT = "https://www.skinexplorer.lol";
 
 class Patch {
-    fullVersionString = presistentVars.oldVersionString;
-    supportedLanguages = supportedLanguages;
+  fullVersionString = presistentVars.oldVersionString;
+  supportedLanguages = supportedLanguages;
 
-    added = added as Added;
-    assets = {
-        champions: champions as { [key: string]: Champion[] },
-        skins: skins as { [key: string]: Skins },
-        skinlines: skinlines as { [key: string]: Skinline[] },
-        universes: universes as { [key: string]: Universe[] },
-    };
-    lang = 'default';
+  added = added as Added;
+  assets = {
+    champions: champions as { [key: string]: Champion[] },
+    skins: skins as { [key: string]: Skins },
+    skinlines: skinlines as { [key: string]: Skinline[] },
+    universes: universes as { [key: string]: Universe[] },
+  };
+  lang = "default";
 
-    constructor(lang = 'default') {
-        this.lang = lang;
-    }
+  constructor(lang = "default") {
+    this.lang = lang;
+  }
 
+  url(path: string, name = "pbe") {
+    return `${CDRAGON}/${name}${path}`;
+  }
 
-    url(path: string, name = 'pbe') {
-        return `${CDRAGON}/${name}${path}`;
-    }
+  data(path: string) {
+    return this.url(`/plugins/rcp-be-lol-game-data/global/default${path}`);
+  }
 
-    data(path: string) {
-        return this.url(`/plugins/rcp-be-lol-game-data/global/default${path}`);
-    }
+  asset(path: string) {
+    return this.data(path.replace("/lol-game-data/assets", "").toLowerCase());
+  }
 
-    asset(path: string) {
-        return this.data(path.replace("/lol-game-data/assets", "").toLowerCase());
-    }
+  get changes() {
+    return changes as Changes;
+  }
 
-    get changes() {
-        return changes as Changes;
-    }
+  get champions() {
+    return this.assets.champions[this.lang];
+  }
 
-    get champions() {
-        return this.assets.champions[this.lang];
-    }
+  get skinlines() {
+    return this.assets.skinlines[this.lang];
+  }
 
-    get skinlines() {
-        return this.assets.skinlines[this.lang];
-    }
+  get universes() {
+    return this.assets.universes[this.lang];
+  }
 
-    get universes() {
-        return this.assets.universes[this.lang];
-    }
-
-    get skins() {
-        return this.assets.skins[this.lang];
-    }
+  get skins() {
+    return this.assets.skins[this.lang];
+  }
 }
 
 export default Patch;
