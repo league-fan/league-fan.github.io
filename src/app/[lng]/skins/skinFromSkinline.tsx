@@ -34,8 +34,8 @@ export function SkinFromSkinline({ skinlineSkins, lng, skinline, skinlineUnivers
                 <div className={styles.parents} key={`${u.id}__${skinline.id}`}>
                     <Link
                         key={u.id}
-                        href={`/${lng}/universes/[universeId]`}
-                        as={`/${lng}/universes/${u.id}`}
+                        href={`/${lng}/skins`}
+                        as={`/${lng}/skins?type=universe&id=${u.id}`}
                         prefetch={false}
                     >
                         <Globe />

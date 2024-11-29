@@ -1,61 +1,64 @@
-'use client'
 import {
   Box,
-  ChevronDown,
-  ChevronUp,
   ExternalLink,
   Folder,
   Globe,
-  Palette,
   User,
   Video,
 } from "lucide-react";
-import Image from "../image";
 import Link from "next/link";
-import { asset } from "@/data/helpers";
 import styles from "./styles.module.scss";
-import { useContext, useEffect, useState } from "react";
-import { SkinWithMeta } from "./helpers";
-import { PropsContext } from "@/data/propsContext";
+import { Champion, Skin, Skinline, Universe } from "@/types";
+import { allowedLng } from "@/data/constants";
 
-export function Popup({ skin }: { skin: SkinWithMeta }) {
-  const { lng } = useContext(PropsContext);
-  const [showChromas, setShowChromas] = useState(false);
-  useEffect(() => {
-    setShowChromas(false);
-  }, [skin]);
-  const meta = skin.$skinExplorer;
+type Props = {
+  lng: allowedLng
+  skin: Skin;
+  skinChamp: Champion;
+  skinSkinlines: Skinline[],
+  skinUniverse: Universe[]
+}
+
+export function Popup({ lng, skin, skinChamp, skinSkinlines, skinUniverse }: Props) {
+  const skinSpotlightsUrl = (skin: Skin) => {
+    const name = skin.name.slice(skin.isBase ? 9 : 0);
+    switch (lng) {
+      case "en":
+        return `https://www.youtube.com/c/SkinSpotlights/search?query=${name}`;
+      default:
+        return `https://search.bilibili.com/all?keyword=${name}`;
+    }
+  }
+
+  const modelviewerUrl = (skin: Skin) => {
+    return `https://www.modelviewer.lol/en-US/model-viewer?id=${skin.id}`;
+  }
+
   return (
-    (<aside className={styles.popup} onTouchStart={(e) => e.stopPropagation()}>
+    (<aside className={styles.popup}>
       <nav>
         <div>
           <User />
-          <Link href={`/${lng}/champions/[alias]`} as={`/${lng}/champions/${meta.champion.alias}`}>
-
-            <span>{meta.champion.name}</span>
-
+          <Link href={`/${lng}/skins`} as={`/${lng}/skins?type=champion&id=${skinChamp.alias}`}>
+            <span>{skinChamp.name}</span>
           </Link>
         </div>
-        {!!meta.universes.length && (
+        {!!skinUniverse.length && (
           <div>
             <Globe />
-            {meta.universes.map((u) => (
-              <Link key={u.id} href="/universes/[id]" as={`/universes/${u.id}`}>
-
+            {skinUniverse.map((u) => (
+              <Link key={u.id} href="/skins" as={`/${lng}/skins?type=universe&id=${u.id}`}>
                 <span>{u.name}</span>
-
               </Link>
             ))}
           </div>
         )}
-        {!!meta.skinlines.length && (
+        {!!skinSkinlines.length && (
           <div>
             <Folder />
-            {meta.skinlines.map((l) => (
-              <Link key={l.id} href="/skinlines/[id]" as={`/skinlines/${l.id}`}>
-
+            {skinSkinlines.map((l) => (
+              <Link key={l.id} href="/skins" as={`/${lng}/skins?type=skinline&id=${l.id}`}>
                 <span>{l.name}</span>
-
               </Link>
             ))}
           </div>
@@ -64,39 +67,8 @@ export function Popup({ skin }: { skin: SkinWithMeta }) {
       {skin.description && (
         <p dangerouslySetInnerHTML={{ __html: skin.description }} />
       )}
-      {skin.chromas && (
-        <>
-          <h3 onClick={() => setShowChromas(!showChromas)}>
-            <span>
-              <Palette /> {skin.chromas.length + 1} Chromas
-            </span>
-            {showChromas ? <ChevronUp /> : <ChevronDown />}
-          </h3>
-          {showChromas && (
-            <div className={styles.chromas}>
-              {[skin, ...skin.chromas].map((chroma) => (
-                <div key={chroma.id}>
-                  <a
-                    href={asset(chroma.chromaPath ?? '')}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Image
-                      loading="eager"
-                      unoptimized
-                      src={asset(chroma.chromaPath ?? '')}
-                      layout="fill"
-                      objectFit="contain"
-                      alt={skin.name}
-                    />
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
-      <a href={meta.skinSpotlightsUrl} target="_blank" rel="noreferrer">
+
+      <a href={skinSpotlightsUrl(skin)} target="_blank" rel="noreferrer">
         <h3>
           <span>
             <Video />
@@ -105,7 +77,7 @@ export function Popup({ skin }: { skin: SkinWithMeta }) {
           <ExternalLink />
         </h3>
       </a>
-      <a href={meta.modelviewerUrl} target="_blank" rel="noreferrer">
+      <a href={modelviewerUrl(skin)} target="_blank" rel="noreferrer">
         <h3>
           <span>
             <Box />

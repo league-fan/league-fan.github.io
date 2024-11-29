@@ -44,17 +44,18 @@ export function SkinFromUniverse({ universeSkinlineSkins, lng, universe, univers
                 </label>
             </div>
             {universeSkinlines.map((skinline) => (
-                <>
+                <div key={`${universe.id}__${skinline.id}`}>
                     <h2 className={styles.subtitle}>
                         <Link href={`/${lng}/skinlines/[skinlineId]`} as={`/${lng}/skinlines/${skinline.id}`}>
                             <Folder />
-                            Skinline
+                            <span>{skinline.name}</span>
                         </Link>
                     </h2>
                     <SkinGrid
                         skins={sortSkins(sortBy === "rarity", universeSkinlineSkins[skinline.id])}
                         linkTo={(skinId) => linkTo(skinId, skinline.id.toString())}
-                    /></>
+                    />
+                </div>
             ))}
         </div>
     )

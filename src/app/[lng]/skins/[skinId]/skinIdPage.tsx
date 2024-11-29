@@ -1,50 +1,53 @@
 'use client'
 
 import { SkinViewer } from "@/components/skin-viewer";
-import { SkinProvider } from "@/data/skinContext";
-import { useContext } from "react";
-import { PropsContext } from "@/data/propsContext";
+import { ReactNode } from "react";
 import { Folder, User } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { Skin } from "@/types";
+import { Champion, Skin, Skinline } from "@/types";
 import NotFound from "@/components/notFound";
+import { allowedLng } from "@/data/constants";
 
-type skinsIdPageSearchParams = {
-    type: 'champion' | 'skinline',
-    id: string, // champion.alias.toString() | skinline.id.toString()
+type Props = {
+    lng: allowedLng,
+    skin: Skin,
+    skinSkinlines: Skinline[],
+    skinSkinlineSkins: { [key: string]: Skin[] },
+    skinChamp: Champion,
+    skinChampSkins: Skin[],
+    popup: ReactNode
 }
+const allowType = ['champion', 'skinline'];
 
-export default function SkinIdPage({
-    params,
-}: {
-    params: { lng: string, skinId: string }
-}) {
-    const { champions, skins, skinlines } = useContext(PropsContext)
-    const { lng, skinId } = params;
+export default function SkinIdPage({ lng, skin, skinSkinlines, skinSkinlineSkins, skinChamp, skinChampSkins, popup }: Props) {
     const searchParams = useSearchParams()
     const type = searchParams.get('type');
-    if (!type || (type !== 'champion' && type !== 'skinline')) {
-        return <NotFound params={{ title: 'SearchParam `type` is missing or invalid' }} />
+    if (!type || !allowType.includes(type)) return <NotFound title="Type not found" lng={lng} back={`/${lng}/champions`} />;
+    let id = searchParams.get('id');
+    const validId = (type: string, id: string) => {
+        if (type === 'champion') return skinChamp.alias === id;
+        if (type === 'skinline') return skinSkinlines.some(s => s.id.toString() === id);
+        return false;
     }
-    const id = searchParams.get('id');
-    if (!id) {
-        return <NotFound params={{ title: 'SearchParam `id` is missing' }} />
-    }
+    if (!id || !validId(type, id)) return <NotFound title="Id not found" lng={lng} back={`/${lng}/champions`} />;
 
-    const skin = Object.values(skins).find(skin => skin.id.toString() === skinId);
-    if (!skin) return <NotFound params={{ title: `Skin ${skinId} not found` }} />
 
+    const skinSkinline = skinSkinlines.find(s => s.id.toString() === id) as Skinline;
+    const collectionName = type === 'champion' ? skinChamp.name : skinSkinline.name;
     const collectionIcon = type === 'champion' ? (<User />) : (<Folder />)
     const backTo = `/${lng}/skins?type=${type}&id=${id}`
     const linkTo = (skin: Skin) => `/${lng}/skins/${skin.id}?type=${type}&id=${id}`
+    const skinCollection = type === 'champion' ? skinChampSkins : skinSkinlineSkins[id];
+    
     return (
-        <SkinProvider value={{ skin, type, id }}>
-            <SkinViewer
-                params={{
-                    collectionIcon,
-                    backTo,
-                    linkTo,
-                }}
-            /></SkinProvider>
+        <SkinViewer
+            skin={skin}
+            collectionName={collectionName}
+            collectionIcon={collectionIcon}
+            backTo={backTo}
+            linkTo={linkTo}
+            skinCollection={skinCollection}
+            popup={popup}
+        />
     );
 }

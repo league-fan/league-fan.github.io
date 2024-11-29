@@ -1,8 +1,8 @@
 import { allowedLng, Langs, languages } from "@/data/constants";
 import SkinGridPage from "./skinGridPage";
 import { Suspense } from "react";
-import { getAddedSkins, local_fetch, LocalData } from "@/data/server";
-import { Added, Champion, Skinline, Skins, Universe } from "@/types";
+import { local_fetch, LocalData } from "@/data/server";
+import { Champion, Skinline, Skins, Universe } from "@/types";
 
 export async function generateStaticParams() {
     return languages.map(lng => (

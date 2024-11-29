@@ -7,7 +7,6 @@ import {
   useMemo,
   useState,
   ReactNode,
-  useContext,
 } from "react";
 import classNames from "classnames";
 import { useSwipeable } from "react-swipeable";
@@ -25,26 +24,12 @@ import {
   Users,
 } from "lucide-react";
 import {
-  asset,
   useEscapeTo,
   useLocalStorageState,
 } from "@/data/helpers";
-import { Popup } from "./popup";
 import styles from "./styles.module.scss";
-import { SkinWithMeta } from "./helpers";
-import { getRarityOfSkin } from "@/data/helpers";
+import { getRarityUrl, asset } from "@/data/server";
 import { Skin } from "@/types";
-import { SkinContext } from "@/data/skinContext";
-
-interface SkinViewerProps {
-  backTo: string;
-  linkTo: (skin: Skin) => string;
-  collectionName: string;
-  collectionIcon: ReactNode;
-  prev: SkinWithMeta | null;
-  next: SkinWithMeta | null;
-  skin: SkinWithMeta | null; // 根据实际情况定义 skin 的类型
-}
 
 const _supportsPrefetch = () => {
   if (typeof window === "undefined") return false;
@@ -58,12 +43,12 @@ const _supportsPrefetch = () => {
   }
 };
 
-const pseudoPrefetch = (skin: SkinWithMeta, patch = "pbe") => {
+const pseudoPrefetch = (skin: Skin, patch = "pbe") => {
   new window.Image().src = asset(skin.splashPath, { patch });
   new window.Image().src = asset(skin.uncenteredSplashPath, { patch });
 };
 
-const prefetchLinks = (skin: SkinWithMeta, patch = "pbe") => {
+const prefetchLinks = (skin: Skin, patch = "pbe") => {
   return skin.splashVideoPath ? (
     <>
       <link
@@ -102,18 +87,29 @@ let draggingOrigin: [number, number] | null = null;
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
 
-function _SkinViewer({
+type Props = {
+  skin: Skin;
+  skinCollection: Skin[];
+  collectionIcon: ReactNode;
+  collectionName: string;
+  backTo: string;
+  linkTo: (skin: Skin) => string;
+  popup: ReactNode;
+};
+
+export function SkinViewer({
+  skin,
+  skinCollection,
+  collectionIcon,
+  collectionName,
   backTo,
   linkTo,
-  collectionName,
-  collectionIcon,
-  prev,
-  next,
-  skin,
-}: SkinViewerProps) {
-  if (!skin) return null;
+  popup,
+}: Props) {
+  const currIdx = skinCollection.findIndex((s) => s.id === skin.id);
+  const prev = skinCollection[currIdx - 1];
+  const next = skinCollection[currIdx + 1];
 
-  const meta = skin.$skinExplorer;
   const supportsVideo = useMemo(() => canPlayWebM(), []);
   const supportsPrefetch = useMemo(() => _supportsPrefetch(), []);
 
@@ -147,11 +143,10 @@ function _SkinViewer({
 
     if (!supportsPrefetch) {
       pseudoPrefetch(skin);
-      meta.changes && meta.changes.map((patch) => pseudoPrefetch(skin, patch));
       prev && pseudoPrefetch(prev);
       next && pseudoPrefetch(next);
     }
-  }, [skin, supportsPrefetch, prev, next, meta]);
+  }, [skin, supportsPrefetch, prev, next]);
 
   useEffect(() => {
     if (Math.abs(velocity.top) < 0.000001 && Math.abs(velocity.left) < 0.000001)
@@ -187,7 +182,7 @@ function _SkinViewer({
   const objectPosition = fill
     ? `${position.left * 100}% ${position.top * 100}% `
     : "center center";
-  const rarity = getRarityOfSkin(skin);
+  const rarity = getRarityUrl(skin.rarity);
 
   const goPrevious = useCallback(
     (swipe: boolean) => {
@@ -251,10 +246,6 @@ function _SkinViewer({
     function onKeyDown(e: { key: string; code: string; }) {
       if (e.key === "ArrowLeft") goPrevious(false);
       if (e.key === "ArrowRight") goNext(false);
-      if (meta.changes && e.key === "ArrowUp")
-        setPatch(meta.changes[meta.changes.indexOf(patch) - 1] || "");
-      if (meta.changes && e.key === "ArrowDown")
-        setPatch(meta.changes[meta.changes.indexOf(patch) + 1] || patch);
       if (e.code === "KeyZ") toggleFill();
       if (e.code === "KeyC") toggleCentered();
       if (e.code === "KeyD") downloadActive();
@@ -268,7 +259,6 @@ function _SkinViewer({
     toggleCentered,
     downloadActive,
     patch,
-    meta.changes,
   ]);
 
   useEffect(() => {
@@ -343,20 +333,6 @@ function _SkinViewer({
       e.event.preventDefault();
       !fill && e.velocity > 0.6 && goPrevious(true);
     },
-    onSwipedUp(e) {
-      e.event.preventDefault();
-      const { width, height } = dimensions.current;
-
-      if (
-        (!fill || (height / width) * window.innerWidth <= window.innerHeight) &&
-        meta.changes
-      )
-        setPatch(
-          meta.changes[
-          (meta.changes.indexOf(patch) + 1) % (meta.changes.length + 1)
-          ] || ""
-        );
-    },
     preventScrollOnSwipe: true,
     delta: { left: 3, right: 3, up: 50 },
   });
@@ -422,40 +398,18 @@ function _SkinViewer({
             <div onClick={downloadActive} title="Download (D)">
               <Download />
             </div>
-
-            {meta.changes && (
-              <div className={styles.dropdown}>
-                <select
-                  value={patch}
-                  onChange={(e) => setPatch(e.target.value)}
-                >
-                  <option disabled>Patch</option>
-                  <option value="">PBE</option>
-                  {meta.changes.map((patch) => (
-                    <option key={patch} value={patch}>
-                      {patch}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
           </div>
         </header>
         {prev && (
           <Link href={usePathname()} as={linkTo(prev)} replace className={styles.prev}>
-
             <ArrowLeft />
             <div>{prev.name}</div>
-
           </Link>
         )}
         {next && (
           <Link href={usePathname()} as={linkTo(next)} replace className={styles.next}>
-
             <div>{next.name}</div>
             <ArrowRight />
-
           </Link>
         )}
       </div>
@@ -487,7 +441,7 @@ function _SkinViewer({
             <Info />
           </div>
         </div>
-        <Popup skin={skin} />
+        {popup}
       </div>
       <div className={styles.letterBox}>
         {vidPath ? (
@@ -558,27 +512,4 @@ function _SkinViewer({
       </main>
     </div>
   );
-}
-
-export function SkinViewer({ params }:
-  {
-    params: {
-      collectionIcon: ReactNode,
-      backTo: string,
-      linkTo: (skin: Skin) => string
-    }
-  }) {
-  const { name, skin, prev, next } = useContext(SkinContext);
-  const { backTo, linkTo, collectionIcon } = params;
-  const skinProps: SkinViewerProps = {
-    backTo,
-    linkTo,
-    collectionName: name,
-    collectionIcon,
-    prev,
-    next,
-    skin,
-  }
-
-  return <_SkinViewer {...skinProps} />;
 }

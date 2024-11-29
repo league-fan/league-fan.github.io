@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Image from "@/components/image";
 import Link from "next/link";
-import { asset, getRarityOfSkin } from "@/data/server";
+import { asset, getRarityUrl } from "@/data/server";
 import styles from "./styles.module.scss";
 
 interface SkinGridProps {
@@ -19,7 +19,7 @@ export function SkinGrid({ skins, linkTo }: SkinGridProps) {
   return (
     (<div className={styles.grid}>
       {skins.map((skin) => {
-        const rarity = getRarityOfSkin(skin.rarity);
+        const rarity = getRarityUrl(skin.rarity);
         return (
           (<Link key={skin.id} href={linkTo(skin.id.toString())} as={linkTo(skin.id.toString())}>
             <Image

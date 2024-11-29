@@ -103,7 +103,7 @@ export function asset(path: string, { patch, lang }: { patch?: string, lang?: st
     return path.replace("/lol-game-data/assets", dataRoot({ patch, lang })).toLowerCase();
 }
 
-export function getRarityOfSkin(rarity: String) {
+export function getRarityUrl(rarity: String) {
     const skinRarity = rarity as RarityEnum;
     if (!skinRarity || !(skinRarity in raritiesMap)) {
         return null;
