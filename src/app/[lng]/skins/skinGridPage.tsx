@@ -91,7 +91,7 @@ export function SkinlinePage({ params }: { params: { lng: string, skinline: Skin
     const universes = allUniverses.filter((u) =>
         u.skinSets.includes(skinline.id)
     );
-    const linkTo = (skin: Skin) => `/${lng}/skinlines/${skinline.id}/skins/${skin.id}`;
+    const linkTo = (skin: Skin) => `/${lng}/skins/${skin.id}?type=skinline&id=${skinline.id}`;
     const [sortBy, setSortBy] = useLocalStorageState(
         "skinline__sortBy",
         "champion"

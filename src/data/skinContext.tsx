@@ -3,6 +3,7 @@ import { prepareCollection, SkinWithMeta } from "@/components/skin-viewer/helper
 import { getChampionById, getChampionByName, getSkinlineById, getSkinsOfChampionById, getSkinsOfSkinline, splitId } from "@/data/helpers";
 import { Skin, Skinline } from "@/types";
 import { createContext, ReactNode, useContext } from "react";
+import { get } from "http";
 
 interface SkinContextType {
     name: string;
@@ -35,7 +36,19 @@ function SkinProvider({
 }) {
     const { skins, champions, skinlines, patch } = useContext(PropsContext);
     const type = value.type ?? 'champion'
-    const id = value.id ?? (type === 'champion' ? champions[0].alias.toString() : skins[0].id.toString())
+    let id = value.id;
+    if (!id) {
+        if (type === 'champion') {
+            const defaultChamp = getChampionById(splitId(value.skin.id)[0], champions)
+            id = defaultChamp?.alias.toString()
+        } else {
+            const defaultSkinline = value.skin.skinLines;
+            id = defaultSkinline?.[0].id.toString()
+        }
+    }
+    if (!id) {
+        throw new Error('Id is missing')
+    }
     let skinsSet: Skin[] = [];
     let name = '';
     let currIdx = 0;

@@ -13,7 +13,7 @@ export default function NewAdditions() {
         return null;
     }
 
-    const linkTo = (skin: SkinWithKey) => `/${lng}/champions/${skin.$$alias}/skins/${skin.id}`;
+    const linkTo = (skin: SkinWithKey) => `/${lng}/skins/${skin.id}?type=champion&id=${skin.$$alias}`;
 
     return (
         (<div className={styles.container}>
