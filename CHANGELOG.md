@@ -14,9 +14,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 0.0.4 (2024-11-30)
 
-This version refactor App router structure. Optimize for SSR and SSG.
+### Feat
+
+- refactor App router structure for improved SSR and SSG optimization
+- refactor i18n settings and initialization to use object destructuring for improved clarity
+- add loading skeleton component and integrate patch handling in skinlines, champions, and universes pages
+- rename getRarityOfSkin to getRarityUrl for clarity and update skin link handling in various components
+- enhance skin handling by fetching skinlines, skins, champions, and universes in the skins page and improve key assignment in SkinFromSkinline component
+- implement SkinFromChampion and SkinFromSkinline components with sorting functionality and enhance SkinGrid for better skin handling
+- update link generation in SkinlinePage and NewAdditions components for improved URL structure and error handling
+- implement NotFound component and enhance SkinIdPage for better error handling
+- enhance SkinIdPage to handle missing parameters and improve skin retrieval logic
+- update SkinIdPage and SkinGridPage to handle missing search parameters and improve redirects
+- TODO refactor skin page structure and implement SkinIdPage component
+- add common skin page
+- implement static parameter generation for skinline pages
+- add skinlines/skinlineId
+- add universes
+- add skinlines
+- enhance champions sorting functionality and update redirect logic
+
+### Fix
+
+- Popup linkTo
+- NewAdditions linkTo
+- SkinViewer linkTo
+- update link generation for champion skins and add sass options to config
+- skin viewer layout
+- layout component lang type error
+
+### Refactor
+
+- layout components to use Common layout and improve parameter handling in champions, skinlines, and universes pages
+- move to ssr
+- use common skin router
+- remove layout components and integrate Entry in page components
+- update sorting options in champions component to sort by ID
 
 ## 0.0.3 (2024-11-27)
 
