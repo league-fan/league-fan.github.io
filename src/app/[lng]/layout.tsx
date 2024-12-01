@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { languageZoneToBCP47 } from "@/types/languagezone";
 import { poppins } from "../fonts";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export function generateMetadata(): Metadata {
   const langdict = Object.fromEntries(
@@ -54,8 +55,8 @@ export default async function RootLayout({
 
   return (
     <html lang={lng} className={poppins.className}>
-      <head />
       <body>{children}</body>
+      <GoogleAnalytics gaId="G-BHM49VD1L8" />
     </html>
   );
 }
