@@ -2,7 +2,7 @@ import { LanguageZone } from "@/types";
 import { dir } from "i18next";
 import "@/styles/globals.scss";
 import styles from "@/styles/static.module.scss";
-import { Common } from "@/layouts/common";
+import { Common } from "@/components/layouts/common";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

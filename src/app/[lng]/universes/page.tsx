@@ -2,7 +2,7 @@ import Universes from "@/app/[lng]/universes/universes";
 import { allowedLng, Langs, languages } from "@/data/constants";
 import { getAddedSkins, local_fetch, LocalData } from "@/data/server";
 import { Added, Champion, Skinline, Skins, Universe } from "@/types";
-import { Common } from "@/layouts/common";
+import { Common } from "@/components/layouts/common";
 import NewAdditions from "@/components/new-additions";
 import { Metadata } from "next";
 

@@ -1,5 +1,5 @@
 import { allowedLng } from "@/data/constants";
-import { Common } from "@/layouts/common";
+import { Common } from "@/components/layouts/common";
 import Link from "next/link";
 
 export type NotFoundProps = {

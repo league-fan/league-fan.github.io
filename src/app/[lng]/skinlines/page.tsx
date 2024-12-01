@@ -2,7 +2,7 @@ import { allowedLng, Langs, languages } from "@/data/constants";
 import Skinlines from "@/app/[lng]/skinlines/skinlines";
 import { getAddedSkins, local_fetch, LocalData } from "@/data/server";
 import { Added, Champion, Skinline, Skins } from "@/types";
-import { Common } from "@/layouts/common";
+import { Common } from "@/components/layouts/common";
 import NewAdditions from "@/components/new-additions";
 import { Metadata } from "next";
 
