@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./styles.module.scss";
 import { Champion, Skin, Skinline, Universe } from "@/types";
 import { allowedLng } from "@/data/constants";
+import { Chromas } from "./chromas";
 
 type Props = {
   lng: allowedLng;
@@ -77,7 +78,7 @@ export function Popup({
       {skin.description && (
         <p dangerouslySetInnerHTML={{ __html: skin.description }} />
       )}
-
+      {skin.chromas && <Chromas skin={skin} />}
       <a href={skinSpotlightsUrl(skin)} target="_blank" rel="noreferrer">
         <h3>
           <span>

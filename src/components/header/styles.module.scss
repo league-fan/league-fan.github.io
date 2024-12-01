@@ -146,6 +146,10 @@
       background: rgb(12, 15, 19) !important;
     }
 
+    .menuIcon:first-of-type ul {
+      width: calc(100vw - 56px);
+    }
+
     &.search {
       .logo {
         display: none;
