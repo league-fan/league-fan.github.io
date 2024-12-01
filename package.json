@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "serve": "bunx serve@latest out",
     "scrape": "bun scraper/index.ts",
     "prepare": "husky"
   },

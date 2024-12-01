@@ -3,6 +3,7 @@ import { dir } from "i18next";
 import "@/styles/globals.scss";
 import styles from "@/styles/static.module.scss";
 import { Common } from "@/layouts/common";
+import { Metadata } from "next";
 
 export default async function RootLayout({
   children,
