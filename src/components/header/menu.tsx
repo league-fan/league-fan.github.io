@@ -7,7 +7,7 @@ import { ExternalLink, Languages, Menu } from "lucide-react";
 import { languages } from "@/data/constants";
 import Link from "next/link";
 import { languageZoneToName } from "@/types/languagezone";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 type Prop = {
   lng: string;
@@ -16,6 +16,10 @@ type Prop = {
 export function HeaderMenuLanguage({ lng }: Prop) {
   const [langOpen, setLangOpen] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const langUrl = (l: string) =>
+    `${pathname.replace(lng, l)}?${searchParams.toString()}`;
   return (
     <div
       className={classNames(styles.menuIcon, { [styles.open]: langOpen })}
@@ -28,9 +32,7 @@ export function HeaderMenuLanguage({ lng }: Prop) {
           .map((l) => {
             return (
               <li key={l}>
-                <Link href={pathname.replace(lng, l)}>
-                  {languageZoneToName[l]}
-                </Link>
+                <Link href={langUrl(l)}>{languageZoneToName[l]}</Link>
               </li>
             );
           })}

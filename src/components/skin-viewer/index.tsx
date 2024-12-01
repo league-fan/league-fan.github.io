@@ -425,7 +425,7 @@ export function SkinViewer({
       >
         <div
           className={styles.name}
-          onClickCapture={(e) => setShowInfoBox(!showInfoBox)}
+          onClick={(e) => setShowInfoBox(!showInfoBox)}
         >
           <div>
             <span>

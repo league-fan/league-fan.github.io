@@ -48,13 +48,13 @@ export function SkinFromUniverse({
       </div>
       {universeSkinlines.map((skinline) => (
         <div key={`${universe.id}__${skinline.id}`}>
-          <h2 className={styles.subtitle}>
+          <h2 className={styles.groupTitle}>
             <Link
               href={`/${lng}/skinlines/[skinlineId]`}
               as={`/${lng}/skinlines/${skinline.id}`}
             >
               <Folder />
-              <span>{skinline.name}</span>
+              {skinline.name}
             </Link>
           </h2>
           <SkinGrid

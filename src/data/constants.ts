@@ -1,7 +1,7 @@
 import { LanguageZone } from "@/types";
 
 export const CDRAGON = "https://raw.communitydragon.org";
-export const ROOT = "https://www.skinexplorer.lol";
+export const ROOT = "https://league-fan.github.io";
 
 export const ext_languages = [
   LanguageZone.ChineseChina,
