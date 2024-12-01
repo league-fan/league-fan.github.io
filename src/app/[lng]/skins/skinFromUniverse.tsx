@@ -6,7 +6,7 @@ import { SkinGrid } from "@/components/skin-grid";
 import { useLocalStorageState } from "@/data/helpers";
 import { Folder, Globe } from "lucide-react";
 import Link from "next/link";
-import { sortSkins } from "@/data/server";
+import { sortSkins, sortUniverses } from "@/data/server";
 
 type Props = {
   lng: allowedLng;
@@ -21,9 +21,13 @@ export function SkinFromUniverse({
   universe,
   universeSkinlines,
 }: Props) {
-  const [sortBy, setSortBy] = useLocalStorageState(
-    "universe__sortBy",
+  const [skinSortBy, setSkinSortBy] = useLocalStorageState(
+    "universe__skinSortBy",
     "champion",
+  );
+  const [skinlineSortBy, setSkinlineSortBy] = useLocalStorageState(
+    "universe__skinlineSortBy",
+    "",
   );
   const linkTo = (skinId: string, skinlineId: string) =>
     `/${lng}/skins/${skinId}?type=skinline&id=${skinlineId}`;
@@ -39,14 +43,29 @@ export function SkinFromUniverse({
       )}
       <div className={styles.controls}>
         <label>
-          <span>Sort By</span>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <span>Skinlines Sort By</span>
+          <select
+            value={skinlineSortBy}
+            onChange={(e) => setSkinlineSortBy(e.target.value)}
+          >
+            <option value="name">Name</option>
+            <option value="id">Id</option>
+            <option value="">Default</option>
+          </select>
+        </label>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <label>
+          <span>Champions Sort By</span>
+          <select
+            value={skinSortBy}
+            onChange={(e) => setSkinSortBy(e.target.value)}
+          >
             <option value="champion">Champion</option>
             <option value="rarity">Rarity</option>
           </select>
         </label>
       </div>
-      {universeSkinlines.map((skinline) => (
+      {sortUniverses(skinlineSortBy, universeSkinlines, lng).map((skinline) => (
         <div key={`${universe.id}__${skinline.id}`}>
           <h2 className={styles.groupTitle}>
             <Link
@@ -59,7 +78,7 @@ export function SkinFromUniverse({
           </h2>
           <SkinGrid
             skins={sortSkins(
-              sortBy === "rarity",
+              skinSortBy === "rarity",
               universeSkinlineSkins[skinline.id],
             )}
             linkTo={(skinId) => linkTo(skinId, skinline.id.toString())}

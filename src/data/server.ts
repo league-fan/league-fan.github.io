@@ -1,4 +1,4 @@
-import { Added, Champion, Skin, Skins } from "@/types";
+import { Added, Champion, Skin, Skinline, Skins, Universe } from "@/types";
 import { use } from "react";
 import presistentVars from "@/../.cache/persistentVars.json";
 import supportedLanguages from "@/../.cache/supportedLanguages.json";
@@ -8,8 +8,9 @@ import universes from "@/../.cache/universes.json";
 import skins from "@/../.cache/skins.json";
 import added from "@/../.cache/added.json";
 import changes from "@/../.cache/changes.json";
-import { CDRAGON, fallbackLng } from "./constants";
+import { allowedLng, CDRAGON, fallbackLng } from "./constants";
 import { RarityEnum } from "@/types/skins";
+import { languageZoneToBCP47 } from "@/types/languagezone";
 
 const CACHE = "@/../.cache";
 export enum LocalData {
@@ -136,4 +137,19 @@ export function sortSkins(sortByRarity: boolean, skins: Skin[]) {
       .sort((a, b) => keys.indexOf(b.rarity) - keys.indexOf(a.rarity));
   }
   return skins;
+}
+
+export function sortUniverses(
+  sortBy: "" | "name" | "id",
+  skinlines: Skinline[],
+  lng: allowedLng,
+) {
+  if (sortBy === "name") {
+    return skinlines
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name, languageZoneToBCP47[lng]));
+  } else if (sortBy === "id") {
+    return skinlines.slice().sort((a, b) => a.id - b.id);
+  }
+  return skinlines;
 }

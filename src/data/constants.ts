@@ -6,6 +6,7 @@ export const ROOT = "https://league-fan.github.io";
 export const ext_languages = [
   LanguageZone.ChineseChina,
   LanguageZone.ChineseTaiwan,
+  LanguageZone.ChineseMalaysia,
 ] as const;
 export const fallbackLng = LanguageZone.EnglishDefault as const;
 export const languages = [fallbackLng, ...ext_languages] as const;
