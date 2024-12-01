@@ -6,6 +6,7 @@ import logo from "@/assets/logo.png";
 import { ArrowLeft } from "lucide-react";
 import { HeaderMenu, HeaderMenuLanguage } from "./menu";
 import { allowedLng } from "@/data/constants";
+import { Suspense } from "react";
 
 interface HeaderProps {
   lng: allowedLng;
@@ -34,7 +35,9 @@ export function Header({ lng, flat, backTo }: HeaderProps) {
             width={178}
           />
         </Link>
-        <HeaderMenuLanguage lng={lng} />
+        <Suspense>
+          <HeaderMenuLanguage lng={lng} />
+        </Suspense>
         <HeaderMenu />
       </header>
       <div className={styles.headerSpacer} />

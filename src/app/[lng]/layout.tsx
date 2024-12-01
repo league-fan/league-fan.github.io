@@ -1,16 +1,15 @@
 import "@/styles/globals.scss";
 import { ReactNode } from "react";
-import { dir } from "i18next";
 import { allowedLng, fallbackLng, languages, ROOT } from "@/data/constants";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { languageZoneToBCP47 } from "@/types/languagezone";
 import { poppins } from "../fonts";
 
-export async function generateMetadata(
-  params: Promise<{ lng: allowedLng }>,
-): Promise<Metadata> {
-  const lng = (await params).lng;
+export function generateMetadata(): Metadata {
+  const langdict = Object.fromEntries(
+    languages.map((l) => [languageZoneToBCP47[l], `/${l}/champions`]),
+  );
 
   return {
     title: {
@@ -34,9 +33,7 @@ export async function generateMetadata(
     metadataBase: new URL(ROOT),
     alternates: {
       canonical: "/",
-      languages: Object.fromEntries(
-        languages.map((lng) => [languageZoneToBCP47[lng], `/${lng}/champions`]),
-      ),
+      languages: langdict,
     },
   };
 }
@@ -56,7 +53,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang={lng} dir={dir(lng)} className={poppins.className}>
+    <html lang={lng} className={poppins.className}>
       <head />
       <body>{children}</body>
     </html>

@@ -8,13 +8,9 @@ import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ lng: allowedLng }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lng = (await params).lng as allowedLng;
   const skinlines = local_fetch<Langs<Skinline[]>>(LocalData.skinlines)[lng];
 

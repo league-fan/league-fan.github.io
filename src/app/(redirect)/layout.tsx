@@ -1,5 +1,4 @@
 import { LanguageZone } from "@/types";
-import { dir } from "i18next";
 import "@/styles/globals.scss";
 import styles from "@/styles/static.module.scss";
 import { Common } from "@/components/layouts/common";
@@ -21,7 +20,7 @@ export default async function RootLayout({
 }) {
   const lng = LanguageZone.EnglishDefault;
   return (
-    <html lang={lng} dir={dir(lng)}>
+    <html lang={lng}>
       <head />
       <body>
         <Common lng={lng} backTo="/">

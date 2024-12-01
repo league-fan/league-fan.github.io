@@ -1,20 +1,16 @@
 import NewAdditions from "@/components/new-additions";
 import Champions from "./champions";
 import { allowedLng, Langs, languages } from "@/data/constants";
-import { Common } from "@/layouts/common";
+import { Common } from "@/components/layouts/common";
 import { Added, Champion, Skins } from "@/types";
 import { getAddedSkins, local_fetch, LocalData } from "@/data/server";
 import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ lng: allowedLng }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lng = (await params).lng as allowedLng;
   const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
 
