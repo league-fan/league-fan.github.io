@@ -3,6 +3,7 @@ import "@/styles/globals.scss";
 import styles from "@/styles/static.module.scss";
 import { Common } from "@/components/layouts/common";
 import { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: {
@@ -21,7 +22,6 @@ export default async function RootLayout({
   const lng = LanguageZone.EnglishDefault;
   return (
     <html lang={lng}>
-      <head />
       <body>
         <Common lng={lng} backTo="/">
           <div className="main-layout">
@@ -29,6 +29,7 @@ export default async function RootLayout({
           </div>
         </Common>
       </body>
+      <GoogleAnalytics gaId="G-BHM49VD1L8" />
     </html>
   );
 }
