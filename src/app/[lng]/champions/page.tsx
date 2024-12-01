@@ -4,6 +4,26 @@ import { allowedLng, Langs, languages } from "@/data/constants";
 import { Common } from "@/layouts/common";
 import { Added, Champion, Skins } from "@/types";
 import { getAddedSkins, local_fetch, LocalData } from "@/data/server";
+import { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ lng: allowedLng }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
+  const lng = (await params).lng as allowedLng;
+  const champions = local_fetch<Langs<Champion[]>>(LocalData.champions)[lng];
+
+  return {
+    title: "Champions",
+    description:
+      `Explore ` + champions.length + ` champions in League of Legends.`,
+  };
+}
 
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));

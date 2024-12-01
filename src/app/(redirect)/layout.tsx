@@ -5,6 +5,15 @@ import styles from "@/styles/static.module.scss";
 import { Common } from "@/layouts/common";
 import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: {
+    default: "Explore latest Skins, Champions, and more",
+    template: "%s | League Fan",
+  },
+  description:
+    "Explore the latest skins, champions, and more in League of Legends. Get the latest news, updates, and more.",
+};
+
 export default async function RootLayout({
   children,
 }: {

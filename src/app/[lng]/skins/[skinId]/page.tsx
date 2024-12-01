@@ -5,6 +5,22 @@ import { Suspense } from "react";
 import { local_fetch, LocalData, splitSkinId } from "@/data/server";
 import NotFound from "@/components/notFound";
 import { Popup } from "@/components/skin-viewer/popup";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lng: allowedLng; skinId: string }>;
+}): Promise<Metadata> {
+  const { lng, skinId } = await params;
+  const tempMetadata = (skin: Skin, name: string) => ({
+    title: `${skin.name}`,
+    description: `Explore the ${skin.name} skin in League of Legends`,
+  });
+  const skin = local_fetch<Langs<Skins>>(LocalData.skins)[lng][skinId];
+
+  return tempMetadata(skin, skin.name);
+}
 
 export async function generateStaticParams() {
   const skinsDict = local_fetch<Langs<Skins>>(LocalData.skins);

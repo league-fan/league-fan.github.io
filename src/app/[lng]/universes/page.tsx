@@ -4,6 +4,26 @@ import { getAddedSkins, local_fetch, LocalData } from "@/data/server";
 import { Added, Champion, Skinline, Skins, Universe } from "@/types";
 import { Common } from "@/layouts/common";
 import NewAdditions from "@/components/new-additions";
+import { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ lng: allowedLng }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
+  const lng = (await params).lng as allowedLng;
+  const universes = local_fetch<Langs<Universe[]>>(LocalData.universes)[lng];
+
+  return {
+    title: "Universes",
+    description:
+      `Explore ` + universes.length + ` universes in League of Legends.`,
+  };
+}
 
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
