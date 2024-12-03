@@ -12,6 +12,7 @@
 
 # cache
 .cache/
+.content-collections
 
 # testing
 /coverage

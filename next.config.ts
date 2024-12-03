@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import nextMdx from "@next/mdx";
+import { withContentCollections } from "@content-collections/next";
 
 const withMDX = nextMdx({
   extension: /\.mdx?$/,
@@ -26,4 +27,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withMDX(nextConfig);
+export default withContentCollections(withMDX(nextConfig));
