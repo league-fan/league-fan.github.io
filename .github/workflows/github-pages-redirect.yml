@@ -1,6 +1,6 @@
 # Keep https://league-fan.github.io/ as an entry URL that sends users to
 # Cloudflare Pages. GitHub controls *.github.io DNS — we cannot point it at CF,
-# so the only way for the old URL to "use" CF is a client/server redirect.
+# so the only way for the old URL to "use" CF is a client redirect.
 #
 # Publishes a tiny static site to the gh-pages branch (repo Pages source).
 
@@ -15,9 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: gh-pages-redirect
@@ -26,9 +24,6 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,10 +31,15 @@ jobs:
         run: |
           mkdir -p _gh_pages
           cp -R scripts/gh-pages-redirect/* _gh_pages/
+          # SPA-style deep links: unknown paths hit 404.html on GitHub Pages
+          # (see scripts/gh-pages-redirect/404.html)
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: _gh_pages
-
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_gh_pages
+          publish_branch: gh-pages
+          force_orphan: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
