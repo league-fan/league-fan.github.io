@@ -303,6 +303,104 @@ export function hasExtraMedia(item, category) {
   return groups.length > 1;
 }
 
+/** @typedef {"default" | "time-asc" | "time-desc"} SortMode */
+
+export const SORT_OPTIONS = [
+  { value: "default", label: "Default" },
+  { value: "time-asc", label: "Time ascending" },
+  { value: "time-desc", label: "Time descending" },
+];
+
+/**
+ * Numeric-ish id for sorting (handles string ids like CHEST_96).
+ * @param {unknown} id
+ */
+export function numericId(id) {
+  if (typeof id === "number" && Number.isFinite(id)) return id;
+  const n = Number(id);
+  if (Number.isFinite(n)) return n;
+  const m = String(id ?? "").match(/(\d+)/);
+  return m ? Number(m[1]) : 0;
+}
+
+/**
+ * Chronological proxy for an item.
+ * Prefer explicit dates when present; otherwise use id (usually increases over time).
+ * @param {Record<string, any>} item
+ * @param {string} category
+ */
+export function getTimeSortValue(item, category) {
+  if (!item) return 0;
+
+  if (category === "summoner-icons") {
+    const year = Number(item.yearReleased) || 0;
+    return year * 1e9 + numericId(item.id);
+  }
+
+  if (category === "loot") {
+    const start = item.startDate && String(item.startDate).trim();
+    if (start) {
+      const t = Date.parse(start);
+      if (!Number.isNaN(t)) return t;
+    }
+    const end = item.endDate && String(item.endDate).trim();
+    if (end) {
+      const t = Date.parse(end);
+      if (!Number.isNaN(t)) return t;
+    }
+  }
+
+  // Precomputed on load when available
+  if (typeof item._timeSort === "number") return item._timeSort;
+
+  return numericId(item.id);
+}
+
+/**
+ * Stamp load order + time key, then return list (mutates items lightly).
+ * @param {any[]} list
+ * @param {string} category
+ */
+export function finalizeList(list, category) {
+  return list.map((item, index) => {
+    const next = item;
+    next._loadIndex = index;
+    next._timeSort = getTimeSortValue(
+      // avoid using stale _timeSort when computing
+      { ...item, _timeSort: undefined },
+      category,
+    );
+    return next;
+  });
+}
+
+/**
+ * Sort a filtered list by sort mode (stable for group reordering).
+ * @param {any[]} list
+ * @param {SortMode} sortMode
+ * @param {string} category
+ */
+export function sortItems(list, sortMode, category) {
+  if (!list.length || sortMode === "default") {
+    // Preserve load / filter order; if _loadIndex exists, restore it
+    if (list.some((i) => typeof i._loadIndex === "number")) {
+      return [...list].sort(
+        (a, b) => (a._loadIndex ?? 0) - (b._loadIndex ?? 0),
+      );
+    }
+    return list;
+  }
+  const dir = sortMode === "time-asc" ? 1 : -1;
+  return [...list].sort((a, b) => {
+    const ta = a._timeSort ?? getTimeSortValue(a, category);
+    const tb = b._timeSort ?? getTimeSortValue(b, category);
+    if (ta !== tb) return (ta - tb) * dir;
+    const idDiff = (numericId(a.id) - numericId(b.id)) * dir;
+    if (idDiff !== 0) return idDiff;
+    return ((a._loadIndex ?? 0) - (b._loadIndex ?? 0)) * dir;
+  });
+}
+
 /**
  * @param {UiLang} uiLang
  */
@@ -372,13 +470,16 @@ export async function loadCategoryList(category, uiLang = "chinese") {
   const client = getClient(uiLang);
   const raw = await client.load(/** @type {any} */ (category));
 
+  /** @type {any[]} */
+  let list;
   switch (category) {
     case "summoner-icons":
-      return /** @type {any[]} */ (raw)
+      list = /** @type {any[]} */ (raw)
         .filter((i) => i.imagePath)
         .map((i) => ({ ...i }));
+      break;
     case "summoner-emotes":
-      return /** @type {any[]} */ (raw)
+      list = /** @type {any[]} */ (raw)
         .filter(
           (i) =>
             i.inventoryIcon &&
@@ -386,17 +487,20 @@ export async function loadCategoryList(category, uiLang = "chinese") {
         )
         .map((i) => ({ ...i }))
         .sort((a, b) => b.id - a.id);
+      break;
     case "ward-skins":
-      return /** @type {any[]} */ (raw)
+      list = /** @type {any[]} */ (raw)
         .filter((i) => i.wardImagePath)
         .map((i) => ({ ...i }))
         .sort((a, b) => b.id - a.id);
+      break;
     case "loot":
-      return /** @type {any[]} */ (raw)
+      list = /** @type {any[]} */ (raw)
         .filter((i) => i.image)
         .map((i) => ({ ...i }));
+      break;
     case "champions":
-      return /** @type {any[]} */ (raw)
+      list = /** @type {any[]} */ (raw)
         .filter((i) => i.squarePortraitPath)
         .map((i) => ({
           ...i,
@@ -404,21 +508,25 @@ export async function loadCategoryList(category, uiLang = "chinese") {
           rolesLabel: (Array.isArray(i.roles) ? i.roles : []).join(", "),
           primaryRole: (Array.isArray(i.roles) && i.roles[0]) || "unknown",
         }));
+      break;
     case "skins": {
       // Parallel load related metadata for grouping & labels
       const [champions, skinlines] = await Promise.all([
         client.load("champions"),
         client.load("skinlines"),
       ]);
-      return normalizeSkins(
+      list = normalizeSkins(
         /** @type {Record<string, any>} */ (raw),
         /** @type {any[]} */ (champions),
         /** @type {any[]} */ (skinlines),
       );
+      break;
     }
     default:
-      return Array.isArray(raw) ? raw.map((i) => ({ ...i })) : [];
+      list = Array.isArray(raw) ? raw.map((i) => ({ ...i })) : [];
   }
+
+  return finalizeList(list, category);
 }
 
 /**
