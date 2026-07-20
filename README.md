@@ -8,8 +8,11 @@ Browse League of Legends client cosmetics and champion skins, powered by
 ## Features
 
 - Live data from CommunityDragon via typed asset loaders
+- Full-viewport responsive layout: left filters / details, right gallery
 - Chinese / English UI language
-- Search by title or id
+- Search by name, id, champion, series, and more
+- Skins: group by **Hero** or **Series**, filter by rarity / legacy / chromas
+- Detail panel shows original attributes (rarity, description, release notes, chromas, asset links, …)
 - Categories: **Icons · Emotes · Wards · Loot · Champions · Skins**
 
 ## Develop

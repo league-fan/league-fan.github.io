@@ -179,7 +179,8 @@ export default defineComponent({
             return (end < this.totalPages) ? end : this.totalPages
         },
         totalPages: function () {
-            return Math.ceil(this.total / this.perPage)
+            if (!this.perPage || this.total <= 0) return 1
+            return Math.max(1, Math.ceil(this.total / this.perPage))
         },
         nextPage: function () {
             return this.current + 1
