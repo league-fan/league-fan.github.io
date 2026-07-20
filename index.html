@@ -9,28 +9,5 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-    <!-- Analytics only on production hosts (avoids local DNS / adblock noise) -->
-    <script>
-      (function () {
-        var host = location.hostname;
-        var allowed =
-          host === "league-fan.github.io" ||
-          host === "www.league-fan.github.io" ||
-          host === "league-fan-github-io.pages.dev" ||
-          host.endsWith(".league-fan-github-io.pages.dev");
-        if (!allowed) return;
-        var s = document.createElement("script");
-        s.async = true;
-        s.src = "https://www.googletagmanager.com/gtag/js?id=G-BHM49VD1L8";
-        document.head.appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        window.gtag = gtag;
-        gtag("js", new Date());
-        gtag("config", "G-BHM49VD1L8");
-      })();
-    </script>
   </body>
 </html>
