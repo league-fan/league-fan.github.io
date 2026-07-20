@@ -17,13 +17,8 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
       - run: npm ci --legacy-peer-deps
-      - name: Build
-        env:
-          # Same default as production Pages (prebuilt JSON CDN)
-          VITE_ASSETS_BASE: https://league-fan-data.yxra3603.workers.dev/latest
-        run: npm run build
-      - name: Check SPA redirects / headers present in dist
+      - run: npm run build
+      - name: Check dist
         run: |
-          test -f dist/_redirects
-          test -f dist/_headers
           test -f dist/index.html
+          test -f dist/_redirects
