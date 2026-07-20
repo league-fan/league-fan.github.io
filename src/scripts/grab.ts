@@ -29,8 +29,8 @@ class Grab {
   private client(uiLang: UiLang = this.lang) {
     return createClient({
       lang: langMap[uiLang] ?? "default",
-      // Live until GitHub data releases exist for v2:
-      source: { kind: "cdragon", patch: "latest" },
+      // Prefer prebuilt data-v* Releases; fall back path is cdragon in the lib API.
+      source: { kind: "release" },
     });
   }
 
