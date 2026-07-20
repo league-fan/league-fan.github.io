@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@aacassandra/vue3-progressbar": "^1.0.3",
+    "@magicwenli/league-fan-assets": "file:../league-fan-assets",
     "axios": "^0.24.0",
     "js-search": "^2.0.0",
     "sass": "^1.43.5",
@@ -19,6 +20,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",
+    "typescript": "^5.7.2",
     "vite": "^2.6.4"
   }
 }
+
