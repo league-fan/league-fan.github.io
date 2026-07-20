@@ -29,10 +29,12 @@ class Grab {
   private client(uiLang: UiLang = this.lang) {
     return createClient({
       lang: langMap[uiLang] ?? "default",
-      // Prefer prebuilt data-v* Releases; fall back path is cdragon in the lib API.
-      source: { kind: "release" },
+      // Browser: CDragon allows CORS (*). GitHub Release assets do not —
+      // use { kind: "release" } from Node/SSR or behind a CORS-enabled CDN.
+      source: { kind: "cdragon", patch: "latest" },
     });
   }
+
 
   /**
    * Returns `{ data }` to stay drop-in compatible with former axios usage.
