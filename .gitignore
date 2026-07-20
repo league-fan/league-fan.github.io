@@ -6,3 +6,4 @@ dist-ssr
 yarn-error.log
 .idea
 python
+.wrangler
