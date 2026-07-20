@@ -3,9 +3,12 @@ import Pagination from "../components/Pagination.vue";
 import ImageTooltip from "../components/ImageTooltip.vue";
 import {
   DETAIL_FIELDS,
+  SORT_OPTIONS,
   deriveSkinFilterOptions,
   buildMediaGroups,
   hasExtraMedia,
+  sortItems,
+  finalizeList,
 } from "../services/assets.js";
 
 /** Density = min card width; grid always auto-fills available space */
@@ -56,6 +59,9 @@ export default {
       },
       /** flat | champion | skinline | role */
       groupMode: "flat",
+      /** default | time-asc | time-desc */
+      sortMode: "default",
+      sortOptions: SORT_OPTIONS,
       /** hide base skins by default for skins category */
       filters: {
         rarities: /** @type {string[]} */ ([]),
@@ -160,18 +166,21 @@ export default {
         return true;
       });
     },
-    /** Sorted list respecting group mode (items of same group adjacent). */
+    /** Sorted list: time/default first, then optional grouping (stable). */
     sortedList() {
-      const list = this.filteredList;
+      let list = sortItems(
+        this.filteredList,
+        this.sortMode,
+        this.category,
+      );
       if (this.groupMode === "flat" || !this.canGroup) {
         return list;
       }
+      // Stable sort by group label — preserves time/default order within group
       return [...list].sort((a, b) => {
         const la = this.groupLabel(a);
         const lb = this.groupLabel(b);
-        const cmp = la.localeCompare(lb, "zh");
-        if (cmp !== 0) return cmp;
-        return (b.id || 0) - (a.id || 0);
+        return la.localeCompare(lb, "zh");
       });
     },
     totalPages() {
@@ -282,8 +291,14 @@ export default {
     assetsList: {
       immediate: true,
       handler(list) {
-        if (this.isSkins && Array.isArray(list) && list.length) {
-          this.filterOptions = deriveSkinFilterOptions(list);
+        if (Array.isArray(list) && list.length) {
+          // Ensure sort keys exist (covers vuex cache from older sessions)
+          if (list[0]._loadIndex == null || list[0]._timeSort == null) {
+            finalizeList(list, this.category);
+          }
+          if (this.isSkins) {
+            this.filterOptions = deriveSkinFilterOptions(list);
+          }
         }
         this.pageCurr = 1;
         this.syncPreview();
@@ -304,8 +319,12 @@ export default {
     category() {
       this.resetFilters();
       this.groupMode = "flat";
+      this.sortMode = "default";
       this.pageCurr = 1;
       this.mediaOpen = false;
+    },
+    sortMode() {
+      this.pageCurr = 1;
     },
   },
   mounted() {
@@ -382,6 +401,9 @@ export default {
       this.gridMod = `repeat(auto-fill, minmax(${opt.minPx}px, 1fr))`;
     },
     onGroupModeChange() {
+      this.pageCurr = 1;
+    },
+    onSortModeChange() {
       this.pageCurr = 1;
     },
     itemKey(item) {
@@ -721,6 +743,23 @@ export default {
             <select id="pagesize-select" v-model.number="pageSize">
               <option v-for="n in pageSizeOptions" :key="n" :value="n">
                 {{ n }}
+              </option>
+            </select>
+          </div>
+
+          <div class="toolbar-field">
+            <label for="sort-select">Sort</label>
+            <select
+              id="sort-select"
+              v-model="sortMode"
+              @change="onSortModeChange"
+            >
+              <option
+                v-for="opt in sortOptions"
+                :key="opt.value"
+                :value="opt.value"
+              >
+                {{ opt.label }}
               </option>
             </select>
           </div>
