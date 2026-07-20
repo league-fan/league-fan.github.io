@@ -9,7 +9,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview --host",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=league-fan-github-io"
   },
   "dependencies": {
     "@aacassandra/vue3-progressbar": "^1.0.3",

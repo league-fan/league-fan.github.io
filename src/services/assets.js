@@ -402,13 +402,31 @@ export function sortItems(list, sortMode, category) {
 }
 
 /**
+ * Prebuilt JSON CDN (Cloudflare Worker → R2). CORS-enabled.
+ * Override with VITE_ASSETS_BASE (no trailing slash), e.g. local mock or pin path.
+ * Empty / "cdragon" falls back to live CommunityDragon.
+ */
+const ASSETS_BASE =
+  typeof import.meta !== "undefined" && import.meta.env?.VITE_ASSETS_BASE
+    ? String(import.meta.env.VITE_ASSETS_BASE).trim()
+    : "https://league-fan-data.yxra3603.workers.dev/latest";
+
+/**
  * @param {UiLang} uiLang
  */
 export function getClient(uiLang = "chinese") {
+  const lang = langMap[uiLang] ?? "default";
+  if (!ASSETS_BASE || ASSETS_BASE === "cdragon") {
+    return createClient({
+      lang,
+      // Live CDragon (CORS *); heavier client-side transforms
+      source: { kind: "cdragon", patch: "latest" },
+    });
+  }
   return createClient({
-    lang: langMap[uiLang] ?? "default",
-    // Browser: CDragon has CORS *. GH Release assets do not.
-    source: { kind: "cdragon", patch: "latest" },
+    lang,
+    // Prebuilt snapshots from R2 via Worker (CORS)
+    source: { kind: "release", baseUrl: ASSETS_BASE },
   });
 }
 

@@ -9,13 +9,16 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-    <!-- Analytics only on production host (avoids local DNS / adblock noise) -->
+    <!-- Analytics only on production hosts (avoids local DNS / adblock noise) -->
     <script>
       (function () {
         var host = location.hostname;
-        if (host !== "league-fan.github.io" && host !== "www.league-fan.github.io") {
-          return;
-        }
+        var allowed =
+          host === "league-fan.github.io" ||
+          host === "www.league-fan.github.io" ||
+          host === "league-fan-github-io.pages.dev" ||
+          host.endsWith(".league-fan-github-io.pages.dev");
+        if (!allowed) return;
         var s = document.createElement("script");
         s.async = true;
         s.src = "https://www.googletagmanager.com/gtag/js?id=G-BHM49VD1L8";
