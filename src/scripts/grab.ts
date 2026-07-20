@@ -15,9 +15,8 @@ const langMap: Record<UiLang, Lang> = {
 type LoadableCategory = CosmeticsCategory;
 
 /**
- * Thin adapter for vue@1 views.
- * Loads via CDragon (live) through the shared assets lib.
- * Prefer release source once data-v* snapshots are published.
+ * Thin adapter for league-fan main site cosmetics pages.
+ * Browser loads via CDragon (CORS *). Use release source from Node/SSR.
  */
 class Grab {
   public lang: UiLang;

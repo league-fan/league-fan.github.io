@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@aacassandra/vue3-progressbar": "^1.0.3",
-    "@magicwenli/league-fan-assets": "file:../league-fan-assets",
+    "@magicwenli/league-fan-assets": "github:league-fan/league-fan-assets#master",
     "axios": "^0.24.0",
     "js-search": "^2.0.0",
     "sass": "^1.43.5",
