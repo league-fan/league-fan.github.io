@@ -1,5 +1,5 @@
 <script setup>
-import 'terminal.css';
+import "terminal.css";
 </script>
 
 <template>
@@ -7,19 +7,28 @@ import 'terminal.css';
     <div class="terminal-nav">
       <div class="terminal-logo">
         <div class="logo terminal-prompt">
-          <a href="./" class="no-style">League Fan</a>
+          <router-link to="/" class="no-style">League Fan</router-link>
         </div>
       </div>
       <nav class="terminal-menu">
-        <ul>
+        <ul class="nav-list">
           <li>
-            <router-link to="./" class="menu-item">Icons</router-link>
+            <router-link to="/" class="menu-item">Icons</router-link>
           </li>
           <li>
-            <router-link to="./summoner-emotes" class="menu-item">Emotes</router-link>
+            <router-link to="/summoner-emotes" class="menu-item">Emotes</router-link>
           </li>
           <li>
-            <router-link to="./summoner-skins" class="menu-item">Skins</router-link>
+            <router-link to="/ward-skins" class="menu-item">Wards</router-link>
+          </li>
+          <li>
+            <router-link to="/loot" class="menu-item">Loot</router-link>
+          </li>
+          <li>
+            <router-link to="/champions" class="menu-item">Champions</router-link>
+          </li>
+          <li>
+            <router-link to="/skins" class="menu-item">Skins</router-link>
           </li>
         </ul>
       </nav>
@@ -33,22 +42,56 @@ import 'terminal.css';
     <div class="footer">
       <hr />
       <footer>
-        <header></header>
         <p>
-          Css theme by
-          <a href="https://terminalcss.xyz/" target="_blank">Terminal CSS</a>
-          <span style="float:right;">
-            Project by magicwenli/<a href="https://github.com/league-fan/league-fan.github.io/" target="_blank">league-fan</a>
+          Data via
+          <a
+            href="https://github.com/league-fan/league-fan-assets"
+            target="_blank"
+            rel="noopener"
+            >@magicwenli/league-fan-assets</a
+          >
+          · CDN
+          <a href="https://communitydragon.org" target="_blank" rel="noopener"
+            >CommunityDragon</a
+          >
+          · Theme
+          <a href="https://terminalcss.xyz/" target="_blank" rel="noopener"
+            >Terminal CSS</a
+          >
+          <span class="footer-right">
+            <a
+              href="https://github.com/league-fan/league-fan.github.io/"
+              target="_blank"
+              rel="noopener"
+              >league-fan</a
+            >
           </span>
         </p>
-        <router-link to="./license">License</router-link>
+        <router-link to="/license">License</router-link>
       </footer>
     </div>
   </div>
 </template>
 
 <style>
-.container {
-  grid-template-rows: 1fr 1fr 1fr; /* or whatever you need */
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-right {
+  float: right;
+}
+
+@media only screen and (max-width: 48em) {
+  .footer-right {
+    float: none;
+    display: block;
+    margin-top: 0.5em;
+  }
 }
 </style>
