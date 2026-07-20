@@ -1,10 +1,15 @@
 {
   "name": "league-fan",
   "version": "1.6.0",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview --host"
+    "serve": "vite preview --host",
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@aacassandra/vue3-progressbar": "^1.0.3",
@@ -21,4 +26,5 @@
     "vite": "^2.6.4"
   }
 }
+
 
