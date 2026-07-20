@@ -1,5 +1,14 @@
 import { createStore } from "vuex";
 
+/** Shared browser state for each asset gallery page */
+function galleryState() {
+  return {
+    previewIndex: 0,
+    page: 1,
+    caches: {},
+  };
+}
+
 export const store = createStore({
   state() {
     return {
@@ -11,16 +20,13 @@ export const store = createStore({
         display: "none",
         language: "chinese",
       },
-      icons:{
-        previewIndex:0,
-        page:1,
-        caches:{}
-      },
-      emotes:{
-        previewIndex:0,
-        page:1,
-        caches:{}
-      }
+      // keys must match route meta.storeKey / ImgFrame `name` prop
+      icons: galleryState(),
+      emotes: galleryState(),
+      wards: galleryState(),
+      loot: galleryState(),
+      champions: galleryState(),
+      skins: galleryState(),
     };
   },
   mutations: {
@@ -30,7 +36,12 @@ export const store = createStore({
       }
     },
     toggleSettings(state) {
-      state.settings.display = state.settings.display === "none" ? "block" : "none";
-    }
+      state.settings.display =
+        state.settings.display === "none" ? "block" : "none";
+    },
+    setGalleryCache(state, { storeKey, lang, data }) {
+      if (!state[storeKey]) return;
+      state[storeKey].caches[lang] = data;
+    },
   },
 });
