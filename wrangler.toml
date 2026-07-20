@@ -1,0 +1,12 @@
+# Cloudflare Pages project (Git integration + optional direct upload)
+name = "league-fan-github-io"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-01-01"
+
+# Build is usually done by Cloudflare Pages Git pipeline:
+#   install: npm ci --legacy-peer-deps
+#   build:   npm run build
+#   output:  dist
+#
+# Direct deploy:
+#   npm run build && npx wrangler pages deploy dist --project-name=league-fan-github-io
