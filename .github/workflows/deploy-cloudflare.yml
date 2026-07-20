@@ -1,0 +1,51 @@
+# Optional: deploy SPA to Cloudflare Pages from GitHub Actions.
+#
+# Prefer ONE of:
+#   A) Cloudflare Dashboard → Git integration (already on for this repo), or
+#   B) This workflow + secrets
+# Using both causes a double deploy on every push to main.
+#
+# Secrets (repo Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   — Account: Cloudflare Pages Edit (+ Workers if needed)
+#   CLOUDFLARE_ACCOUNT_ID  — 2d050a91329e311c8af17d38efe1cd2d
+
+name: Deploy Cloudflare Pages
+
+on:
+  workflow_dispatch:
+  # Uncomment to replace Dashboard Git integration with Actions-only deploy:
+  # push:
+  #   branches: [main]
+
+concurrency:
+  group: pages-cf-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Build
+        env:
+          VITE_ASSETS_BASE: https://league-fan-data.yxra3603.workers.dev/latest
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=league-fan-github-io --branch=main --commit-dirty=true

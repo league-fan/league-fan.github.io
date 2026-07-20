@@ -38,11 +38,33 @@ Copy `.env.example` → `.env` if needed:
 
 ## Deploy
 
+### Why not “GitHub Pages on Cloudflare”?
+
+`*.github.io` DNS is owned by **GitHub**. You cannot point `league-fan.github.io` at Cloudflare’s edge the way you would a custom domain.
+
+What actually works:
+
+| Layer | Role |
+|-------|------|
+| **GitHub repo** | Source of truth |
+| **Cloudflare Pages** | Real host (build + CDN) |
+| **league-fan.github.io** | Optional **redirect** entry URL → Pages |
+
+```
+push main ──┬──► Cloudflare Pages Git integration  ──► https://league-fan-github-io.pages.dev
+            ├──► (optional) GHA wrangler pages deploy ──► same project
+            └──► GHA “GitHub Pages redirect” ──► https://league-fan.github.io → CF
+```
+
 ### Cloudflare Pages (primary)
 
 Project name: **`league-fan-github-io`**
 
-- **Git integration:** push to `main` → automatic build (`npm ci --legacy-peer-deps` / `npm run build` / `dist`)
+- **Dashboard Git integration:** connect repo → production branch `main` → build `npm ci --legacy-peer-deps` / `npm run build` / output `dist`  
+  (already connected; push to `main` deploys)
+- **GitHub Action** (optional explicit deploy): `.github/workflows/deploy-cloudflare.yml`  
+  Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`  
+  Prefer **either** Git integration **or** this Action to avoid double deploys.
 - **CLI:**
 
 ```bash
@@ -52,6 +74,13 @@ npm run deploy
 
 SPA fallback: `public/_redirects` → `/* /index.html 200`  
 Cache headers: `public/_headers`
+
+### GitHub Pages URL (redirect only)
+
+Workflow: `.github/workflows/github-pages-redirect.yml`  
+Publishes a tiny site so `https://league-fan.github.io/` jumps to Cloudflare Pages (deep links via `404.html`).
+
+Repo → Settings → Pages → Source: **GitHub Actions**.
 
 ### Data pipeline
 
