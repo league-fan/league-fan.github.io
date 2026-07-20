@@ -79,12 +79,33 @@ export default {
 </script>
 
 <template>
-  <img-frame
-    v-if="storeKey"
-    :name="storeKey"
-    :assets-list="items"
-    :assets-props="assetsProps"
-    :scale="scale"
-    @on-lang-change="load()"
-  />
+  <div class="asset-browser-page">
+    <img-frame
+      v-if="storeKey"
+      :name="storeKey"
+      :category="category"
+      :assets-list="items"
+      :assets-props="assetsProps"
+      :scale="scale"
+      @on-lang-change="load()"
+    />
+  </div>
 </template>
+
+<style scoped>
+.asset-browser-page {
+  /* Fill app-main between sticky header/footer; no outer page scroll */
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.asset-browser-page > * {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+}
+</style>

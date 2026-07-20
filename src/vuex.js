@@ -3,7 +3,8 @@ import { createStore } from "vuex";
 /** Shared browser state for each asset gallery page */
 function galleryState() {
   return {
-    previewIndex: 0,
+    /** null = unset (do not use 0 — some icons legitimately have id 0) */
+    previewIndex: null,
     page: 1,
     caches: {},
   };
@@ -13,10 +14,10 @@ export const store = createStore({
   state() {
     return {
       slider: {
-        val: 1,
+        val: 3, // density M
       },
       settings: {
-        sliderVal: 1,
+        sliderVal: 3,
         display: "none",
         language: "chinese",
       },
@@ -31,8 +32,9 @@ export const store = createStore({
   },
   mutations: {
     changeSliderVal(state, val) {
-      if (val >= 1 && val <= 6) {
+      if (val >= 1 && val <= 5) {
         state.slider.val = val;
+        state.settings.sliderVal = val;
       }
     },
     toggleSettings(state) {
