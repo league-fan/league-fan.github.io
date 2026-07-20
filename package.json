@@ -1,16 +1,19 @@
 {
   "name": "league-fan",
-  "version": "1.5.0",
+  "version": "1.6.0",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview --host"
+    "serve": "vite preview --host",
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@aacassandra/vue3-progressbar": "^1.0.3",
     "@magicwenli/league-fan-assets": "^2.0.0",
-    "axios": "^0.24.0",
-    "js-search": "^2.0.0",
     "sass": "^1.43.5",
     "terminal.css": "^0.7.2",
     "vue": "^3.2.16",
@@ -20,7 +23,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.3",
-    "typescript": "^5.7.2",
     "vite": "^2.6.4"
   }
 }
+
+
