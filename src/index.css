@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — dark "hextech" palette derived from the League client:
+   deep navy ink, antique gold accent, teal for interactive/secondary state.
+   Fonts are system-only on purpose: an external font CDN is slow or blocked
+   on the mainland-China path this app explicitly supports.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-ink-950: #05080f;
+  --color-ink-900: #090d16;
+  --color-ink-850: #0d121d;
+  --color-ink-800: #121926;
+  --color-ink-750: #172032;
+  --color-ink-700: #1e293c;
+  --color-ink-600: #2a374c;
+  --color-ink-500: #3d4c64;
+
+  --color-gold-600: #a9863f;
+  --color-gold-500: #c8aa6e;
+  --color-gold-400: #dcc48f;
+  --color-gold-300: #f0e6d2;
+
+  --color-teal-500: #0ac8b9;
+  --color-teal-600: #0397ab;
+
+  --color-parchment: #e7e3d8;
+  --color-muted: #8992a4;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius-panel: 0.75rem;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --sidebar-width: 300px;
+  }
+
+  html,
+  body,
+  #app {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-ink-950 text-parchment font-sans antialiased;
+    font-size: 14px;
+  }
+
+  /* Ambient hextech glow behind the whole shell */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(
+        60rem 40rem at 12% -10%,
+        rgb(3 151 171 / 0.1),
+        transparent 60%
+      ),
+      radial-gradient(
+        50rem 35rem at 95% 0%,
+        rgb(200 170 110 / 0.07),
+        transparent 55%
+      );
+  }
+
+  ::selection {
+    @apply bg-gold-500/30 text-gold-300;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-teal-500;
+  }
+
+  /* Thin dark scrollbars for the two independent scroll panes */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-600) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full border-2 border-transparent bg-ink-600 bg-clip-content;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink-500;
+  }
+}
+
+@layer components {
+  /* --- form controls ------------------------------------------------- */
+
+  .field-label {
+    @apply text-[0.68rem] font-medium tracking-wide text-muted uppercase;
+  }
+
+  .select {
+    @apply w-full appearance-none rounded-lg border border-ink-600 bg-ink-800
+      py-1.5 pr-8 pl-2.5 text-[0.82rem] text-parchment transition
+      hover:border-ink-500 focus:border-teal-600 focus:outline-none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238992a4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 0.85rem;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-ink-600 bg-ink-800 px-2.5 py-1.5
+      text-[0.82rem] text-parchment transition
+      placeholder:text-muted/70
+      hover:border-ink-500 focus:border-teal-600 focus:outline-none;
+  }
+
+  /* --- surfaces ------------------------------------------------------ */
+
+  .panel {
+    @apply overflow-hidden rounded-panel border border-ink-700 bg-ink-850/70;
+  }
+
+  .panel-head {
+    @apply flex w-full items-center justify-between gap-2 px-3 py-2
+      text-left text-[0.78rem] font-semibold tracking-wide text-gold-400
+      uppercase transition select-none;
+  }
+
+  .panel-head-toggle {
+    @apply cursor-pointer hover:bg-ink-800/70;
+  }
+
+  .panel-body {
+    @apply border-t border-ink-700/70 p-3;
+  }
+
+  /* --- buttons ------------------------------------------------------- */
+
+  .chip {
+    @apply cursor-pointer rounded-full border border-ink-600 bg-ink-800
+      px-2.5 py-1 text-[0.72rem] text-parchment/85 transition
+      hover:border-ink-500 hover:text-parchment;
+  }
+
+  .chip-active {
+    @apply border-gold-500 bg-gold-500/15 text-gold-300
+      shadow-[0_0_0_1px_var(--color-gold-500)_inset];
+  }
+
+  .icon-btn {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg
+      border border-ink-600 bg-ink-800 text-muted transition
+      hover:border-ink-500 hover:text-parchment;
+  }
+
+  .link-quiet {
+    @apply cursor-pointer text-[0.72rem] font-medium text-teal-500 underline
+      decoration-teal-500/40 underline-offset-2 transition
+      hover:text-teal-500/80;
+  }
+}

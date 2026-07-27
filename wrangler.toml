@@ -4,7 +4,7 @@ pages_build_output_dir = "dist"
 compatibility_date = "2026-01-01"
 
 # Build is usually done by Cloudflare Pages Git pipeline:
-#   install: npm ci --legacy-peer-deps
+#   install: npm ci
 #   build:   npm run build
 #   output:  dist
 #

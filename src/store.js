@@ -1,4 +1,5 @@
-import { defineStore } from "pinia";
+import { create } from "zustand";
+import { useShallow } from "zustand/react/shallow";
 
 const SETTINGS_STORAGE_KEY = "lf-settings";
 
@@ -57,44 +58,83 @@ export const GALLERY_KEYS = [
   "skinlines",
 ];
 
-export const useMainStore = defineStore("main", {
-  state: () => {
-    const base = {
-      settings: loadSettings(),
-    };
-    // keys must match route meta.storeKey / ImgFrame `name` prop
-    for (const key of GALLERY_KEYS) base[key] = galleryState();
-    return base;
+function initialGalleries() {
+  const galleries = {};
+  // keys must match route meta.storeKey
+  for (const key of GALLERY_KEYS) galleries[key] = galleryState();
+  return galleries;
+}
+
+export const useMainStore = create((set, get) => ({
+  settings: loadSettings(),
+  galleries: initialGalleries(),
+
+  changeSliderVal(val) {
+    if (val < 1 || val > 5) return;
+    const settings = { ...get().settings, sliderVal: val };
+    persistSettings(settings);
+    set({ settings });
   },
-  actions: {
-    changeSliderVal(val) {
-      if (val >= 1 && val <= 5) {
-        this.settings.sliderVal = val;
-        persistSettings(this.settings);
-      }
-    },
-    setLanguage(lang) {
-      if (!["chinese", "english"].includes(lang)) return;
-      this.settings.language = lang;
-      persistSettings(this.settings);
-    },
-    setImageCdn(mode) {
-      if (!["auto", "global", "cn"].includes(mode)) return;
-      this.settings.imageCdn = mode;
-      persistSettings(this.settings);
-    },
-    setGalleryCache({ storeKey, cacheKey, data }) {
-      if (!this[storeKey]) return;
-      this[storeKey].caches[cacheKey] = data;
-    },
-    clearGalleryCaches() {
+
+  setLanguage(lang) {
+    if (!["chinese", "english"].includes(lang)) return;
+    const settings = { ...get().settings, language: lang };
+    persistSettings(settings);
+    set({ settings });
+  },
+
+  setImageCdn(mode) {
+    if (!["auto", "global", "cn"].includes(mode)) return;
+    const settings = { ...get().settings, imageCdn: mode };
+    persistSettings(settings);
+    set({ settings });
+  },
+
+  setGalleryCache({ storeKey, cacheKey, data }) {
+    const gallery = get().galleries[storeKey];
+    if (!gallery) return;
+    set((state) => ({
+      galleries: {
+        ...state.galleries,
+        [storeKey]: {
+          ...gallery,
+          caches: { ...gallery.caches, [cacheKey]: data },
+        },
+      },
+    }));
+  },
+
+  clearGalleryCaches() {
+    set((state) => {
+      const galleries = {};
       for (const key of GALLERY_KEYS) {
-        this[key].caches = {};
+        galleries[key] = { ...state.galleries[key], caches: {} };
       }
-    },
-    setPreviewIndex({ storeKey, id }) {
-      if (!this[storeKey]) return;
-      this[storeKey].previewIndex = id;
-    },
+      return { galleries };
+    });
   },
-});
+
+  setPreviewIndex({ storeKey, id }) {
+    const gallery = get().galleries[storeKey];
+    if (!gallery) return;
+    if (gallery.previewIndex === id) return;
+    set((state) => ({
+      galleries: {
+        ...state.galleries,
+        [storeKey]: { ...gallery, previewIndex: id },
+      },
+    }));
+  },
+}));
+
+/** Persisted user settings + their setters, in one shallow-compared slice. */
+export function useSettings() {
+  return useMainStore(
+    useShallow((s) => ({
+      settings: s.settings,
+      setLanguage: s.setLanguage,
+      setImageCdn: s.setImageCdn,
+      changeSliderVal: s.changeSliderVal,
+    })),
+  );
+}

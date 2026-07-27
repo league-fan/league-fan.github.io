@@ -1,4 +1,3 @@
-import { markRaw } from "vue";
 import {
   createClient,
   splitSkinId,
@@ -426,8 +425,8 @@ function buildSearchIndex(item, category) {
 
 /**
  * Stamp load order + time key + search index, then return list.
- * Items are markRaw'd: the lists are read-only for the UI and deep
- * reactivity on thousands of large objects wastes memory and CPU.
+ * Lists are treated as immutable by the UI — never mutated after this point,
+ * so they can be held in state and passed around by reference.
  * @param {any[]} list
  * @param {string} category
  */
@@ -439,9 +438,8 @@ export function finalizeList(list, category) {
     item._timeSort = getTimeSortValue(item, category);
     item._search = buildSearchIndex(item, category);
     item._hasMedia = hasExtraMedia(item, category);
-    markRaw(item);
   }
-  return markRaw(list);
+  return list;
 }
 
 /**

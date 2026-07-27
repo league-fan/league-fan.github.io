@@ -1,97 +1,68 @@
-import License from "./views/Licence.vue";
-import NotFound from "./views/NotFound.vue";
-
-const baseUrl = import.meta.env.VITE_BASE_URL || "";
-
-/** @type {import('vue-router').RouterOptions['routes']} */
-export const routes = [
+/**
+ * Gallery routes. Each entry drives three things: the header nav, the router,
+ * and the AssetBrowserPage behaviour (which store slice and asset category to
+ * load, plus the hover zoom factor that suits that art's aspect ratio).
+ *
+ * - storeKey: store slice key (icons | emotes | wards | …)
+ * - category: @magicwenli/league-fan-assets category id
+ */
+export const GALLERIES = [
   {
-    path: baseUrl + "/",
-    name: "icons",
-    component: () => import("./views/AssetBrowserPage.vue"),
-    meta: {
-      title: "Summoner Icons",
-      storeKey: "icons",
-      category: "summoner-icons",
-      scale: 1.5,
-    },
+    path: "/",
+    label: "Icons",
+    title: "Summoner Icons",
+    storeKey: "icons",
+    category: "summoner-icons",
+    scale: 1.5,
   },
   {
-    path: baseUrl + "/summoner-emotes",
-    name: "emotes",
-    component: () => import("./views/AssetBrowserPage.vue"),
-    meta: {
-      title: "Summoner Emotes",
-      storeKey: "emotes",
-      category: "summoner-emotes",
-      scale: 1.5,
-    },
+    path: "/summoner-emotes",
+    label: "Emotes",
+    title: "Summoner Emotes",
+    storeKey: "emotes",
+    category: "summoner-emotes",
+    scale: 1.5,
   },
   {
-    path: baseUrl + "/ward-skins",
-    name: "wards",
-    component: () => import("./views/AssetBrowserPage.vue"),
-    meta: {
-      title: "Ward Skins",
-      storeKey: "wards",
-      category: "ward-skins",
-      scale: 1.2,
-    },
+    path: "/ward-skins",
+    label: "Wards",
+    title: "Ward Skins",
+    storeKey: "wards",
+    category: "ward-skins",
+    scale: 1.2,
   },
   {
-    path: baseUrl + "/loot",
-    name: "loot",
-    component: () => import("./views/AssetBrowserPage.vue"),
-    meta: {
-      title: "Hextech Chests",
-      storeKey: "loot",
-      category: "loot",
-      scale: 1.2,
-    },
+    path: "/loot",
+    label: "Loot",
+    title: "Hextech Chests",
+    storeKey: "loot",
+    category: "loot",
+    scale: 1.2,
   },
   {
-    path: baseUrl + "/champions",
-    name: "champions",
-    component: () => import("./views/AssetBrowserPage.vue"),
-    meta: {
-      title: "Champions",
-      storeKey: "champions",
-      category: "champions",
-      scale: 1.5,
-    },
+    path: "/champions",
+    label: "Champions",
+    title: "Champions",
+    storeKey: "champions",
+    category: "champions",
+    scale: 1.5,
   },
   {
-    path: baseUrl + "/skins",
-    name: "skins",
-    component: () => import("./views/AssetBrowserPage.vue"),
-    meta: {
-      title: "Champion Skins",
-      storeKey: "skins",
-      category: "skins",
-      scale: 1.1,
-    },
+    path: "/skins",
+    label: "Skins",
+    title: "Champion Skins",
+    storeKey: "skins",
+    category: "skins",
+    scale: 1.1,
   },
   {
-    path: baseUrl + "/skinlines",
-    name: "skinlines",
-    component: () => import("./views/AssetBrowserPage.vue"),
-    meta: {
-      title: "Skin Series",
-      storeKey: "skinlines",
-      category: "skinlines",
-      scale: 1.1,
-    },
+    path: "/skinlines",
+    label: "Series",
+    title: "Skin Series",
+    storeKey: "skinlines",
+    category: "skinlines",
+    scale: 1.1,
   },
-  {
-    path: baseUrl + "/license",
-    name: "license",
-    meta: { title: "License" },
-    component: License,
-  },
-  // legacy redirects
-  {
-    path: baseUrl + "/summoner-skins",
-    redirect: baseUrl + "/skins",
-  },
-  { path: "/:path(.*)", component: NotFound },
 ];
+
+export const SITE_TITLE = import.meta.env.VITE_SITE_TITLE || "League Fan";

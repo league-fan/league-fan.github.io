@@ -28,23 +28,22 @@ Also:
 ## Develop
 
 ```bash
-npm install --legacy-peer-deps
+npm install
 npm run dev
 npm run build
 ```
 
-Requires Node 18+.
+Requires Node 20+.
 
 ## Stack
 
-- Vue 3 + Vue Router + Vuex + Vite  
-- [Terminal CSS](https://terminalcss.xyz/)  
+- React 19 + React Router 7 + Zustand + Vite  
+- Tailwind CSS v4 — dark "hextech" theme, system fonts only (no external font CDN, which keeps the mainland-China path fast)  
 - [`@magicwenli/league-fan-assets`](https://github.com/league-fan/league-fan-assets)
 
 ## Credits
 
 - [CommunityDragon](https://communitydragon.org)  
 - Riot Games (game assets ©)  
-- Vue 3  
 
 Not endorsed by Riot Games.
