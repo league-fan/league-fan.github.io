@@ -35,6 +35,11 @@ import "terminal.css";
             <li>
               <router-link to="/skins" class="menu-item">Skins</router-link>
             </li>
+            <li>
+              <router-link to="/skinlines" class="menu-item"
+                >Series</router-link
+              >
+            </li>
           </ul>
         </nav>
       </div>

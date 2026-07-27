@@ -45,12 +45,14 @@ export default {
   },
   methods: {
     async load() {
-      const lang = this.$store.state.settings.language;
+      const { language: lang, imageCdn } = this.$store.state.settings;
       const key = this.storeKey;
       const cat = this.category;
       if (!key || !cat) return;
 
-      const cache = this.$store.state[key]?.caches?.[lang];
+      // Image CDN choice is baked into item URLs, so it is part of the key
+      const cacheKey = `${lang}|${imageCdn}`;
+      const cache = this.$store.state[key]?.caches?.[cacheKey];
       if (cache) {
         this.items = cache;
         return;
@@ -58,11 +60,11 @@ export default {
 
       this.$Progress.start();
       try {
-        const list = await loadCategoryList(cat, lang);
+        const list = await loadCategoryList(cat, lang, { imageCdn });
         this.items = list;
         this.$store.commit("setGalleryCache", {
           storeKey: key,
-          lang,
+          cacheKey,
           data: list,
         });
         this.$Progress.finish();

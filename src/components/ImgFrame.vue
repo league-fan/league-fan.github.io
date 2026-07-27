@@ -57,6 +57,8 @@ export default {
       search: {
         keyword: "",
       },
+      /** Raw input value; committed to search.keyword after a debounce */
+      searchInput: "",
       /** flat | champion | skinline | role */
       groupMode: "flat",
       /** default | time-asc | time-desc */
@@ -108,36 +110,32 @@ export default {
     mediaGroups() {
       return buildMediaGroups(this.preview, this.category);
     },
-    previewHasMedia() {
-      return hasExtraMedia(this.preview, this.category) || this.mediaGroups.length > 0;
+    /** UI language backed by the store (persisted). */
+    languageModel: {
+      get() {
+        return this.$store.state.settings.language;
+      },
+      set(value) {
+        this.$store.commit("setLanguage", value);
+      },
+    },
+    /** Image CDN preference backed by the store (persisted). */
+    imageCdnModel: {
+      get() {
+        return this.$store.state.settings.imageCdn;
+      },
+      set(value) {
+        this.$store.commit("setImageCdn", value);
+      },
     },
     filteredList() {
       const list = Array.isArray(this.assetsList) ? this.assetsList : [];
       const kw = (this.search.keyword || "").trim().toLowerCase();
-      const titleKey = this.assetsProps.title;
-      const idKey = this.assetsProps.id;
-      const descKey = this.assetsProps.description;
 
       return list.filter((item) => {
         if (kw) {
-          const hay = [
-            item[titleKey],
-            item[idKey],
-            item.id,
-            item[descKey],
-            item.championName,
-            item.championAlias,
-            item.rarityName,
-            item.rarity,
-            ...(item.skinlineNames || []),
-            item.alias,
-            item.key,
-            item.title,
-            item.name,
-          ]
-            .filter((v) => v != null && v !== "")
-            .map((v) => String(v).toLowerCase())
-            .join(" ");
+          // _search is precomputed on load (services/assets.js finalizeList)
+          const hay = item._search || "";
           if (!hay.includes(kw)) return false;
         }
 
@@ -292,8 +290,12 @@ export default {
       immediate: true,
       handler(list) {
         if (Array.isArray(list) && list.length) {
-          // Ensure sort keys exist (covers vuex cache from older sessions)
-          if (list[0]._loadIndex == null || list[0]._timeSort == null) {
+          // Ensure sort/search keys exist (covers caches from older sessions)
+          if (
+            list[0]._loadIndex == null ||
+            list[0]._timeSort == null ||
+            list[0]._search == null
+          ) {
             finalizeList(list, this.category);
           }
           if (this.isSkins) {
@@ -301,6 +303,7 @@ export default {
           }
         }
         this.pageCurr = 1;
+        this.resetPageLoadProgress();
         this.syncPreview();
       },
     },
@@ -341,6 +344,9 @@ export default {
     this.onDensityChange(stored);
     this.syncPreview();
   },
+  beforeUnmount() {
+    clearTimeout(this._searchTimer);
+  },
   methods: {
     formatRole(role) {
       if (!role) return "Unknown";
@@ -373,6 +379,7 @@ export default {
     },
     resetFilters() {
       this.search.keyword = "";
+      this.searchInput = "";
       this.filters = {
         rarities: [],
         legacy: "all",
@@ -389,7 +396,16 @@ export default {
       else this.filters.rarities.push(value);
       this.pageCurr = 1;
     },
-    onSearch() {
+    /** Debounced: full-list scans only run when the user pauses typing. */
+    onSearchInput(value) {
+      this.searchInput = value;
+      clearTimeout(this._searchTimer);
+      this._searchTimer = setTimeout(() => this.applySearch(), 180);
+    },
+    applySearch() {
+      clearTimeout(this._searchTimer);
+      if (this.search.keyword === this.searchInput) return;
+      this.search.keyword = this.searchInput;
       this.pageCurr = 1;
     },
     onDensityChange(value) {
@@ -411,10 +427,8 @@ export default {
     },
     updatePreview(item) {
       const id = this.itemKey(item);
-      if (this.$store.state[this.name]) {
-        // null means unset; allow real id 0
-        this.$store.state[this.name].previewIndex = id;
-      }
+      // null means unset; allow real id 0
+      this.$store.commit("setPreviewIndex", { storeKey: this.name, id });
       this.preview = item;
       this.openMediaDrawer(item);
     },
@@ -435,7 +449,7 @@ export default {
       // Open drawer when there is media beyond a bare single thumb, or always for skins
       this.mediaOpen =
         groups.length > 0 &&
-        (hasExtraMedia(item, this.category) ||
+        ((item._hasMedia ?? hasExtraMedia(item, this.category)) ||
           this.isSkins ||
           this.category === "ward-skins");
     },
@@ -450,9 +464,6 @@ export default {
     },
     isMediaGroupOpen(key) {
       return this.mediaGroupOpen[key] !== false;
-    },
-    hasExtraMedia(item, cat) {
-      return hasExtraMedia(item, cat || this.category);
     },
     syncPreview() {
       const gallery = this.$store.state[this.name];
@@ -472,7 +483,10 @@ export default {
           : list.find((item) => this.itemKey(item) === idx);
       this.preview = found || list[0];
       if (found == null && this.preview) {
-        gallery.previewIndex = this.itemKey(this.preview);
+        this.$store.commit("setPreviewIndex", {
+          storeKey: this.name,
+          id: this.itemKey(this.preview),
+        });
       }
     },
     resetPageLoadProgress() {
@@ -503,12 +517,16 @@ export default {
     },
     handleImgLoad() {
       this.pageLoaded++;
-      if (this.pageItemNum > 0) {
-        this.$Progress.increase((1 / this.pageItemNum) * 101);
-      }
+      if (this.pageItemNum <= 0) return;
+      this.$Progress.increase((1 / this.pageItemNum) * 101);
       if (this.pageLoaded >= this.pageItemNum) {
         this.$Progress.finish();
       }
+    },
+    onImageCdnChange() {
+      // Image URLs are baked into the cached lists — rebuild them
+      this.$store.commit("clearGalleryCaches");
+      this.$emit("onLangChange");
     },
   },
 };
@@ -521,8 +539,8 @@ export default {
       <button
         type="button"
         class="sidebar-rail-btn"
-        :title="sidebarOpen ? '向左隐藏侧栏' : '向右展开侧栏'"
-        :aria-label="sidebarOpen ? '向左隐藏侧栏' : '向右展开侧栏'"
+        :title="sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
+        :aria-label="sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
         @click="toggleSidebar"
       >
         <span class="rail-icon" aria-hidden="true">{{
@@ -538,9 +556,9 @@ export default {
           <input
             type="search"
             placeholder="Search name, id, series…"
-            v-model="search.keyword"
-            @input="onSearch"
-            @keyup.enter="onSearch"
+            :value="searchInput"
+            @input="onSearchInput($event.target.value)"
+            @keyup.enter="applySearch"
           />
           <span class="hint"
             >{{ sortedList.length }} / {{ assetsList.length }} items</span
@@ -711,13 +729,22 @@ export default {
         <div class="toolbar-fields">
           <div class="toolbar-field">
             <label for="lang-select">Language</label>
-            <select
-              id="lang-select"
-              v-model="$store.state.settings.language"
-              @change="onLangChange"
-            >
-              <option value="chinese">Chinese</option>
+            <select id="lang-select" v-model="languageModel" @change="onLangChange">
+              <option value="chinese">中文</option>
               <option value="english">English</option>
+            </select>
+          </div>
+
+          <div class="toolbar-field">
+            <label for="cdn-select">Image CDN</label>
+            <select
+              id="cdn-select"
+              v-model="imageCdnModel"
+              @change="onImageCdnChange"
+            >
+              <option value="auto">Auto</option>
+              <option value="global">Global</option>
+              <option value="cn">中国大陆</option>
             </select>
           </div>
 
@@ -810,12 +837,8 @@ export default {
                 <ImageTooltip
                   :img-src="item[assetsProps.src]"
                   :id="item[assetsProps.id]"
-                  :description="
-                    item[assetsProps.description] || item.rarityName || ''
-                  "
                   :name="item[assetsProps.title]"
                   :scale="scale"
-                  :popup="false"
                   @handle-img-load="handleImgLoad"
                 />
                 <div class="cell-meta">
@@ -844,9 +867,7 @@ export default {
                   >
                     {{ item[assetsProps.description] }}
                   </span>
-                  <span
-                    v-if="hasExtraMedia(item, category)"
-                    class="cell-media-hint"
+                  <span v-if="item._hasMedia" class="cell-media-hint"
                     >media</span
                   >
                 </div>
@@ -1533,16 +1554,6 @@ export default {
   padding: 2rem 0;
   text-align: center;
   color: var(--secondary-color);
-}
-
-.badge {
-  display: inline-block;
-  margin-left: 0.35rem;
-  background: var(--primary-color);
-  color: var(--invert-font-color);
-  border-radius: 999px;
-  padding: 0 0.4rem;
-  font-size: 0.75rem;
 }
 
 @media only screen and (max-width: 56em) {

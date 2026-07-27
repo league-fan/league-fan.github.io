@@ -72,6 +72,17 @@ export const routes = [
     },
   },
   {
+    path: baseUrl + "/skinlines",
+    name: "skinlines",
+    component: () => import("./views/AssetBrowserPage.vue"),
+    meta: {
+      title: "Skin Series",
+      storeKey: "skinlines",
+      category: "skinlines",
+      scale: 1.1,
+    },
+  },
+  {
     path: baseUrl + "/license",
     name: "license",
     meta: { title: "License" },

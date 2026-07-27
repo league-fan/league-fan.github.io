@@ -1,9 +1,18 @@
+import { markRaw } from "vue";
 import {
   createClient,
   splitSkinId,
   getRarityUrl,
   modelviewerUrl,
 } from "@magicwenli/league-fan-assets";
+import {
+  resolveImageCdnMode,
+  loadTencentSkinMap,
+  gtimgSkinSmall,
+  gtimgSkinBig,
+  gtimgSkinLoading,
+  gtimgChampionAvatar,
+} from "./cdn.js";
 
 /** @typedef {"chinese" | "english"} UiLang */
 
@@ -50,6 +59,12 @@ export const CATEGORY_PROPS = {
   skins: {
     id: "id",
     src: "tilePath",
+    title: "name",
+    description: "description",
+  },
+  skinlines: {
+    id: "id",
+    src: "coverPath",
     title: "name",
     description: "description",
   },
@@ -141,6 +156,13 @@ export const DETAIL_FIELDS = {
     ["ID", (i) => i.id],
     ["Name", (i) => i.name],
     ["Roles", (i) => (i.roles || []).join(", ")],
+  ],
+  skinlines: [
+    ["ID", (i) => i.id],
+    ["Name", (i) => i.name],
+    ["Description", (i) => i.description],
+    ["Skins", (i) => i.skinCount],
+    ["Champions", (i) => (i.championNames || []).join(", ")],
   ],
 };
 
@@ -280,6 +302,20 @@ export function buildMediaGroups(item, category) {
     case "champions":
       push("portrait", "Portrait", one(item.squarePortraitPath, item.name));
       break;
+    case "skinlines":
+      if (Array.isArray(item.memberSkins) && item.memberSkins.length) {
+        push(
+          "members",
+          `Skins (${item.memberSkins.length})`,
+          item.memberSkins.map((s) => ({
+            id: `sl-skin-${s.id}`,
+            src: s.tilePath,
+            title: s.name,
+            caption: s.championName,
+          })),
+        );
+      }
+      break;
     default:
       break;
   }
@@ -299,6 +335,9 @@ export function hasExtraMedia(item, category) {
   }
   if (category === "ward-skins") {
     return groups.some((g) => g.key === "shadow");
+  }
+  if (category === "skinlines") {
+    return groups.some((g) => g.key === "members");
   }
   return groups.length > 1;
 }
@@ -357,21 +396,52 @@ export function getTimeSortValue(item, category) {
 }
 
 /**
- * Stamp load order + time key, then return list (mutates items lightly).
+ * Lowercased search haystack, precomputed once per load so keystroke
+ * filtering is a single string.includes per item.
+ * @param {Record<string, any>} item
+ * @param {string} category
+ */
+function buildSearchIndex(item, category) {
+  const p = CATEGORY_PROPS[category] || {};
+  return [
+    item[p.title],
+    item[p.id],
+    item.id,
+    item[p.description],
+    item.championName,
+    item.championAlias,
+    item.rarityName,
+    item.rarity,
+    ...(item.skinlineNames || []),
+    ...(item.championNames || []),
+    item.alias,
+    item.key,
+    item.title,
+    item.name,
+  ]
+    .filter((v) => v != null && v !== "")
+    .map((v) => String(v).toLowerCase())
+    .join(" ");
+}
+
+/**
+ * Stamp load order + time key + search index, then return list.
+ * Items are markRaw'd: the lists are read-only for the UI and deep
+ * reactivity on thousands of large objects wastes memory and CPU.
  * @param {any[]} list
  * @param {string} category
  */
 export function finalizeList(list, category) {
-  return list.map((item, index) => {
-    const next = item;
-    next._loadIndex = index;
-    next._timeSort = getTimeSortValue(
-      // avoid using stale _timeSort when computing
-      { ...item, _timeSort: undefined },
-      category,
-    );
-    return next;
-  });
+  for (let index = 0; index < list.length; index++) {
+    const item = list[index];
+    item._loadIndex = index;
+    item._timeSort = undefined; // clear stale value before recompute
+    item._timeSort = getTimeSortValue(item, category);
+    item._search = buildSearchIndex(item, category);
+    item._hasMedia = hasExtraMedia(item, category);
+    markRaw(item);
+  }
+  return markRaw(list);
 }
 
 /**
@@ -430,13 +500,49 @@ export function getClient(uiLang = "chinese") {
   });
 }
 
+/** Live-CDragon client, used as a fallback when the release CDN is down. */
+function getFallbackClient(uiLang) {
+  return createClient({
+    lang: langMap[uiLang] ?? "default",
+    source: { kind: "cdragon", patch: "latest" },
+  });
+}
+
+/**
+ * Load a category from the release CDN, falling back to live CommunityDragon
+ * when the CDN is unreachable (e.g. workers.dev blocked, outage).
+ * Returns the client that succeeded so related loads stay on the same source.
+ * @param {UiLang} uiLang
+ * @param {string} category
+ */
+async function loadWithFallback(uiLang, category) {
+  const client = getClient(uiLang);
+  try {
+    return { client, raw: await client.load(/** @type {any} */ (category)) };
+  } catch (err) {
+    if (!ASSETS_BASE || ASSETS_BASE === "cdragon") throw err;
+    console.warn(
+      `[assets] release CDN failed for ${category}; falling back to CommunityDragon`,
+      err,
+    );
+    const fallback = getFallbackClient(uiLang);
+    return {
+      client: fallback,
+      raw: await fallback.load(/** @type {any} */ (category)),
+    };
+  }
+}
+
 /**
  * Enrich skins with champion / skinline metadata and keep all raw fields.
+ * When `tencentMap` (skinId → gtimg instanceId) is provided, the main image
+ * kinds are rewritten to game.gtimg.cn for mainland-China loading speed.
  * @param {Record<string, any>} skinsMap
  * @param {any[]} champions
  * @param {any[]} skinlines
+ * @param {Record<string, string> | null} [tencentMap]
  */
-function normalizeSkins(skinsMap, champions, skinlines) {
+function normalizeSkins(skinsMap, champions, skinlines, tencentMap = null) {
   const champById = new Map(champions.map((c) => [c.id, c]));
   const lineById = new Map(skinlines.map((l) => [l.id, l]));
 
@@ -448,10 +554,20 @@ function normalizeSkins(skinsMap, champions, skinlines) {
         .map((ref) => lineById.get(ref.id))
         .filter(Boolean);
       const rarityInfo = s.rarity ? getRarityUrl(String(s.rarity)) : null;
-      const tilePath = s.tilePath || s.splashPath || "";
+      let tilePath = s.tilePath || s.splashPath || "";
+      let cnOverrides = null;
+      const instanceId = tencentMap ? tencentMap[String(s.id)] : null;
+      if (instanceId) {
+        tilePath = gtimgSkinSmall(instanceId);
+        cnOverrides = {
+          splashPath: gtimgSkinBig(instanceId),
+          loadScreenPath: gtimgSkinLoading(instanceId),
+        };
+      }
 
       return {
         ...s,
+        ...cnOverrides,
         tilePath,
         champId,
         skinIndex,
@@ -482,19 +598,22 @@ function normalizeSkins(skinsMap, champions, skinlines) {
  * Preserves as many original fields as possible.
  * @param {string} category
  * @param {UiLang} uiLang
+ * @param {{ imageCdn?: import("./cdn.js").ImageCdnSetting }} [opts]
  * @returns {Promise<Array<Record<string, unknown>>>}
  */
-export async function loadCategoryList(category, uiLang = "chinese") {
-  const client = getClient(uiLang);
-  const raw = await client.load(/** @type {any} */ (category));
+export async function loadCategoryList(category, uiLang = "chinese", opts = {}) {
+  const { client, raw } = await loadWithFallback(uiLang, category);
+
+  // Resolve the image CDN once per load; "cn" rewrites skin/champion images
+  // to game.gtimg.cn (only where a verified gtimg equivalent exists).
+  const cdnMode = await resolveImageCdnMode(opts.imageCdn || "auto");
+  const useCn = cdnMode === "cn";
 
   /** @type {any[]} */
   let list;
   switch (category) {
     case "summoner-icons":
-      list = /** @type {any[]} */ (raw)
-        .filter((i) => i.imagePath)
-        .map((i) => ({ ...i }));
+      list = /** @type {any[]} */ (raw).filter((i) => i.imagePath);
       break;
     case "summoner-emotes":
       list = /** @type {any[]} */ (raw)
@@ -503,25 +622,23 @@ export async function loadCategoryList(category, uiLang = "chinese") {
             i.inventoryIcon &&
             !String(i.inventoryIcon).includes("/lol-game-data/"),
         )
-        .map((i) => ({ ...i }))
         .sort((a, b) => b.id - a.id);
       break;
     case "ward-skins":
       list = /** @type {any[]} */ (raw)
         .filter((i) => i.wardImagePath)
-        .map((i) => ({ ...i }))
         .sort((a, b) => b.id - a.id);
       break;
     case "loot":
-      list = /** @type {any[]} */ (raw)
-        .filter((i) => i.image)
-        .map((i) => ({ ...i }));
+      list = /** @type {any[]} */ (raw).filter((i) => i.image);
       break;
     case "champions":
       list = /** @type {any[]} */ (raw)
         .filter((i) => i.squarePortraitPath)
         .map((i) => ({
           ...i,
+          squarePortraitPath:
+            (useCn && gtimgChampionAvatar(i.alias)) || i.squarePortraitPath,
           roles: Array.isArray(i.roles) ? i.roles : [],
           rolesLabel: (Array.isArray(i.roles) ? i.roles : []).join(", "),
           primaryRole: (Array.isArray(i.roles) && i.roles[0]) || "unknown",
@@ -529,22 +646,81 @@ export async function loadCategoryList(category, uiLang = "chinese") {
       break;
     case "skins": {
       // Parallel load related metadata for grouping & labels
-      const [champions, skinlines] = await Promise.all([
+      const [champions, skinlines, tencentMap] = await Promise.all([
         client.load("champions"),
         client.load("skinlines"),
+        useCn ? loadTencentSkinMap(ASSETS_BASE) : Promise.resolve(null),
       ]);
       list = normalizeSkins(
         /** @type {Record<string, any>} */ (raw),
         /** @type {any[]} */ (champions),
         /** @type {any[]} */ (skinlines),
+        tencentMap,
       );
       break;
     }
+    case "skinlines": {
+      const [skinsRaw, championsRaw, tencentMap] = await Promise.all([
+        client.load("skins"),
+        client.load("champions"),
+        useCn ? loadTencentSkinMap(ASSETS_BASE) : Promise.resolve(null),
+      ]);
+      const skins = normalizeSkins(
+        /** @type {Record<string, any>} */ (skinsRaw),
+        /** @type {any[]} */ (championsRaw),
+        /** @type {any[]} */ (raw),
+        tencentMap,
+      );
+      list = normalizeSkinlines(/** @type {any[]} */ (raw), skins);
+      break;
+    }
     default:
-      list = Array.isArray(raw) ? raw.map((i) => ({ ...i })) : [];
+      list = Array.isArray(raw) ? [...raw] : [];
   }
 
   return finalizeList(list, category);
+}
+
+/**
+ * Build a browsable series list: cover image + member skins.
+ * @param {any[]} skinlines
+ * @param {any[]} skins normalized skins (already CDN-rewritten)
+ */
+function normalizeSkinlines(skinlines, skins) {
+  const bySkinline = new Map();
+  for (const s of skins) {
+    for (const lineId of s.skinlineIds || []) {
+      if (!bySkinline.has(lineId)) bySkinline.set(lineId, []);
+      bySkinline.get(lineId).push(s);
+    }
+  }
+
+  return skinlines
+    .map((l) => {
+      const members = (bySkinline.get(l.id) || [])
+        .slice()
+        .sort((a, b) => a.champId - b.champId || a.id - b.id);
+      const cover = members.find((m) => m.tilePath);
+      const championNames = [
+        ...new Set(members.map((m) => m.championName).filter(Boolean)),
+      ];
+      return {
+        id: l.id,
+        name: l.name?.trim() || `#${l.id}`,
+        description: l.description || "",
+        coverPath: cover?.tilePath || "",
+        skinCount: members.length,
+        championNames,
+        memberSkins: members.map((m) => ({
+          id: m.id,
+          name: m.name,
+          tilePath: m.tilePath,
+          championName: m.championName,
+        })),
+      };
+    })
+    .filter((l) => l.skinCount > 0 && l.coverPath)
+    .sort((a, b) => String(a.name).localeCompare(String(b.name), "zh"));
 }
 
 /**

@@ -12,14 +12,18 @@ Browse League of Legends client cosmetics and champion skins in a simple gallery
 - **Loot** — Hextech chest items  
 - **Champions** — champion list with portraits  
 - **Skins** — full skin browser  
+- **Series** — browse skin lines with cover art and member skins  
 
 Also:
 
-- Chinese / English UI  
-- Search by name, id, champion, series, and more  
+- Chinese / English UI (persisted)  
+- Image CDN switch: Auto / Global (CommunityDragon) / 中国大陆 (Tencent gtimg) — auto-detects CommunityDragon reachability and falls back to the domestic CDN  
+- Search by name, id, champion, series, and more (indexed + debounced)  
 - Skins: group by hero or series; filter by rarity, legacy, chromas  
 - Detail panel with rarity, description, chromas, splash / load screens, and related links  
 - Sort by default or release time  
+- Lazy-loaded images with broken-image fallback  
+- Data source falls back to live CommunityDragon when the release CDN is unreachable  
 
 ## Develop
 
