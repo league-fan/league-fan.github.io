@@ -1,10 +1,12 @@
 <script>
+import { mapStores } from "pinia";
 import ImgFrame from "../components/ImgFrame.vue";
 import { loadCategoryList, CATEGORY_PROPS } from "../services/assets.js";
+import { useMainStore } from "../store.js";
 
 /**
  * Generic gallery page driven by route.meta:
- * - storeKey: vuex key (icons | emotes | wards | …)
+ * - storeKey: store key (icons | emotes | wards | …)
  * - category: assets lib category id
  * - scale?: number
  */
@@ -17,6 +19,7 @@ export default {
     };
   },
   computed: {
+    ...mapStores(useMainStore),
     storeKey() {
       return this.$route.meta.storeKey;
     },
@@ -45,14 +48,14 @@ export default {
   },
   methods: {
     async load() {
-      const { language: lang, imageCdn } = this.$store.state.settings;
+      const { language: lang, imageCdn } = this.mainStore.settings;
       const key = this.storeKey;
       const cat = this.category;
       if (!key || !cat) return;
 
       // Image CDN choice is baked into item URLs, so it is part of the key
       const cacheKey = `${lang}|${imageCdn}`;
-      const cache = this.$store.state[key]?.caches?.[cacheKey];
+      const cache = this.mainStore[key]?.caches?.[cacheKey];
       if (cache) {
         this.items = cache;
         return;
@@ -62,7 +65,7 @@ export default {
       try {
         const list = await loadCategoryList(cat, lang, { imageCdn });
         this.items = list;
-        this.$store.commit("setGalleryCache", {
+        this.mainStore.setGalleryCache({
           storeKey: key,
           cacheKey,
           data: list,

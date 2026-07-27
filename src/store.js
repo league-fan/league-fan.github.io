@@ -1,4 +1,4 @@
-import { createStore } from "vuex";
+import { defineStore } from "pinia";
 
 const SETTINGS_STORAGE_KEY = "lf-settings";
 
@@ -57,8 +57,8 @@ export const GALLERY_KEYS = [
   "skinlines",
 ];
 
-export const store = createStore({
-  state() {
+export const useMainStore = defineStore("main", {
+  state: () => {
     const base = {
       settings: loadSettings(),
     };
@@ -66,35 +66,35 @@ export const store = createStore({
     for (const key of GALLERY_KEYS) base[key] = galleryState();
     return base;
   },
-  mutations: {
-    changeSliderVal(state, val) {
+  actions: {
+    changeSliderVal(val) {
       if (val >= 1 && val <= 5) {
-        state.settings.sliderVal = val;
-        persistSettings(state.settings);
+        this.settings.sliderVal = val;
+        persistSettings(this.settings);
       }
     },
-    setLanguage(state, lang) {
+    setLanguage(lang) {
       if (!["chinese", "english"].includes(lang)) return;
-      state.settings.language = lang;
-      persistSettings(state.settings);
+      this.settings.language = lang;
+      persistSettings(this.settings);
     },
-    setImageCdn(state, mode) {
+    setImageCdn(mode) {
       if (!["auto", "global", "cn"].includes(mode)) return;
-      state.settings.imageCdn = mode;
-      persistSettings(state.settings);
+      this.settings.imageCdn = mode;
+      persistSettings(this.settings);
     },
-    setGalleryCache(state, { storeKey, cacheKey, data }) {
-      if (!state[storeKey]) return;
-      state[storeKey].caches[cacheKey] = data;
+    setGalleryCache({ storeKey, cacheKey, data }) {
+      if (!this[storeKey]) return;
+      this[storeKey].caches[cacheKey] = data;
     },
-    clearGalleryCaches(state) {
+    clearGalleryCaches() {
       for (const key of GALLERY_KEYS) {
-        state[key].caches = {};
+        this[key].caches = {};
       }
     },
-    setPreviewIndex(state, { storeKey, id }) {
-      if (!state[storeKey]) return;
-      state[storeKey].previewIndex = id;
+    setPreviewIndex({ storeKey, id }) {
+      if (!this[storeKey]) return;
+      this[storeKey].previewIndex = id;
     },
   },
 });

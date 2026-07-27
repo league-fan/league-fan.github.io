@@ -1,6 +1,8 @@
 <script>
+import { mapStores } from "pinia";
 import Pagination from "../components/Pagination.vue";
 import ImageTooltip from "../components/ImageTooltip.vue";
+import { useMainStore } from "../store.js";
 import {
   DETAIL_FIELDS,
   SORT_OPTIONS,
@@ -95,6 +97,7 @@ export default {
     };
   },
   computed: {
+    ...mapStores(useMainStore),
     isSkins() {
       return this.category === "skins" || this.name === "skins";
     },
@@ -113,19 +116,19 @@ export default {
     /** UI language backed by the store (persisted). */
     languageModel: {
       get() {
-        return this.$store.state.settings.language;
+        return this.mainStore.settings.language;
       },
       set(value) {
-        this.$store.commit("setLanguage", value);
+        this.mainStore.setLanguage(value);
       },
     },
     /** Image CDN preference backed by the store (persisted). */
     imageCdnModel: {
       get() {
-        return this.$store.state.settings.imageCdn;
+        return this.mainStore.settings.imageCdn;
       },
       set(value) {
-        this.$store.commit("setImageCdn", value);
+        this.mainStore.setImageCdn(value);
       },
     },
     filteredList() {
@@ -339,7 +342,7 @@ export default {
     } else {
       this.pageSize = 120;
     }
-    const stored = this.$store.state.settings.sliderVal || 3;
+    const stored = this.mainStore.settings.sliderVal || 3;
     this.densityId = stored;
     this.onDensityChange(stored);
     this.syncPreview();
@@ -411,7 +414,7 @@ export default {
     onDensityChange(value) {
       const n = Number(value);
       this.densityId = n;
-      this.$store.commit("changeSliderVal", n);
+      this.mainStore.changeSliderVal(n);
       const opt =
         this.densityOptions.find((o) => o.id === n) || this.densityOptions[2];
       this.gridMod = `repeat(auto-fill, minmax(${opt.minPx}px, 1fr))`;
@@ -428,7 +431,7 @@ export default {
     updatePreview(item) {
       const id = this.itemKey(item);
       // null means unset; allow real id 0
-      this.$store.commit("setPreviewIndex", { storeKey: this.name, id });
+      this.mainStore.setPreviewIndex({ storeKey: this.name, id });
       this.preview = item;
       this.openMediaDrawer(item);
     },
@@ -466,7 +469,7 @@ export default {
       return this.mediaGroupOpen[key] !== false;
     },
     syncPreview() {
-      const gallery = this.$store.state[this.name];
+      const gallery = this.mainStore[this.name];
       const list = this.sortedList;
       if (!list.length) {
         this.preview = {};
@@ -483,7 +486,7 @@ export default {
           : list.find((item) => this.itemKey(item) === idx);
       this.preview = found || list[0];
       if (found == null && this.preview) {
-        this.$store.commit("setPreviewIndex", {
+        this.mainStore.setPreviewIndex({
           storeKey: this.name,
           id: this.itemKey(this.preview),
         });
@@ -525,7 +528,7 @@ export default {
     },
     onImageCdnChange() {
       // Image URLs are baked into the cached lists — rebuild them
-      this.$store.commit("clearGalleryCaches");
+      this.mainStore.clearGalleryCaches();
       this.$emit("onLangChange");
     },
   },

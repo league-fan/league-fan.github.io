@@ -192,11 +192,11 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-input {
-    :focus {
-        outline: none;
-    }
+<style scoped>
+/* NOTE: descendant selector, kept identical to what the old scss compiled to
+   (`input { :focus {} }` → `input :focus`), so it intentionally matches nothing */
+input :focus {
+    outline: none;
 }
 
 .block {
@@ -303,11 +303,11 @@ a {
     cursor: pointer;
     color: var(--primary-color);
     text-decoration: none;
+}
 
-    :hover {
-        background-color: var(--primary-color);
-        color: var(--invert-font-color);
-    }
+a :hover {
+    background-color: var(--primary-color);
+    color: var(--invert-font-color);
 }
 
 .bg-change {

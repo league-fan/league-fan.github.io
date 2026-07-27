@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import { routes } from './routes.js'
-import {store} from './vuex.js'
 import { createRouter, createWebHistory } from 'vue-router'
 import VueProgressBar from "./components/vue3-progressbar";
 
@@ -32,4 +32,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-createApp(App).use(router).use(store).use(VueProgressBar, progressbarOptions).mount('#app')
+createApp(App).use(router).use(createPinia()).use(VueProgressBar, progressbarOptions).mount('#app')

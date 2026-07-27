@@ -473,13 +473,14 @@ export function sortItems(list, sortMode, category) {
 
 /**
  * Prebuilt JSON CDN (Cloudflare Worker → R2). CORS-enabled.
- * Override with VITE_ASSETS_BASE (no trailing slash), e.g. local mock or pin path.
+ * Set via VITE_ASSETS_BASE at build time (no trailing slash) — .env.local for
+ * local dev, Pages build env var for CI. Never hardcode the real URL here.
  * Empty / "cdragon" falls back to live CommunityDragon.
  */
 const ASSETS_BASE =
   typeof import.meta !== "undefined" && import.meta.env?.VITE_ASSETS_BASE
     ? String(import.meta.env.VITE_ASSETS_BASE).trim()
-    : "https://REDACTED.invalid/latest";
+    : "";
 
 /**
  * @param {UiLang} uiLang
